@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>zfy-非鱼</title>
+  <subtitle>子非鱼焉知鱼之乐</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2017-02-16T08:54:47.383Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Zhifeiyu</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hbase原理、基本概念、基本架构</title>
+    <link href="http://yoursite.com/2017/02/16/Hbase%E5%8E%9F%E7%90%86%E3%80%81%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84/"/>
+    <id>http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/</id>
+    <published>2017-02-16T07:02:22.000Z</published>
+    <updated>2017-02-16T08:54:47.383Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HBase是一个构建在HDFS上的分布式列存储系统；<br>HBase是基于Google BigTable模型开发的，典型的key/value系统；<br>HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；<br>从逻辑上讲，HBase将数据按照表、行和列进行存储。<br>与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。</p>
+<h2 id="Hbase-表特点"><a href="#Hbase-表特点" class="headerlink" title="Hbase 表特点"></a>Hbase 表特点</h2><ul>
+<li><strong>大</strong>：一个表可以有数十亿行，上百万列；</li>
+<li><strong>无模式</strong>：每行都有一个可排序的主键和任意多的列，列可以根据需要动态的增加，同一张表中不同的行可以有截然不同的列；</li>
+<li><strong>面向列</strong>：面向列（族）的存储和权限控制，列（族）独立检索；</li>
+<li><strong>稀疏</strong>：空（null）列并不占用存储空间，表可以设计的非常稀疏；</li>
+<li><strong>数据多版本</strong>：每个单元中的数据可以有多个版本，默认情况下版本号自动分配，是单元格插入时的时间戳；</li>
+<li><strong>数据类型单一</strong>：Hbase中的数据都是字符串，没有类型。<h1 id="Hbase-数据模型"><a href="#Hbase-数据模型" class="headerlink" title="Hbase 数据模型"></a>Hbase 数据模型</h1><h2 id="Hbase-逻辑视图"><a href="#Hbase-逻辑视图" class="headerlink" title="Hbase 逻辑视图"></a>Hbase 逻辑视图</h2><center><img src="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg" alt=""></center><h2 id="Hbase-基本概念"><a href="#Hbase-基本概念" class="headerlink" title="Hbase 基本概念"></a>Hbase 基本概念</h2></li>
+<li>RowKey：是Byte array，是表中每条记录的“主键”，方便快速查找，Rowkey的设计非常重要。</li>
+<li>Column Family：列族，拥有一个名称(string)，包含一个或者多个相关列</li>
+<li>Column：属于某一个columnfamily，familyName:columnName，每条记录可动态添加</li>
+<li>Version Number：类型为Long，默认值是系统时间戳，可由用户自定义</li>
+<li>Value(Cell)：Byte array<h1 id="Hbase-物理模型"><a href="#Hbase-物理模型" class="headerlink" title="Hbase 物理模型"></a>Hbase 物理模型</h1>每个column family存储在HDFS上的一个单独文件中，空值不会被保存。<br>Key 和 Version number在每个 column family中均有一份；<br>HBase 为每个值维护了多级索引，即：\<key, column="" family,="" name,="" timestamp\=""><h2 id="物理存储"><a href="#物理存储" class="headerlink" title="物理存储"></a>物理存储</h2></key,></li>
+<li>Table中所有行都按照row key的字典序排列；</li>
+<li>Table在行的方向上分割为多个Region；</li>
+<li>Region按大小分割的，每个表开始只有一个Region，随着数据增多，Region不断增大，当增大到一个阀值的时候，Region就会等分会两个新的Region，之后会有越来越多的Region；</li>
+<li>Region是Hbase中分布式存储和负载均衡的最小单元，不同Region分布到不同RegionServer上;<center><img src="http://p1.bpimg.com/567571/f2b44b62778590fd.png" alt=""></center></li>
+<li>Region虽然是分布式存储的最小单元，但并不是存储的最小单元。Region由一个或者多个Store组成，每个store保存一个columns family；每个Strore又由一个memStore和0至多个StoreFile组成，StoreFile包含HFile；memStore存储在内存中，StoreFile存储在HDFS上。<br><center><img src="http://i1.piimg.com/567571/cef3cba296a41b07.png" alt=""></center><h1 id="Hbase-架构及基本组件"><a href="#Hbase-架构及基本组件" class="headerlink" title="Hbase 架构及基本组件"></a>Hbase 架构及基本组件</h1><center><img src="http://i1.piimg.com/567571/e5524df5446fab63.jpg" alt=""></center><h2 id="基本组件说明"><a href="#基本组件说明" class="headerlink" title="基本组件说明"></a>基本组件说明</h2></li>
+<li><strong>Client</strong>：包含访问HBase的接口，并维护cache来加快对HBase的访问，比如Region的位置信息</li>
+<li><strong>Master</strong><ul>
+<li>为Region server分配Region</li>
+<li>负责Region server的负载均衡</li>
+<li>发现失效的Region server并重新分配其上的Region</li>
+<li>管理用户对table的增删改查操作</li>
+</ul>
+</li>
+<li><strong>Region server</strong><ul>
+<li>Regionserver维护Region，处理对这些Region的IO请求</li>
+<li>Regionserver负责切分在运行过程中变得过大的region</li>
+</ul>
+</li>
+<li><strong>Zookeeper</strong><ul>
+<li>通过选举，保证任何时候，集群中只有一个master，Master与RegionServers 启动时会向ZooKeeper注册</li>
+<li>存贮所有Region的寻址入口</li>
+<li>实时监控Region server的上线和下线信息。并实时通知给Master</li>
+<li>存储HBase的schema和table元数据</li>
+<li>默认情况下，HBase 管理ZooKeeper 实例，比如， 启动或者停止ZooKeeper</li>
+<li>Zookeeper的引入使得Master不再是单点故障</li>
+</ul>
+</li>
+<li><strong>Write-Ahead-Log（WAL）</strong>(预写式日志)<br><center><img src="http://p1.bqimg.com/567571/daa136c290a5faf5.png" alt=""></center><br>该机制用于数据的容错和恢复：<br>每个HRegionServer中都有一个HLog对象，HLog是一个实现Write Ahead Log的类，在每次用户操作写入MemStore的同时，也会写一份数据到HLog文件中，HLog文件定期会滚动出新的，并删除旧的文件（已持久化到StoreFile中的数据）。当HRegionServer意外终止后，HMaster会通过Zookeeper感知到，HMaster首先会处理遗留的 HLog文件，将其中不同Region的Log数据进行拆分，分别放到相应region的目录下，然后再将失效的region重新分配，领取到这些region的HRegionServer在Load Region的过程中，会发现有历史HLog需要处理，因此会Replay HLog中的数据到MemStore中，然后flush到StoreFiles，完成数据恢复。<h2 id="HBase容错性"><a href="#HBase容错性" class="headerlink" title="HBase容错性"></a>HBase容错性</h2></li>
+<li>Master容错：Zookeeper重新选择一个新的Master<ul>
+<li>无Master过程中，数据读取仍照常进行；</li>
+<li>无master过程中，region切分、负载均衡等无法进行；</li>
+</ul>
+</li>
+<li>RegionServer容错：定时向Zookeeper汇报心跳，如果一旦时间内未出现心跳，Master将该RegionServer上的Region重新分配到其他RegionServer上，失效服务器上“预写”日志由主服务器进行分割并派送给新的RegionServer</li>
+<li>Zookeeper容错：Zookeeper是一个可靠地服务，一般配置3或5个Zookeeper实例<h2 id="Region定位流程"><a href="#Region定位流程" class="headerlink" title="Region定位流程"></a>Region定位流程</h2><center><img src="http://i1.piimg.com/567571/bb229506635f0f77.jpg" alt=""></center></li>
+<li>寻找RegionServer<br>ZooKeeper–&gt; -ROOT-(单Region)–&gt; .META.–&gt; 用户表</li>
+<li>-ROOT-<ul>
+<li>表包含.META.表所在的region列表，该表只会有一个Region；</li>
+<li>Zookeeper中记录了-ROOT-表的location。</li>
+</ul>
+</li>
+<li>.META.<br>表包含所有的用户空间region列表，以及RegionServer的服务器地址。<h2 id="Hbase-使用场景"><a href="#Hbase-使用场景" class="headerlink" title="Hbase 使用场景"></a>Hbase 使用场景</h2></li>
+<li>大数据量存储，大数据量高并发操作</li>
+<li>需要对数据随机读写操作</li>
+<li>读写访问均是非常简单的操作<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><a href="http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html" target="_blank" rel="external">读和写的流程</a><br><a href="http://blog.csdn.net/dianacody/article/details/39530165" target="_blank" rel="external">HBase的Region机制</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;HBase是一个构建在HDFS上的分布式列存储系统；&lt;br&gt;HBase是基于Google BigTable模型开发的，典型的key/valu
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="Hbase" scheme="http://yoursite.com/tags/Hbase/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>centos7 网桥的配置</title>
+    <link href="http://yoursite.com/2017/01/06/centos7%20%E7%BD%91%E6%A1%A5%E7%9A%84%E9%85%8D%E7%BD%AE/"/>
+    <id>http://yoursite.com/2017/01/06/centos7 网桥的配置/</id>
+    <published>2017-01-06T06:11:45.000Z</published>
+    <updated>2017-01-06T06:11:45.965Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://tonylit.me/2016/04/06/centos7%E7%BD%91%E6%A1%A5%E9%85%8D%E7%BD%AE/" target="_blank" rel="external">http://tonylit.me/2016/04/06/centos7%E7%BD%91%E6%A1%A5%E9%85%8D%E7%BD%AE/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;http://tonylit.me/2016/04/06/centos7%E7%BD%91%E6%A1%A5%E9%85%8D%E7%BD%AE/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://tonylit.me/2016
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+      <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+      <category term="net" scheme="http://yoursite.com/tags/net/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hive &amp; hbase</title>
+    <link href="http://yoursite.com/2016/12/30/hive%20&amp;%20hbase/"/>
+    <id>http://yoursite.com/2016/12/30/hive &amp; hbase/</id>
+    <published>2016-12-30T01:23:32.000Z</published>
+    <updated>2016-12-30T01:29:57.743Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>Hive 是为了简化编写MapReduce程序而生的</strong>，使用MapReduce做过数据分析的人都知道，很多分析程序除业务逻辑不同外，程序流程基本一样。在这种 情况下，就需要Hive这样的用戶编程接口。Hive本身不存储和计算数据，它完全依赖于HDFS和MapReduce，Hive中的表纯逻辑，就是些表 的定义等，也就是表的元数据。使用SQL实现Hive是因为SQL大家都熟悉，转换成本低，类似作用的Pig就不是SQL。</p>
+<p><strong>HBase为查询而生的</strong>，它通过组织起节点內所有机器的內存，提供一個超大的內存Hash表，它需要组织自己的数据结构，包括磁盘和內存中的，而Hive是不做这个的，表在HBase中是物理表，而不是逻辑表，搜索引擎使用它來存储索引，以满足查询的实时性需求。</p>
+<p>hive类似CloudBase，也是基于hadoop分布式计算平台上的提供data warehouse的sql功能的一套软件。使得存储在hadoop里面的海量数据的汇总，即席查询简单化。hive提供了一套QL的查询语言，以sql为基础，使用起来很方便。</p>
+<p><strong>HBase是一个分布式的基于列存储的非关系型数据库</strong>。HBase的查询效率很高，主要由于查询和展示结果。</p>
+<p><strong>hive 是分布式的关系型数据库</strong>。主要用来并行分布式处理大量数据。hive中的所有查询除了”select <em> from table;”都是需要通过Map\Reduce的方式来执行的。由于要走Map\Reduce，即使一个只有1行1列的表，如果不是通过select </em> from table;方式来查询的，可能也需要8、9秒。但hive比较擅长处理大量数据。当要处理的数据很多，并且Hadoop集群有足够的规模，这时就能体现 出它的优势。<br><em>通过hive的存储接口，hive和Hbase可以整合使用。</em></p>
+<ol>
+<li>hive是sql语言，通过数据库的方式来操作hdfs文件系统，为了简化编程，底层计算方式为mapreduce。</li>
+<li>hive是面向行存储的数据库。</li>
+<li>Hive本身不存储和计算数据，它完全依赖于HDFS和MapReduce，Hive中的表纯逻辑。</li>
+<li>HBase为查询而生的，它通过组织起节点內所有机器的內存，提供一個超大的內存Hash表</li>
+<li>hbase不是关系型数据库，而是一个在hdfs上开发的面向列的分布式数据库，不支持sql。</li>
+<li>hbase是物理表，不是逻辑表，提供一个超大的内存hash表，搜索引擎通过它来存储索引，方便查询操作。</li>
+<li>hbase是列存储。</li>
+</ol>
+<p><strong>Hive只供维护用，真正查起来非常非常慢的</strong>！<br>这是因为它的底层是要通过mapreduce分布式计算的，hbase、hive、pig底层都是这样的。但整体来说hadoop还是比较快的，因为它是进行海量数据存储和分布式计算，这个速度已经很不错了。<br>Hive和Hbase有各自不同的特征：<strong>hive是高延迟、结构化和面向分析的，hbase是低延迟、非结构化和面向编程的。Hive数据仓库在hadoop上是高延迟的。</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;Hive 是为了简化编写MapReduce程序而生的&lt;/strong&gt;，使用MapReduce做过数据分析的人都知道，很多分析程序除业务逻辑不同外，程序流程基本一样。在这种 情况下，就需要Hive这样的用戶编程接口。Hive本身不存储和计算数据，它完全依赖于
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+      <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RabbitMQ下的生产消费者模式与订阅发布模式</title>
+    <link href="http://yoursite.com/2016/12/27/RabbitMQ%E4%B8%8B%E7%9A%84%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%AE%A2%E9%98%85%E5%8F%91%E5%B8%83%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/</id>
+    <published>2016-12-27T02:08:09.000Z</published>
+    <updated>2017-02-16T09:15:16.590Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。</p>
+<h2 id="数据接入"><a href="#数据接入" class="headerlink" title="数据接入"></a>数据接入</h2><p>一个用户行为采集系统，负责从App端采集用户点击行为数据。通常会将数据上报和数据处理分离开，即App端通过REST API上报数据，后端拿到数据后放入队列中就立刻返回，而数据处理则另外使用Worker从队列中取出数据来做，如下图所示：<br><img src="http://p1.bqimg.com/567571/cc3a7aa1c382177e.jpg" alt=""><br>这样做的好处有：第一，功能分离，上报的API接口不关心数据处理功能，只负责接入数据；第二，数据缓冲，数据上报的速率是不可控的，取决于用户使用频率，采用该模式可以一定程度地缓冲数据；第三，易于扩展，在数据量大时，通过增加数据处理Worker来扩展，提高处理速率。这便是典型的<strong>生产消费者模式</strong>，数据上报为生产者，数据处理为消费者。</p>
+<h2 id="事件分发"><a href="#事件分发" class="headerlink" title="事件分发"></a>事件分发</h2><p>一个电商系统，那么，用户“收藏”、“下单”、“付款”等行为都是非常重要的事件，通常后端服务在完成相应的功能处理外，还需要在这些事件点上做很多其他处理动作，比如发送短信通知、记录用户积分等等。我们可以将这些额外的处理动作放到每个模块中，但这并不是优雅的实现，不利于功能解耦和代码维护。<br>??我们需要的是一个事件分发系统，在各个功能模块中将对应的事件发布出来，由对其感兴趣的处理者进行处理。这里涉及两个角色：A对B感兴趣，A是处理者，B是事件，由事件处理器完成二者的绑定，并向消息中心订阅事件。服务模块是后端的业务逻辑服务，在不同的事件点发布事件，事件经过消息中心分发给事件处理器对应的处理者。整个流程如下图所示。这边是典型的<strong>订阅发布模式</strong>。<br><img src="http://p1.bqimg.com/567571/9923cb1907dbecb8.jpg" alt=""></p>
+<h1 id="RabbitMQ核心概念"><a href="#RabbitMQ核心概念" class="headerlink" title="RabbitMQ核心概念"></a>RabbitMQ核心概念</h1><h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><p>RabbitMQ是基于AMQP协议来实现的消息中间件。AMQP，类似于HTTP协议，也是一个应用层的协议，网络层使用TCP来通信。因此，RabbitMQ也是典型的C-S模型，准确地说是C-S-C模型，因为伴随着RabbitMQ的使用，总是会有Producer与Consumer两个Client和一个Broker Server。<br><img src="http://p1.bqimg.com/567571/4e6b03c753eec38a.jpg" alt=""><br>Client要与Server进行通信，就必须先建立连接，RabbitMQ中有Connection与Channel两个概念，前者就是一个TCP连接，后者是在这个连接上的虚拟概念，负责逻辑上的数据传递，因此，为了节省资源，一般在一个客户端中建立一个Connection，每次使用时再分配一个Channel即可。</p>
+<h2 id="消息体"><a href="#消息体" class="headerlink" title="消息体"></a>消息体</h2><p>Message是RabbitMQ中的消息体概念。类似HTTP传输中，有header和body两部分数据，Message中也有Attributes和Payload两部分数据，前者是一些元信息，后者是传递的消息数据实体。</p>
+<h2 id="消息投递"><a href="#消息投递" class="headerlink" title="消息投递"></a>消息投递</h2><p>Exchange、Queue与Routing Key三个概念是理解RabbitMQ消息投递的关键。RabbitMQ中一个核心的原则是，消息不能直接投递到Queue中。Producer只能将自己的消息投递到Exchange中，由Exchange按照routing_key投递到对应的Queue中，具体的架构参见下图。细细品味就会体会到这样设计的精妙之处。<br><img src="http://i1.piimg.com/567571/50d6da93fec7a4e5.jpg" alt=""></p>
+<ol>
+<li>在Consumer Worker中，声明自己对哪个Exchange感兴趣，并将自己的Queue绑定到自己感兴趣的一组routing_key上，建立相应的映射关系；</li>
+<li>在Producer中，将消息投递一个Exchange中，并指明它的routing_key。由此可见，Queue这个概念只是对Consumer可见，Producer并不关心消息被投递到哪个Queue中。 </li>
+<li>看过RabbitMQ的”Hello World”教程的童鞋可能会发现在那里面的图中并没有看到Exchange和routing_key的踪迹，但这并不意味着RabbitMQ可以支持直接将消息投递到Queue中，而是在内部使用了默认的Exchange和routing_key了。默认情况下，RabbitMQ使用名称为“amq.direct”的Direct Exchange，routing_key默认名字与Queue保持一致。<br>搞清楚上述概念，就不难理解Exchange的四种类型了。Direct、Fanout、Topic、Headers，区别在于如何将消息从Exchange投递到Queue中。Direct使用具体的routing_key来投递；Fanout则忽略routing_key，直接广播给所有的Queue；Topic是使用模糊匹配来对一组routing_key进行投递；Headers也是忽略routing_key，使用消息中的Headers信息来投递。<h2 id="消息可靠性"><a href="#消息可靠性" class="headerlink" title="消息可靠性"></a>消息可靠性</h2></li>
+<li>消息确认机制。Consumer处理完消息后，需要发送确认消息给Broker Server，可以选择“确认接收”、“丢弃”、“重新投递”三种方式。如果Consumer在Broker Server收到确认消息之前挂了，Broker Server便会重新投递该消息。</li>
+<li>可以选择数据持久化，这样即使RabbitMQ重启，也不会丢失消息。<h1 id="生产消费者模式"><a href="#生产消费者模式" class="headerlink" title="生产消费者模式"></a>生产消费者模式</h1><img src="http://p1.bqimg.com/567571/13204f61927c1570.jpg" alt=""><br>“数据接入”的场景，架构如上图所示，对于上报的数据，如果是special的行为，需要优先处理。从上图可以看到，数据上报端负责将数据投递到RabbitMQ对应的Exchange，并指明routing_key是common还是special。数据处理端，可以根据情况启多个Woker来消费数据，但至少需要两个，一个用来处理common数据，一个用来处理special的数据。<h1 id="订阅发布模式"><a href="#订阅发布模式" class="headerlink" title="订阅发布模式"></a>订阅发布模式</h1><img src="http://p1.bqimg.com/567571/c820244527b48013.jpg" alt=""><br>“事件分发”的场景，架构如上图所示，使用event name/id来作为RabbitMQ的routing key的名字。Event Processor 01对event 01 和event 02感兴趣，则在启动Consumer Worker时，将自己的Queue绑定到这两个routing key上即可，其他Event Processor也是如此，这样便完成了事件的订阅。当有事件发布时，消息便会按照event name/id被投递到对应的Queue中。 <h1 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h1><img src="http://www.itdadao.com/articles/c15a901095p0.html" alt=""><br><img src="http://www.cnblogs.com/xiazh/archive/2011/04/29/2004859.html" alt=""><br><img src="http://blog.csdn.net/lk10207160511/article/details/50334173" alt=""></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。&lt;/p&gt;
+&lt;h2 id=&quot;数据接入&quot;&gt;&lt;
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
+    
+      <category term="MQ" scheme="http://yoursite.com/tags/MQ/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hadoop &amp; Hbase 自动化部署</title>
+    <link href="http://yoursite.com/2016/12/08/hadoop&amp;hbase%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/"/>
+    <id>http://yoursite.com/2016/12/08/hadoop&amp;hbase自动化部署/</id>
+    <published>2016-12-08T07:50:50.000Z</published>
+    <updated>2016-12-08T08:00:28.253Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Hadoop-amp-Hbase-自动化部署"><a href="#Hadoop-amp-Hbase-自动化部署" class="headerlink" title="Hadoop &amp; Hbase 自动化部署"></a>Hadoop &amp; Hbase 自动化部署</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>项目组只有一台高配的服务器，故决定使用docker搭建Hadoop&amp;Hbase等集群环境。</p>
+<h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><p>Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。</p>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><ul>
+<li>hadoop-hbase-hive-cluster-docker-master<ul>
+<li>config</li>
+<li>Dockerfile</li>
+<li>program</li>
+<li>resize-cluster.sh</li>
+<li>start-container.sh</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>config 目录存放配值文件</li>
+<li>Dockerfile docker命令脚本，用于构建Dokcer镜像</li>
+<li>program hadoop、hbase等安装包目录</li>
+<li>resize-cluster.sh 重建镜像脚本</li>
+<li>start-container.sh 启动容器脚本</li>
+</ol>
+<h3 id="Dockerfile-说明"><a href="#Dockerfile-说明" class="headerlink" title="Dockerfile 说明"></a>Dockerfile 说明</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">FROM rastasheep/ubuntu-sshd:latest  # 基于rastasheep/ubuntu-sshd镜像</div><div class="line"></div><div class="line">MAINTAINER zfylin   # author</div><div class="line"></div><div class="line">WORKDIR /root #工作目录</div><div class="line"></div><div class="line"># 配置JDK</div><div class="line">ADD program/jdk-8u101-linux-x64.tar.gz /usr/local</div><div class="line">RUN mv /usr/local/jdk1.8.0_101 /usr/local/jdk</div><div class="line"></div><div class="line"># install hadoop 2.7.2</div><div class="line">ADD program/hadoop-2.7.2.tar.gz /usr/local</div><div class="line">RUN mv /usr/local/hadoop-2.7.2 /usr/local/hadoop</div><div class="line"></div><div class="line"># install hbase 1.2.3 </div><div class="line">ADD program/hbase-1.2.3-bin.tar.gz /usr/local</div><div class="line">RUN mv /usr/local/hbase-1.2.3 /usr/local/hbase</div><div class="line"></div><div class="line"># install hive-2.1.0</div><div class="line">ADD program/apache-hive-2.1.0-bin.tar.gz /usr/local</div><div class="line">RUN mv /usr/local/apache-hive-2.1.0-bin /usr/local/hive</div><div class="line">ADD program/mysql-connector-java-5.1.40.tar.gz /tmp</div><div class="line">RUN cp /tmp/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar /usr/local/hive/lib</div><div class="line"></div><div class="line"># install sqoop-1.4.6</div><div class="line">ADD program/sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz /usr/local</div><div class="line">RUN mv /usr/local/sqoop-1.4.6.bin__hadoop-2.0.4-alpha /usr/local/sqoop</div><div class="line">RUN cp /tmp/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar /usr/local/sqoop/lib</div><div class="line"></div><div class="line"># set environment variable</div><div class="line">ENV JAVA_HOME=/usr/local/jdk</div><div class="line">ENV HADOOP_HOME=/usr/local/hadoop</div><div class="line">ENV HBASE_HOME=/usr/local/hbase</div><div class="line">ENV HIVE_HOME=/usr/local/hive</div><div class="line">ENV SQOOP_HOME=/usr/local/sqoop</div><div class="line">ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin:/usr/local/hbase/bin:/usr/local/hive/bin:/usr/local/sqoop/bin:/usr/local/jdk/bin</div><div class="line"></div><div class="line"># ssh without key</div><div class="line">RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -P &apos;&apos; &amp;&amp; \</div><div class="line">    cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</div><div class="line"></div><div class="line"># mkdir hadoop log</div><div class="line">RUN  mkdir $HADOOP_HOME/logs</div><div class="line"></div><div class="line"># copy configs</div><div class="line">COPY config/* /tmp/</div><div class="line">RUN mv /tmp/ssh_config ~/.ssh/config &amp;&amp; \</div><div class="line">    mv /tmp/hadoop-env.sh /usr/local/hadoop/etc/hadoop/hadoop-env.sh &amp;&amp; \</div><div class="line">    mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml &amp;&amp; \</div><div class="line">    mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml &amp;&amp; \</div><div class="line">    mv /tmp/mapred-site.xml $HADOOP_HOME/etc/hadoop/mapred-site.xml &amp;&amp; \</div><div class="line">    mv /tmp/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml &amp;&amp; \</div><div class="line">    mv /tmp/slaves $HADOOP_HOME/etc/hadoop/slaves &amp;&amp; \</div><div class="line">    mv /tmp/start-hadoop.sh ~/start-hadoop.sh &amp;&amp; \</div><div class="line">    mv /tmp/run-wordcount.sh ~/run-wordcount.sh &amp;&amp; \</div><div class="line">    mv /tmp/hbase-env.sh $HBASE_HOME/conf/hbase-env.sh &amp;&amp; \</div><div class="line">    mv /tmp/hbase-site.xml $HBASE_HOME/conf/hbase-site.xml &amp;&amp; \</div><div class="line">    mv /tmp/regionservers $HBASE_HOME/conf/regionservers &amp;&amp; \</div><div class="line">    mv /tmp/start-hbase.sh ~/start-hbase.sh &amp;&amp; \</div><div class="line">    mv /tmp/stop-hbase.sh ~/stop-hbase.sh &amp;&amp; \</div><div class="line">    mv /tmp/hive-site.xml $HIVE_HOME/conf/hive-site.xml &amp;&amp; \</div><div class="line">    mv /tmp/hive-log4j2.properties $HIVE_HOME/conf/hive-log4j2.properties &amp;&amp; \</div><div class="line">    mv /tmp/hive-exec-log4j2.properties $HIVE_HOME/conf/hive-exec-log4j2.properties &amp;&amp; \</div><div class="line">   mv /tmp/hive-config.sh ~/hive-config.sh &amp;&amp; \</div><div class="line">   mv /tmp/sqoop-env.sh $&#123;SQOOP_HOME&#125;/conf</div><div class="line"></div><div class="line">RUN chmod +x ~/start-hadoop.sh &amp;&amp; \</div><div class="line">    chmod +x ~/run-wordcount.sh &amp;&amp; \</div><div class="line">    chmod +x $HADOOP_HOME/sbin/start-dfs.sh &amp;&amp; \</div><div class="line">    chmod +x $HADOOP_HOME/sbin/start-yarn.sh &amp;&amp; \</div><div class="line">    chmod +x ~/start-hbase.sh &amp;&amp; \</div><div class="line">    chmod +x $HBASE_HOME/bin/start-hbase.sh &amp;&amp; \</div><div class="line">    chmod +x ~/stop-hbase.sh &amp;&amp; \</div><div class="line">    chmod +x $&#123;HBASE_HOME&#125;/bin/stop-hbase.sh &amp;&amp; \</div><div class="line">    chmod +x ~/hive-config.sh</div><div class="line"></div><div class="line">CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;service ssh start; bash&quot;]</div><div class="line"></div><div class="line">EXPOSE 22 7373 7946 9000 50010 50020 50070 50075 50090 50475 8030 8031 8032 8033 8040 8042 8060 8088 50060 2818 60000 60010</div></pre></td></tr></table></figure>
+<h3 id="resize-cluster-sh"><a href="#resize-cluster-sh" class="headerlink" title="resize-cluster.sh"></a>resize-cluster.sh</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line"># N is the node number of hadoop cluster</div><div class="line">N=$&#123;1:-3&#125;   # 默认3个节点</div><div class="line"></div><div class="line">if [ $# = 0 ]</div><div class="line">then</div><div class="line">        echo &quot;Please specify the node number of hadoop cluster!&quot;</div><div class="line">        exit 1</div><div class="line">fi</div><div class="line"></div><div class="line"># change slaves file</div><div class="line">i=1</div><div class="line">rm config/slaves</div><div class="line">rm config/regionservers</div><div class="line">while [ $i -lt $N ]</div><div class="line">do</div><div class="line">        echo &quot;hadoop-slave$i&quot; &gt;&gt; config/slaves</div><div class="line">        # 同步修改hbase-site.xml hbase.zookeeper.quorum配置项</div><div class="line">        # 如果 N = 3, 则 value 为 “hadoop-master,hadoop-slave1,hadoop-slave2”</div><div class="line">        # 如果 N = 5, 则 value 为  &quot;hadoop-master,hadoop-slave1,hadoop-slave2,hadoop-slave3, hadoop-slave4&quot;</div><div class="line">        echo &quot;hadoop-slave$i&quot; &gt;&gt; config/regionservers </div><div class="line">        ((i++))</div><div class="line">done</div><div class="line"></div><div class="line">echo &quot;&quot;</div><div class="line"></div><div class="line">echo -e &quot;\nbuild docker hadoop image\n&quot;</div><div class="line"></div><div class="line"># rebuild zfylin/hadoop image</div><div class="line">sudo docker build -t zfylin/hadoop-hbase:1.0 .</div><div class="line"></div><div class="line">echo &quot;&quot;</div></pre></td></tr></table></figure>
+<h3 id="start-container-sh"><a href="#start-container-sh" class="headerlink" title="start-container.sh"></a>start-container.sh</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line"># the default node number is 3</div><div class="line">N=$&#123;1:-3&#125;</div><div class="line">HADOOP_IAMGES_NAME=zfylin/hadoop-hbase:1.0</div><div class="line">NET_NAME=none</div><div class="line">VOLUMN_PATH=/home/zfy/data/hadoop-cluster</div><div class="line"></div><div class="line">declare -a users</div><div class="line"># node ip, users[1] 为 master ip，其他为 slave ip</div><div class="line"># 有多少个node，就需要配置多少ip</div><div class="line">users=([1]=&apos;10.206.19.121&apos; [2]=&apos;10.206.19.122&apos; [3]=&apos;10.206.19.123&apos;)</div><div class="line"># host 配置，有多少个node，就需要配置多少host</div><div class="line">h0=&apos;mirror.centos.org:10.204.76.222&apos;</div><div class="line">h1=&apos;hadoop-master:10.206.19.121&apos;</div><div class="line">h2=&apos;hadoop-slave1:10.206.19.122&apos;</div><div class="line">h3=&apos;hadoop-slave2:10.206.19.123&apos;</div><div class="line">prefix=24</div><div class="line">via=&apos;10.206.16.11&apos;</div><div class="line"></div><div class="line"># start hadoop master container</div><div class="line">sudo docker rm -f hadoop-master &amp;&gt; /dev/null</div><div class="line">echo &quot;start hadoop-master container...&quot;</div><div class="line">sudo docker run -itd \</div><div class="line">                --net=$&#123;NET_NAME&#125; \</div><div class="line">                --privileged=true \</div><div class="line">                --name hadoop-master \</div><div class="line">                --hostname hadoop-master \</div><div class="line">                --add-host=&quot;$h0&quot; \</div><div class="line">                --add-host=&quot;$h1&quot; \</div><div class="line">                --add-host=&quot;$h2&quot; \</div><div class="line">                --add-host=&quot;$h3&quot; \</div><div class="line">                -v $&#123;VOLUMN_PATH&#125;/hadoop-master/hdfs:/root/hdfs \</div><div class="line">                $&#123;HADOOP_IAMGES_NAME&#125; &amp;&gt; /dev/null</div><div class="line"></div><div class="line">echo &quot;pipework br33 hadoop-master $&#123;users[1]&#125;/$prefix@$via&quot;</div><div class="line"># pipework 绑定hadoop-master ip</div><div class="line">pipework br33 hadoop-master $&#123;users[1]&#125;/$prefix@$via</div><div class="line"></div><div class="line"># start hadoop slave container</div><div class="line">i=1</div><div class="line">while [ $i -lt $N ]</div><div class="line">do</div><div class="line">        sudo docker rm -f hadoop-slave$i &amp;&gt; /dev/null</div><div class="line">        echo &quot;start hadoop-slave$i container...&quot;</div><div class="line">        sudo docker run -itd \</div><div class="line">                        --net=$&#123;NET_NAME&#125; \</div><div class="line">                        --privileged=true \</div><div class="line">                        --add-host=&quot;$h0&quot; \</div><div class="line">                        --add-host=&quot;$h1&quot; \</div><div class="line">                        --add-host=&quot;$h2&quot; \</div><div class="line">                        --add-host=&quot;$h3&quot; \</div><div class="line">                        --name hadoop-slave$i \</div><div class="line">                        --hostname hadoop-slave$i \</div><div class="line">                        -v $&#123;VOLUMN_PATH&#125;/hadoop-slave$i/hdfs:/root/hdfs \</div><div class="line">                        $&#123;HADOOP_IAMGES_NAME&#125; &amp;&gt; /dev/null</div><div class="line">        host_name=hadoop-slave$i</div><div class="line">        i=$(( $i + 1 ))</div><div class="line">        echo &quot;pipework br33 $host_name $&#123;users[$i]&#125;/$prefix@$via&quot;</div><div class="line">        # pipework 绑定hadoop-slave$i ip</div><div class="line">        pipework br33 $host_name $&#123;users[$i]&#125;/$prefix@$via</div><div class="line"></div><div class="line">done</div><div class="line"></div><div class="line"># get into hadoop master container</div><div class="line">sudo docker exec -it hadoop-master bash</div></pre></td></tr></table></figure>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><ul>
+<li>构建Docker镜像<br>  sudo ./resize-cluster.sh </li>
+<li>启动镜像<br> sudo  ./start-container.sh </li>
+<li>启动hadoop<br>  ./start-hadoop.sh</li>
+<li>启动hbase<br> ./start-hbase.sh</li>
+<li>启动hive<br>hiveserver2 start</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Hadoop-amp-Hbase-自动化部署&quot;&gt;&lt;a href=&quot;#Hadoop-amp-Hbase-自动化部署&quot; class=&quot;headerlink&quot; title=&quot;Hadoop &amp;amp; Hbase 自动化部署&quot;&gt;&lt;/a&gt;Hadoop &amp;amp; Hbase
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos代理设置</title>
+    <link href="http://yoursite.com/2016/11/28/Centos%20%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/"/>
+    <id>http://yoursite.com/2016/11/28/Centos 代理设置/</id>
+    <published>2016-11-28T00:50:02.000Z</published>
+    <updated>2016-12-08T08:00:28.209Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="系统级代理"><a href="#系统级代理" class="headerlink" title="系统级代理"></a>系统级代理</h2><p>vi /etc/profile<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http_proxy = http://username:password@yourproxy:8080/</div><div class="line">ftp_proxy = http://username:password@yourproxy:8080/</div><div class="line">export http_proxy</div><div class="line">export ftp_proxy</div></pre></td></tr></table></figure></p>
+<h2 id="yum-代理"><a href="#yum-代理" class="headerlink" title="yum 代理"></a>yum 代理</h2><p>vi /etc/yum.conf<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">proxy = http://username:password@yourproxy:8080/</div></pre></td></tr></table></figure></p>
+<h2 id="wget代理"><a href="#wget代理" class="headerlink" title="wget代理"></a>wget代理</h2><p>vi /etc/wgetrc<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http_proxy=http://username:password@proxy_ip:port/</div><div class="line">ftp_proxy=http://username:password@proxy_ip:port/</div></pre></td></tr></table></figure></p>
+<h2 id="docker代理"><a href="#docker代理" class="headerlink" title="docker代理"></a>docker代理</h2><ol>
+<li><p>创建目录</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/systemd/system/docker.service.d</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建文件</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">touch /etc/systemd/system/docker.service.d/http-proxy.conf</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置http-proxy.conf文件</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[Service]</div><div class="line">Environment=&quot;HTTP_PROXY=http://proxy.ip.com:80&quot;</div></pre></td></tr></table></figure>
+</li>
+<li><p>daemon重新reload 并重启docker</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl daemon-reload</div><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+</li>
+<li><p>检查变量是否加载</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl show docker --property Environment</div></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;系统级代理&quot;&gt;&lt;a href=&quot;#系统级代理&quot; class=&quot;headerlink&quot; title=&quot;系统级代理&quot;&gt;&lt;/a&gt;系统级代理&lt;/h2&gt;&lt;p&gt;vi /etc/profile&lt;br&gt;添加下面内容&lt;br&gt;&lt;figure class=&quot;highlight plai
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+      <category term="代理" scheme="http://yoursite.com/tags/%E4%BB%A3%E7%90%86/"/>
+    
+      <category term="dokcer" scheme="http://yoursite.com/tags/dokcer/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7 修改 hostname</title>
+    <link href="http://yoursite.com/2016/11/25/Centos7%20%E4%BF%AE%E6%94%B9hostname/"/>
+    <id>http://yoursite.com/2016/11/25/Centos7 修改hostname/</id>
+    <published>2016-11-25T01:49:53.000Z</published>
+    <updated>2017-01-05T08:54:31.497Z</updated>
+    
+    <content type="html"><![CDATA[<p>在CentOS或RHEL中，有三种定义的主机名:a、静态的（static），b、瞬态的（transient），以及 c、灵活的（pretty）。“静态”主机名也称为内核主机名，是系统在启动时从/etc/hostname自动初始化的主机名。“瞬态”主机名是在系统运行时临时分配的主机名，例如，通过DHCP或mDNS服务器分配。静态主机名和瞬态主机名都遵从作为互联网域名同样的字符限制规则。而另一方面，“灵活”主机名则允许使用自由形式（包括特殊/空白字符）的主机名，以展示给终端用户（如Dan’s Computer）。</p>
+<p>在CentOS/RHEL 7中，有个叫hostnamectl的命令行工具，它允许你查看或修改与主机名相关的配置。<br>要查看主机名相关的设置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ hostnamectl status</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@zfy-79 zfy]# hostnamectl status</div><div class="line">   Static hostname: zfy-79</div><div class="line">         Icon name: computer-desktop</div><div class="line">           Chassis: desktop</div><div class="line">        Machine ID: 89b2147b6a1f4fe1a89148cfd53dd727</div><div class="line">           Boot ID: ee5625e25b494acc804e49043dcd8626</div><div class="line">  Operating System: CentOS Linux 7 (Core)</div><div class="line">       CPE OS Name: cpe:/o:centos:centos:7</div><div class="line">            Kernel: Linux 3.10.0-327.36.3.el7.x86_64</div><div class="line">      Architecture: x86-64</div></pre></td></tr></table></figure>
+<p>同时修改所有三个主机名：静态、瞬态和灵活主机名：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[root@zfy-79 zfy]# sudo hostnamectl set-hostname dev-79</div><div class="line">[root@zfy-79 zfy]# hostnamectl status</div><div class="line">   Static hostname: dev-79</div><div class="line">         Icon name: computer-desktop</div><div class="line">           Chassis: desktop</div><div class="line">        Machine ID: 89b2147b6a1f4fe1a89148cfd53dd727</div><div class="line">           Boot ID: ee5625e25b494acc804e49043dcd8626</div><div class="line">  Operating System: CentOS Linux 7 (Core)</div><div class="line">       CPE OS Name: cpe:/o:centos:centos:7</div><div class="line">            Kernel: Linux 3.10.0-327.36.3.el7.x86_64</div><div class="line">      Architecture: x86-64</div></pre></td></tr></table></figure>
+<p>如果你只想修改特定的主机名（静态，瞬态或灵活），你可以使用“–static”，“–transient”或“–pretty”选项。<br><strong>注意，你不必重启机器以激活永久主机名修改。上面的命令会立即修改内核主机名。注销并重新登入后在命令行提示来观察新的静态主机名。</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在CentOS或RHEL中，有三种定义的主机名:a、静态的（static），b、瞬态的（transient），以及 c、灵活的（pretty）。“静态”主机名也称为内核主机名，是系统在启动时从/etc/hostname自动初始化的主机名。“瞬态”主机名是在系统运行时临时分配
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
+    
+      <category term="hostname" scheme="http://yoursite.com/tags/hostname/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile命令介绍及实例</title>
+    <link href="http://yoursite.com/2016/11/24/Dockerfile%E5%91%BD%E4%BB%A4%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%9E%E4%BE%8B/"/>
+    <id>http://yoursite.com/2016/11/24/Dockerfile命令介绍及实例/</id>
+    <published>2016-11-24T12:04:02.000Z</published>
+    <updated>2016-12-08T08:00:28.221Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Docker简介"><a href="#Docker简介" class="headerlink" title="Docker简介"></a>Docker简介</h2><p>Docker项目提供了构建在Linux内核功能之上，协同在一起的的高级工具。其目标是帮助开发和运维人员更容易地跨系统跨主机交付应用程序和他们的依赖。Docker通过Docker容器，一个安全的，基于轻量级容器的环境，来实现这个目标。这些容器由镜像创建，而镜像可以通过命令行手工创建或 者通过Dockerfile自动创建。</p>
+<h2 id="Dokcerfile"><a href="#Dokcerfile" class="headerlink" title="Dokcerfile"></a>Dokcerfile</h2><p>Dockerfile是由一系列命令和参数构成的脚本，这些命令应用于基础镜像并最终创建一个新的镜像。它们简化了从头到尾的流程并极大的简化了部署工作。Dockerfile从FROM命令开始，紧接着跟随者各种方法，命令和参数。其产出为一个新的可以用于创建容器的镜像。</p>
+<h2 id="Dockerfile-语法"><a href="#Dockerfile-语法" class="headerlink" title="Dockerfile 语法"></a>Dockerfile 语法</h2><h3 id="Dockerfile-语法示例"><a href="#Dockerfile-语法示例" class="headerlink" title="Dockerfile 语法示例"></a>Dockerfile 语法示例</h3><p>Dockerfile语法由两部分构成，注释和命令+参数<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Line blocks used for commenting</div><div class="line">command argument argument ..</div></pre></td></tr></table></figure></p>
+<p>一个简单的例子：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Print &quot;Hello docker!&quot;</div><div class="line">RUN echo &quot;Hello docker!&quot;</div></pre></td></tr></table></figure></p>
+<h3 id="Dockerfile-命令"><a href="#Dockerfile-命令" class="headerlink" title="Dockerfile 命令"></a>Dockerfile 命令</h3><p>Dockerfile有十几条命令可用于构建镜像，下文将简略介绍这些命令。</p>
+<h4 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h4><p>ADD命令有两个参数，源和目标。它的基本作用是从源系统的文件系统上复制文件到目标容器的文件系统。如果源是一个URL，那该URL的内容将被下载并复制到容器中。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: ADD [source directory or URL] [destination directory]</div><div class="line">ADD /my_app_folder /my_app_folder</div></pre></td></tr></table></figure></p>
+<h4 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h4><p>和RUN命令相似，CMD可以用于执行特定的命令。和RUN不同的是，这些命令不是在镜像构建的过程中执行的，而是在用镜像构建容器后被调用。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage 1: CMD application &quot;argument&quot;, &quot;argument&quot;, ..</div><div class="line">CMD &quot;echo&quot; &quot;Hello docker!&quot;</div></pre></td></tr></table></figure></p>
+<h4 id="ENTRYPOINT"><a href="#ENTRYPOINT" class="headerlink" title="ENTRYPOINT"></a>ENTRYPOINT</h4><p>ENTRYPOINT 帮助你配置一个容器使之可执行化，如果你结合CMD命令和ENTRYPOINT命令，你可以从CMD命令中移除“application”而仅仅保留参数，参数将传递给ENTRYPOINT命令。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: ENTRYPOINT application &quot;argument&quot;, &quot;argument&quot;, ..</div><div class="line"># Remember: arguments are optional. They can be provided by CMD</div><div class="line"># or during the creation of a container.</div><div class="line">ENTRYPOINT echo</div><div class="line"># Usage example with CMD:</div><div class="line"># Arguments set with CMD can be overridden during *run*</div><div class="line">CMD &quot;Hello docker!&quot;</div><div class="line">ENTRYPOINT echo</div></pre></td></tr></table></figure></p>
+<h4 id="ENV"><a href="#ENV" class="headerlink" title="ENV"></a>ENV</h4><p>ENV命令用于设置环境变量。这些变量以”key=value”的形式存在，并可以在容器内被脚本或者程序调用。这个机制给在容器中运行应用带来了极大的便利。<br><em>ps：ENV配置镜像的环境变量，但是这样设置的环境变量只能在运行时使用/bin/bash时才会生效。当用ssh登录到容器后，这些变量将失效</em><br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: ENV key value</div><div class="line">ENV SERVER_WORKS 4</div></pre></td></tr></table></figure></p>
+<h4 id="EXPOSE"><a href="#EXPOSE" class="headerlink" title="EXPOSE"></a>EXPOSE</h4><p>EXPOSE用来指定端口，使容器内的应用可以通过端口和外界交互。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: EXPOSE [port]</div><div class="line">EXPOSE 8080</div></pre></td></tr></table></figure></p>
+<h4 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h4><p>FROM命令可能是最重要的Dockerfile命令。改命令定义了使用哪个基础镜像启动构建流程。基础镜像可以为任意镜像。如果基础镜像没有被发现，Docker将试图从Docker image index来查找该镜像。FROM命令必须是Dockerfile的首个命令。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: FROM [image name]</div><div class="line">FROM ubuntu</div></pre></td></tr></table></figure></p>
+<h4 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h4><p>我建议这个命令放在Dockerfile的起始部分，虽然理论上它可以放置于Dockerfile的任意位置。这个命令用于声明作者，并应该放在FROM的后面。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: MAINTAINER [name]</div><div class="line">MAINTAINER authors_name</div></pre></td></tr></table></figure></p>
+<h4 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h4><p>RUN命令是Dockerfile执行命令的核心部分。它接受命令作为参数并用于创建镜像。不像CMD命令，RUN命令用于创建镜像（在之前commit的层之上形成新的层）。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: RUN [command]</div><div class="line">RUN aptitude install -y riak</div></pre></td></tr></table></figure></p>
+<h4 id="USER"><a href="#USER" class="headerlink" title="USER"></a>USER</h4><p>USER命令用于设置运行容器的UID。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: USER [UID]</div><div class="line">USER 751</div></pre></td></tr></table></figure></p>
+<h4 id="VOLUME"><a href="#VOLUME" class="headerlink" title="VOLUME"></a>VOLUME</h4><p>VOLUME命令用于让你的容器访问宿主机上的目录。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: VOLUME [&quot;/dir_1&quot;, &quot;/dir_2&quot; ..]</div><div class="line">VOLUME [&quot;/my_files&quot;]</div></pre></td></tr></table></figure></p>
+<h4 id="WORKDIR"><a href="#WORKDIR" class="headerlink" title="WORKDIR"></a>WORKDIR</h4><p>WORKDIR命令用于设置CMD指明的命令的运行目录。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Usage: WORKDIR /path</div><div class="line">WORKDIR ~/</div></pre></td></tr></table></figure></p>
+<h3 id="如何使用Dockerfiles"><a href="#如何使用Dockerfiles" class="headerlink" title="如何使用Dockerfiles"></a>如何使用Dockerfiles</h3><p>使用Dockerfiles和手工使用Docker Daemon运行命令一样简单。脚本运行后输出为新的镜像ID。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Build an image using the Dockerfile at current location</div><div class="line"># Example: sudo docker build -t [name] .</div><div class="line">sudo docker build -t my_mongodb .</div></pre></td></tr></table></figure></p>
+<h2 id="Dockerfile-示例：创建一个Nginx的镜像"><a href="#Dockerfile-示例：创建一个Nginx的镜像" class="headerlink" title="Dockerfile 示例：创建一个Nginx的镜像"></a>Dockerfile 示例：创建一个Nginx的镜像</h2><h3 id="基础镜像"><a href="#基础镜像" class="headerlink" title="基础镜像"></a>基础镜像</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">############################################################</div><div class="line"># Dockerfile to build Nginx Installed Containers</div><div class="line"># Based on Ubuntu</div><div class="line">############################################################</div><div class="line"># Set the base image to Ubuntu</div><div class="line">FROM ubuntu</div><div class="line"># File Author / Maintainer</div><div class="line">MAINTAINER Maintaner Name</div></pre></td></tr></table></figure>
+<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Install Nginx</div><div class="line"># Add application repository URL to the default sources</div><div class="line">RUN echo &quot;deb http://archive.ubuntu.com/ubuntu/ raring main universe&quot; &gt;&gt; /etc/apt/sources.list</div><div class="line"># Update the repository</div><div class="line">RUN apt-get update</div><div class="line"># Install necessary tools</div><div class="line">RUN apt-get install -y nano wget dialog net-tools</div><div class="line"># Download and Install Nginx</div><div class="line">RUN apt-get install -y nginx</div></pre></td></tr></table></figure>
+<h3 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h3><p>安装Nginx后，我们需要配置Nginx并且替换掉默认的配置文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># Remove the default Nginx configuration file</div><div class="line">RUN rm -v /etc/nginx/nginx.conf</div><div class="line"># Copy a configuration file from the current directory</div><div class="line">ADD nginx.conf /etc/nginx/</div><div class="line"># Append &quot;daemon off;&quot; to the beginning of the configuration</div><div class="line">RUN echo &quot;daemon off;&quot; &gt;&gt; /etc/nginx/nginx.conf</div><div class="line"># Expose ports</div><div class="line">EXPOSE 80</div><div class="line"># Set the default command to execute</div><div class="line"># when creating a new container</div><div class="line">CMD service nginx start</div></pre></td></tr></table></figure></p>
+<p>保存 dockfile。</p>
+<h3 id="使用Dockerfile自动构建Nginx容器"><a href="#使用Dockerfile自动构建Nginx容器" class="headerlink" title="使用Dockerfile自动构建Nginx容器"></a>使用Dockerfile自动构建Nginx容器</h3><p>因为我们命令Docker用当前目录的Nginx的配置文件替换默认的配置文件，我们要保证这个新的配置文件存在。在Dockerfile存在的目录下，创建nginx.conf：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo touch nginx.conf</div></pre></td></tr></table></figure></p>
+<p>然后用下述内容替换原有内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">worker_processes 1;</div><div class="line">events &#123; worker_connections 1024; &#125;</div><div class="line">http &#123;</div><div class="line">     sendfile on;</div><div class="line">     server &#123;</div><div class="line">         listen 80;</div><div class="line">         location / &#123;</div><div class="line">              proxy_pass http://httpstat.us/;</div><div class="line">              proxy_set_header X-Real-IP $remote_addr;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>让我们保存nginx.conf。之后我们就可以用Dockerfile和配置文件来构建镜像。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Docker简介&quot;&gt;&lt;a href=&quot;#Docker简介&quot; class=&quot;headerlink&quot; title=&quot;Docker简介&quot;&gt;&lt;/a&gt;Docker简介&lt;/h2&gt;&lt;p&gt;Docker项目提供了构建在Linux内核功能之上，协同在一起的的高级工具。其目标是帮助开发
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
+    
+      <category term="容器" scheme="http://yoursite.com/tags/%E5%AE%B9%E5%99%A8/"/>
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hadoop + Hbase 单机伪分布式安装配置</title>
+    <link href="http://yoursite.com/2016/10/29/hadoop%20%E5%AE%89%E8%A3%85/"/>
+    <id>http://yoursite.com/2016/10/29/hadoop 安装/</id>
+    <published>2016-10-29T03:25:31.000Z</published>
+    <updated>2016-12-08T08:00:28.247Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a><strong>环境</strong></h2><p>centos7 + hadoop2.7.2 + jdk1.8 + hbase1.2.3</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a><strong>准备工作</strong></h2><h3 id="创建hadoop用户"><a href="#创建hadoop用户" class="headerlink" title="创建hadoop用户"></a>创建hadoop用户</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># su hadoop</div><div class="line"># useradd -m hadoop -s /bin/bash   #创建新用户hadoop</div><div class="line"># passwd hadoop    #创建密码</div><div class="line"># vim /etc/sudoers  #赋予管理员权限</div></pre></td></tr></table></figure>
+<p> 找到 root ALL=(ALL) ALL 这行<br> 然后在这行下面增加一行内容：hadoop ALL=(ALL) ALL<br><img src="http://oflrm5g9z.bkt.clouddn.com/Image%201.png" alt=""></p>
+<h3 id="JAVA环境配置"><a href="#JAVA环境配置" class="headerlink" title="JAVA环境配置"></a>JAVA环境配置</h3><h3 id="安装SSH、配置SSH无密码登陆"><a href="#安装SSH、配置SSH无密码登陆" class="headerlink" title="安装SSH、配置SSH无密码登陆"></a>安装SSH、配置SSH无密码登陆</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ rpm -qa | grep ssh</div></pre></td></tr></table></figure>
+<p><img src="http://oflrm5g9z.bkt.clouddn.com/Image%202.png" alt=""><br>返回结果如上图，则说明已经安装了ssh,不需要安装，否则需要通过yum进行安装。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ sudo yum install openssh-clients</div><div class="line">$ sudo yum install openssh-server</div></pre></td></tr></table></figure></p>
+<p> 然后配置SSH无密码登陆<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ cd ~/.ssh/                     # 若没有该目录，请先执行一次ssh localhost</div><div class="line">$ ssh-keygen -t rsa              # 会有提示，都按回车就可以</div><div class="line">$ cat id_rsa.pub &gt;&gt; authorized_keys  # 加入授权</div><div class="line">$ chmod 600 ./authorized_keys    # 修改文件权限</div></pre></td></tr></table></figure></p>
+<p>执行如下命令测试一下 SSH 是否可用：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ ssh localhost</div></pre></td></tr></table></figure></p>
+<p>无需输入密码就可以直接登陆了。</p>
+<h2 id="安装Haoop"><a href="#安装Haoop" class="headerlink" title="安装Haoop"></a><strong>安装Haoop</strong></h2><h3 id="下载hadoop-2-7-2-tar-gz包"><a href="#下载hadoop-2-7-2-tar-gz包" class="headerlink" title="下载hadoop-2.7.2.tar.gz包"></a>下载hadoop-2.7.2.tar.gz包</h3><h3 id="解压并修改文件权限"><a href="#解压并修改文件权限" class="headerlink" title="解压并修改文件权限"></a>解压并修改文件权限</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ sudo tar -zxf ~/下载/hadoop-2.7.2.tar.gz -C /usr/local    # 解压到/usr/local中</div><div class="line">$ cd /usr/local/</div><div class="line">$ sudo ln -s hadoop-2.7.2 hadoop            # 创建hadoop软连接</div><div class="line">$ sudo chown -R hadoop:hadoop ./hadoop        # 修改文件权限</div></pre></td></tr></table></figure>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a><strong>配置环境变量</strong></h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ sudo vim /etc/profile</div></pre></td></tr></table></figure>
+<p>添加如下内容<br><figure class="highlight vim"><table><tr><td class="code"><pre><div class="line"># hadoop Env</div><div class="line">export HADOOP_HOME=/usr/local/hadoop</div><div class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</div><div class="line">export HADOOP_MAPRED_HOME=$HADOOP_HOME</div><div class="line">export HADOOP_COMMON_HOME=$HADOOP_HOME</div><div class="line">export HADOOP_HDFS_HOME=$HADOOP_HOME</div><div class="line">export YARN_HOME=$HADOOP_HOME</div><div class="line">export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native</div><div class="line">export HADOOP_OPTS=<span class="string">"-Djava.library.path=$HADOOP_HOME/lib"</span></div><div class="line">export HADOOP_CLASSPATH=$&#123;JAVA_HOME&#125;/lib/tools.jar</div></pre></td></tr></table></figure></p>
+<h3 id="测试hadoop是否可用"><a href="#测试hadoop是否可用" class="headerlink" title="测试hadoop是否可用"></a>测试hadoop是否可用</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[hadoop@osd01 root]$ hadoop version</div><div class="line">Hadoop 2.7.2</div><div class="line">Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r e3496499ecb8d220fba99dc5ed4c99c8f9e33bb1</div><div class="line">Compiled by jenkins on 2014-11-13T21:10Z</div><div class="line">Compiled with protoc 2.5.0</div><div class="line">From source with checksum 18e43357c8f927c0695f1e9522859d6a</div><div class="line">This command was run using /usr/local/hadoop-2.7.2/share/hadoop/common/hadoop-common-2.7.2.jar</div></pre></td></tr></table></figure>
+<p>成功则会显示 如上的Hadoop 版本信息</p>
+<h2 id="Hadoop伪分布式配置"><a href="#Hadoop伪分布式配置" class="headerlink" title="Hadoop伪分布式配置"></a><strong>Hadoop伪分布式配置</strong></h2><h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>Hadoop 的配置文件位于 /usr/local/hadoop/etc/hadoop/ 中，伪分布式需要修改2个配置文件 core-site.xml 和 hdfs-site.xml 。（/<em>Hadoop的配置文件是 xml 格式，每个配置以声明 property 的 name 和 value 的方式来实现。</em>/）</p>
+<ul>
+<li><p>修改配置文件 core-site.xml </p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">description</span>&gt;</span>Abase for other temporary directories.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件 hdfs-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/usr/local/hadoop/tmp/dfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置hadoop-env.sh的JAVA_HOME</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="comment"># The java implementation to use.</span></div><div class="line"><span class="comment">#export JAVA_HOME=$&#123;JAVA_HOME&#125;</span></div><div class="line"><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/jdk-1.8.0_45</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置yarn-env.sh的JAVA_HOME</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="comment"># some Java parameters</span></div><div class="line"><span class="built_in">export</span> JAVA_HOME=/usr/<span class="built_in">local</span>/jdk-1.8.0_45</div><div class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$JAVA_HOME</span>"</span> != <span class="string">""</span> ]; <span class="keyword">then</span></div><div class="line">  <span class="comment">#echo "run java in $JAVA_HOME"</span></div><div class="line">  JAVA_HOME=<span class="variable">$JAVA_HOME</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="NameNode-的格式化"><a href="#NameNode-的格式化" class="headerlink" title="NameNode 的格式化"></a>NameNode 的格式化</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ hadoop hdfs -format</div></pre></td></tr></table></figure>
+<p>成功的话，会看到 “successfully formatted” 和 “Exitting with status 0” 的提示，若为 “Exitting with status 1” 则是出错。</p>
+<h3 id="开启-NameNode-、DataNode-守护进程-和YARN"><a href="#开启-NameNode-、DataNode-守护进程-和YARN" class="headerlink" title="开启 NameNode 、DataNode 守护进程 和YARN"></a>开启 NameNode 、DataNode 守护进程 和YARN</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ start-dfs.sh</div><div class="line">$ start-yarn.sh</div></pre></td></tr></table></figure>
+<p>通过jps 来判断是否成功启动<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[hadoop@osd01 root]$ jps</div><div class="line">8195 NodeManager</div><div class="line">8106 ResourceManager</div><div class="line">7707 NameNode</div><div class="line">7821 DataNode</div><div class="line">7965 SecondaryNameNode</div><div class="line">10382 Jps</div></pre></td></tr></table></figure></p>
+<p>若成功启动则会列出如下进程:  NameNode 、DataNode、SecondaryNameNode、NodeManager、ResourceManager</p>
+<h2 id="安装Hbase"><a href="#安装Hbase" class="headerlink" title="安装Hbase"></a><strong>安装Hbase</strong></h2><h3 id="下载hbase-1-2-3-bin-tar-gz包"><a href="#下载hbase-1-2-3-bin-tar-gz包" class="headerlink" title="下载hbase-1.2.3-bin.tar.gz包"></a>下载hbase-1.2.3-bin.tar.gz包</h3><p>下载的hbase版本需要与安装的hadoop匹配，具体参考下面的链接<br><a href="https://hbase.apache.org/book.html#configuration" target="_blank" rel="external">hbase-config</a></p>
+<h3 id="解压并修改文件权限-1"><a href="#解压并修改文件权限-1" class="headerlink" title="解压并修改文件权限"></a>解压并修改文件权限</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ tar -zxvf hbase-1.2.3-bin.tar.gz -C /usr/local/    # 解压到/usr/local中</div><div class="line">$ cd /usr/local/</div><div class="line">$ sudo ln -s hbase-1.2.3 hbase</div><div class="line">$ sudo chown -R hadoop:hadoop ./hbase        # 修改文件权限</div></pre></td></tr></table></figure>
+<h3 id="配置环境变量-1"><a href="#配置环境变量-1" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ sudo vim /etc/profile</div></pre></td></tr></table></figure>
+<p>添加如下内容<br><figure class="highlight vim"><table><tr><td class="code"><pre><div class="line">#hbase Env</div><div class="line">export HBASE_HOME=/usr/local/hbase</div><div class="line">export PATH=$PATH:$HBASE_HOME/bin</div></pre></td></tr></table></figure></p>
+<h3 id="测试hadoop是否可用-1"><a href="#测试hadoop是否可用-1" class="headerlink" title="测试hadoop是否可用"></a>测试hadoop是否可用</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[hadoop@osd01 root]$ hbase version</div><div class="line">HBase 1.2.3</div><div class="line">Source code repository git://kalashnikov.att.net/Users/stack/checkouts/hbase.git.commit revision=bd63744624a26dc3350137b564fe746df7a721a4</div><div class="line">Compiled by stack on Mon Aug 29 15:13:42 PDT 2016</div><div class="line">From source with checksum 0ca49367ef6c3a680888bbc4f1485d18</div></pre></td></tr></table></figure>
+<p>成功则会显示如上的Hbase版本信息</p>
+<h3 id="HBase伪分布式模式"><a href="#HBase伪分布式模式" class="headerlink" title="HBase伪分布式模式"></a>HBase伪分布式模式</h3><h4 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><ul>
+<li><p>修改hbase-env.sh<br>添加变量HBASE_CLASSPATH，并将路径设置为本机Hadoop安装目录下的conf目录（即{HADOOP_HOME}/conf）</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><div class="line">export JAVA_HOME=/usr/local/jdk-<span class="number">1.8</span>.<span class="number">0</span>_45</div><div class="line">export HBASE_CLASSPATH=/usr/hadoop/<span class="keyword">conf</span> </div><div class="line">export HBASE_MANAGES_ZK=true</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改hbase-site.xml<br>修改hbase.rootdir，将其指向localhost(与hdfs的端口保持一致)，并指定HBase在HDFS上的存储路径。将属性hbase.cluter.distributed设置为true。假设当前Hadoop集群运行在伪分布式模式下，且NameNode运行在9000端口；</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><div class="line"><span class="symbol">&lt;configuration&gt;</span></div><div class="line">    <span class="symbol">&lt;property&gt;</span></div><div class="line">        <span class="symbol">&lt;name&gt;</span>hbase.rootdir&lt;/name&gt;</div><div class="line">        <span class="symbol">&lt;value&gt;</span>hdf<span class="variable">s:</span>//localhos<span class="variable">t:9000</span>/hbase&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">    <span class="symbol">&lt;property&gt;</span></div><div class="line">        <span class="symbol">&lt;name&gt;</span>hbase.cluster.distributed&lt;/name&gt;</div><div class="line">        <span class="symbol">&lt;value&gt;</span>true&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="启动HBase"><a href="#启动HBase" class="headerlink" title="启动HBase"></a>启动HBase</h3><p>完成以上操作后启动HBase，启动顺序：先启动Hadoop–&gt;再启动HBase，关闭顺序：先关闭HBase–&gt;再关闭Hadoop。<br>假设hadoop已经启动。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[hadoop@osd01 hbase]$ start-hbase.sh</div><div class="line">localhost: starting zookeeper, logging to /usr/local/hbase/bin/../logs/hbase-hadoop-zookeeper-osd01.out</div><div class="line">starting master, logging to /usr/local/hbase/logs/hbase-hadoop-master-osd01.out</div><div class="line">Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0</div><div class="line">Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0</div><div class="line">starting regionserver, logging to /usr/local/hbase/logs/hbase-hadoop-1-regionserver-osd01.out</div><div class="line">[hadoop@osd01 hbase]$ jps</div><div class="line">23189 SecondaryNameNode</div><div class="line">28139 HQuorumPeer</div><div class="line">22908 NameNode</div><div class="line">23005 DataNode</div><div class="line">23341 ResourceManager</div><div class="line">28205 HMaster</div><div class="line">28333 HRegionServer</div><div class="line">23438 NodeManager</div><div class="line">28815 Jps</div></pre></td></tr></table></figure></p>
+<h3 id="进入shell模式"><a href="#进入shell模式" class="headerlink" title="进入shell模式"></a>进入shell模式</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[hadoop@osd01 hbase]$ hbase shell</div><div class="line">2016-10-31 11:07:31,779 WARN  [main] util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</div><div class="line">SLF4J: Class path contains multiple SLF4J bindings.</div><div class="line">SLF4J: Found binding in [jar:file:/usr/local/hbase-1.2.3/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]</div><div class="line">SLF4J: Found binding in [jar:file:/usr/local/hadoop-2.7.2/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]</div><div class="line">SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.</div><div class="line">SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]</div><div class="line">HBase Shell; enter &apos;help&lt;RETURN&gt;&apos; for list of supported commands.</div><div class="line">Type &quot;exit&lt;RETURN&gt;&quot; to leave the HBase Shell</div><div class="line">Version 1.2.3, rbd63744624a26dc3350137b564fe746df7a721a4, Mon Aug 29 15:13:42 PDT 2016</div><div class="line"></div><div class="line">hbase(main):001:0&gt;</div></pre></td></tr></table></figure>
+<h3 id="查看HDFS的HBase数据库文件"><a href="#查看HDFS的HBase数据库文件" class="headerlink" title="查看HDFS的HBase数据库文件"></a>查看HDFS的HBase数据库文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[hadoop@osd01 hbase]$ hadoop fs -ls /hbase</div><div class="line">16/10/31 11:08:41 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</div><div class="line">Found 7 items</div><div class="line">drwxr-xr-x   - hadoop supergroup          0 2016-10-31 11:06 /hbase/.tmp</div><div class="line">drwxr-xr-x   - hadoop supergroup          0 2016-10-31 11:06 /hbase/MasterProcWALs</div><div class="line">drwxr-xr-x   - hadoop supergroup          0 2016-10-31 11:06 /hbase/WALs</div><div class="line">drwxr-xr-x   - hadoop supergroup          0 2016-10-31 10:36 /hbase/data</div><div class="line">-rw-r--r--   1 hadoop supergroup         42 2016-10-31 10:35 /hbase/hbase.id</div><div class="line">-rw-r--r--   1 hadoop supergroup          7 2016-10-31 10:35 /hbase/hbase.version</div><div class="line">drwxr-xr-x   - hadoop supergroup          0 2016-10-31 11:06 /hbase/oldWALs</div></pre></td></tr></table></figure>
+<h2 id="hive-安装"><a href="#hive-安装" class="headerlink" title="hive 安装"></a><strong>hive 安装</strong></h2><hr>
+<p><a href="http://www.powerxing.com/install-hadoop-in-centos/" target="_blank" rel="external">参考链接1</a><br><a href="http://blog.csdn.net/andie_guo/article/details/44086389" target="_blank" rel="external">参考链接2</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;环境&quot;&gt;&lt;a href=&quot;#环境&quot; class=&quot;headerlink&quot; title=&quot;环境&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;centos7 + hadoop2.7.2 + jdk1.8 + hbase1.2.3&lt;/p&gt;
+&lt;h2 i
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 反射机制</title>
+    <link href="http://yoursite.com/2016/10/27/Java%20%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"/>
+    <id>http://yoursite.com/2016/10/27/Java 反射机制/</id>
+    <published>2016-10-27T07:39:49.000Z</published>
+    <updated>2016-12-08T08:00:28.229Z</updated>
+    
+    <content type="html"><![CDATA[<p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。<br>Java反射机制主要提供了以下功能： 在运行时判断任意一个对象所属的类；在运行时构造任意一个类的对象；在运行时判断任意一个类所具有的成员变量和方法；在运行时调用任意一个对象的方法；生成动态代理…</p>
+<h2 id="得到某个对象属性"><a href="#得到某个对象属性" class="headerlink" title="得到某个对象属性"></a><strong>得到某个对象属性</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getProperty</span><span class="params">(Object owner, String fieldName)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">       Class ownerClass = owner.getClass();</div><div class="line">       Field field = ownerClass.getField(fieldName);<span class="comment">// 属性必须是public，否则会报java.lang.NoSuchFieldException异常</span></div><div class="line">       Object property = field.get(owner);</div><div class="line">       <span class="keyword">return</span> property;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h2 id="得到某个类的静态属性"><a href="#得到某个类的静态属性" class="headerlink" title="得到某个类的静态属性"></a><strong>得到某个类的静态属性</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getStaticProperty</span><span class="params">(String className, String fieldName)</span></span></div><div class="line">        <span class="keyword">throws</span> Exception &#123;</div><div class="line">    Class ownerClass = Class.forName(className);</div><div class="line">    Field field = ownerClass.getField(fieldName);</div><div class="line">    Object property = field.get(ownerClass); <span class="comment">//因为该属性是静态的，所以直接从类的Class里取。</span></div><div class="line">    <span class="keyword">return</span> property;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="执行某对象的方法"><a href="#执行某对象的方法" class="headerlink" title="执行某对象的方法"></a><strong>执行某对象的方法</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">invokeMethod</span><span class="params">(Object owner, String methodName, Object[] args)</span></span></div><div class="line">        <span class="keyword">throws</span> Exception &#123;</div><div class="line">    Class ownerClass = owner.getClass();</div><div class="line">    Class[] argsClass = <span class="keyword">new</span> Class[args.length];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = args.length; i &lt; j; i++) &#123;</div><div class="line">        argsClass[i] = args[i].getClass();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通过methodName和参数的argsClass（方法中的参数类型集合）数组得到要执行的Method。</span></div><div class="line">    Method method = ownerClass.getMethod(methodName, argsClass);</div><div class="line">    <span class="comment">// 执行该Method.invoke方法的参数是执行这个方法的对象owner，和参数数组args，</span></div><div class="line">    <span class="comment">// 可以这么理解：owner对象中带有参数args的method方法。返回值是Object，也既是该方法的返回值。</span></div><div class="line">    <span class="keyword">return</span> method.invoke(owner, args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="执行某个类的静态方法"><a href="#执行某个类的静态方法" class="headerlink" title="执行某个类的静态方法"></a><strong>执行某个类的静态方法</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">invokeStaticMethod</span><span class="params">(Object owner, String methodName, Object[] args)</span></span></div><div class="line">        <span class="keyword">throws</span> Exception &#123;</div><div class="line">    Class ownerClass = owner.getClass();</div><div class="line">    Class[] argsClass = <span class="keyword">new</span> Class[args.length];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = args.length; i &lt; j; i++) &#123;</div><div class="line">        argsClass[i] = args[i].getClass();</div><div class="line">    &#125;</div><div class="line">    Method method = ownerClass.getMethod(methodName,argsClass);</div><div class="line">    <span class="comment">// 基本的原理和第3点相同，不同点是最后一行，invoke的一个参数是null，因为这是静态方法，不需要借助实例运行。</span></div><div class="line">    <span class="keyword">return</span> method.invoke(<span class="keyword">null</span>,args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="判断是否为某个类的实例"><a href="#判断是否为某个类的实例" class="headerlink" title="判断是否为某个类的实例"></a><strong>判断是否为某个类的实例</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInstance</span><span class="params">(Object obj, Class cls)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> cls.isInstance(obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Method-invoke"><a href="#Method-invoke" class="headerlink" title="Method.invoke"></a><strong>Method.invoke</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InvokeTest</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> sum;</div><div class="line">    String msg;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> param1, <span class="keyword">int</span> param2)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> param1 + param2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">echo</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"echo "</span> + msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSum</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> sum;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSum</span><span class="params">(<span class="keyword">int</span> sum)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.sum = sum;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.msg = msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        Class&lt;InvokeTest&gt; classType = InvokeTest.class;</div><div class="line">        InvokeTest invokerTester = classType.newInstance();</div><div class="line"></div><div class="line">        Method addMethod = classType.getMethod(<span class="string">"add"</span>, <span class="keyword">int</span>.class,</div><div class="line">                <span class="keyword">int</span>.class);</div><div class="line">        <span class="comment">// Method类的invoke(Object obj,Object args[])方法接收的参数必须为对象，</span></div><div class="line">        <span class="comment">// 如果参数为基本类型数据，必须转换为相应的包装类型的对象。invoke()方法的返回值总是对象，</span></div><div class="line">        <span class="comment">// 如果实际被调用的方法的返回类型是基本类型数据，那么invoke()方法会把它转换为相应的包装类型的对象，再将其返回</span></div><div class="line">        Object result = addMethod.invoke(invokerTester, <span class="number">100</span>, <span class="number">200</span>);</div><div class="line">        System.out.println(result);</div><div class="line"></div><div class="line">        Method echoMethod = classType.getMethod(<span class="string">"echo"</span>, String.class);</div><div class="line">        result = echoMethod.invoke(invokerTester, <span class="string">"hello"</span>);</div><div class="line">        System.out.println(result);</div><div class="line"></div><div class="line">        Method setSumMethod = classType.getMethod(<span class="string">"setSum"</span>, <span class="keyword">int</span>.class);</div><div class="line">        setSumMethod.invoke(invokerTester, <span class="number">12</span>);</div><div class="line">        System.out.println(invokerTester.getSum());</div><div class="line"></div><div class="line">        Method setMsgMethod = classType.getMethod(<span class="string">"setMsg"</span>, String.class);</div><div class="line">        setMsgMethod.invoke(invokerTester, <span class="string">"Hello world!"</span>);</div><div class="line">        System.out.println(invokerTester.getMsg());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="http://azrael6619.iteye.com/blog/429797" target="_blank" rel="external">参考链接</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。&lt;br&gt;Java反射机制主要提供了以下功能： 在运行时判断任意一个对象所
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="反射" scheme="http://yoursite.com/tags/%E5%8F%8D%E5%B0%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 磁盘管理</title>
+    <link href="http://yoursite.com/2016/10/26/Linux-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/"/>
+    <id>http://yoursite.com/2016/10/26/Linux-磁盘管理/</id>
+    <published>2016-10-26T08:07:42.000Z</published>
+    <updated>2017-01-05T08:49:07.123Z</updated>
+    
+    <content type="html"><![CDATA[<p>Linux磁盘管理常用的命令：<strong>df</strong>、<strong>du</strong>、<strong>fdisk</strong>.</p>
+<h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><p>df命令可以获取硬盘被占用了多少空间，目前还剩下多少空间等信息，它也可以显示所有文件系统对i节点和磁盘块的使用情况。<br>df命令各个选项的含义如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-a：显示所有文件系统的磁盘使用情况，包括0块（block）的文件系统，如/proc文件系统。</div><div class="line">-k：以k字节为单位显示。</div><div class="line">-i：显示i节点信息，而不是磁盘块。</div><div class="line">-t：显示各指定类型的文件系统的磁盘空间使用情况。</div><div class="line">-x：列出不是某一指定类型文件系统的磁盘空间使用情况（与t选项相反）。</div><div class="line">-T：显示文件系统类型。</div></pre></td></tr></table></figure></p>
+<h2 id="du"><a href="#du" class="headerlink" title="du"></a>du</h2><p>du的英文原义为“disk usage”，含义为显示磁盘空间的使用情况，统计目录（或文件）所占磁盘空间的大小。该命令的功能是逐级进入指定目录的每一个子目录并显示该目录占用文件系统数据块（1024字节）的情况。若没有给出指定目录，则对当前目录进行统计。<br>df命令的各个选项含义如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">-s：对每个Names参数只给出占用的数据块总数。</div><div class="line">-a：递归地显示指定目录中各文件及子目录中各文件占用的数据块数。若既不指定-s，也不指定-a，则只显示Names中的每一个目录及其中的各子目录所占的磁盘块数。</div><div class="line">-b：以字节为单位列出磁盘空间使用情况（系统默认以k字节为单位）。</div><div class="line">-k：以<span class="number">1024</span>字节为单位列出磁盘空间使用情况。</div><div class="line">-c：最后再加上一个总计（系统默认设置）。</div><div class="line">-l：计算所有的文件大小，对硬链接文件，则计算多次。</div><div class="line">-x：跳过在不同文件系统上的目录不予统计。</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//列出各文件系统的磁盘空间使用情况</div><div class="line">#df</div><div class="line">Filesystem           1k-blocks      Used   Available Use% Mounted on</div><div class="line">/dev/hda5               381139     332921     28540  93% /</div><div class="line">/dev/hda1                46636      6871     37357  16% /boot</div><div class="line">/dev/hda3             10041144   6632528   2898556  70% /home</div><div class="line">none                    127372         0    127372   0% /dev/shm</div><div class="line">/dev/hda2             27474876  24130460   1948772  93% /usr</div><div class="line">/dev/hda6               256667    232729     10686  96% /var</div></pre></td></tr></table></figure>
+<p>第1列是代表文件系统对应的设备文件的路径名（一般是硬盘上的分区）；第2列给出分区包含的数据块（1024字节）的数目；第3，4列分别表示已用的和可用的数据块数目。<br>用户也许会感到奇怪，第3，4列块数之和不等于第2列中的块数。这是因为默认的每个分区都留了少量空间供系统管理员使用的缘故。即使遇到普通用户空间已满的情况，管理员仍能登录和留有解决问题所需的工作空间。清单中Use%列表示普通用户空间使用的百分比，若这一数字达到100%，分区仍然留有系统管理员使用的空间。<br>最后，Mounted on列表示文件系统的安装点。</p>
+<h2 id="fisk"><a href="#fisk" class="headerlink" title="fisk"></a>fisk</h2><p>fdisk可以划分磁盘分区。下面给出使用Fdisk命令进行磁盘分区的操作步骤。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Linux磁盘管理常用的命令：&lt;strong&gt;df&lt;/strong&gt;、&lt;strong&gt;du&lt;/strong&gt;、&lt;strong&gt;fdisk&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;df&quot;&gt;&lt;a href=&quot;#df&quot; class=&quot;headerlink&quot; title=&quot;df
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+      <category term="磁盘" scheme="http://yoursite.com/tags/%E7%A3%81%E7%9B%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM原理</title>
+    <link href="http://yoursite.com/2016/10/25/JVM%E5%8E%9F%E7%90%86/"/>
+    <id>http://yoursite.com/2016/10/25/JVM原理/</id>
+    <published>2016-10-25T09:15:18.000Z</published>
+    <updated>2016-12-08T08:00:28.228Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="JVM-原理"><a href="#JVM-原理" class="headerlink" title="JVM 原理"></a>JVM 原理</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。</p>
+<p>java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。</p>
+<h3 id="JAVA运行过程"><a href="#JAVA运行过程" class="headerlink" title="JAVA运行过程"></a>JAVA运行过程</h3><p>Java语言写的源程序通过Java编译器，编译成与平台无关的‘字节码程序’(.class文件，也就是0，1二进制程序)，然后在OS之上的Java解释器中解释执行。</p>
+<p><img src="http://oflrm5g9z.bkt.clouddn.com/16-10-25/87103552.jpg" alt="java运行过程"></p>
+<h3 id="JVM执行过程"><a href="#JVM执行过程" class="headerlink" title="JVM执行过程"></a>JVM执行过程</h3><ul>
+<li>加载 .class文件</li>
+<li>管理并分配内存</li>
+<li>执行垃圾收集</li>
+</ul>
+<p><img src="http://oflrm5g9z.bkt.clouddn.com/16-10-25/46394905.jpg" alt="jvm运行过程"></p>
+<p>JRE/JDK（java运行时环境）由JVM构造JAVA运行程序</p>
+<p><a href="http://www.codeceo.com/article/jvm-stack-heap.html" target="_blank" rel="external">参考链接</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;JVM-原理&quot;&gt;&lt;a href=&quot;#JVM-原理&quot; class=&quot;headerlink&quot; title=&quot;JVM 原理&quot;&gt;&lt;/a&gt;JVM 原理&lt;/h2&gt;&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="jvm" scheme="http://yoursite.com/tags/jvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RabbitMQ下的生产消费者模式与订阅发布模式</title>
+    <link href="http://yoursite.com/2016/07/21/Spring%20MVC%20%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/"/>
+    <id>http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/</id>
+    <published>2016-07-21T02:08:09.000Z</published>
+    <updated>2017-02-15T09:47:04.882Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Web开发-请求响应模型"><a href="#Web开发-请求响应模型" class="headerlink" title="Web开发-请求响应模型"></a>Web开发-请求响应模型</h2><p><center><img src="http://static.oschina.net/uploads/space/2016/0721/193337_5TaM_2302941.png" alt="请求响应模型"></center></p>
+<ol>
+<li>web客户端（如：浏览器）发起请求，如访问www.baidu.com</li>
+<li>web服务器端（如：tomcat）接收请求，处理请求，最后产生响应</li>
+<li>web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）<h2 id="Web-MVC概述"><a href="#Web-MVC概述" class="headerlink" title="Web MVC概述"></a>Web MVC概述</h2><center><img src="http://static.oschina.net/uploads/space/2016/0721/194538_86Xj_2302941.png" alt=" MVC概述"></center><br><strong>Model（模型）</strong>：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 JavaBean 组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。<br><strong>View（视图）</strong>：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。<br><strong>Controller（控制器）</strong>：接收用户请求，委托给模型进行处理（状态改变） ，处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。<h2 id="Spring-MVC-架构"><a href="#Spring-MVC-架构" class="headerlink" title="Spring MVC 架构"></a>Spring MVC 架构</h2><h3 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h3><center><img src="http://static.oschina.net/uploads/space/2016/0721/194950_U1nS_2302941.png" alt=" 请求处理过程"></center><br>执行步骤如下：</li>
+<li>首先用户发送请求————&gt;前端控制器，前端控制器根据请求信息（如 URL）来决定选择哪一个页面控制器进行处理并把请求委托给它；上图中的 1、2 步骤；</li>
+<li>页面控制器接收到请求后，进行功能处理，首先需要收集和绑定请求参数到一个对象，并进行验证，然后将该对象对象委托给业务对象进行处理；处理完毕后返回一个 ModelAndView（模型数据和逻辑视图名） ；上图中的 3、4、5 步骤；</li>
+<li>前端控制器收回控制权，然后根据返回的逻辑视图名，选择相应的视图进行渲染，并把模型数据传入以便视图渲染；上图 中的步骤 6、7；</li>
+<li>前端控制器再次收回控制权，将响应返回给用户，图 2-1 中的步骤 8；至此整个结束。<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><center><img src="http://static.oschina.net/uploads/space/2016/0721/195034_qV42_2302941.png" alt=" 核心架构"></center><br>具体流程步骤：</li>
+<li>首先用户发送请求——&gt;DispatcherServlet，前端控制器收到请求后自己不进行处理，而是委托给其他的解析器进行处理，作为统一访问点，进行全局的流程控制；</li>
+<li>DispatcherServlet——&gt;Handlermapping（请求到处理器的映射），HandlerMapping 将会把请求映射为 HandlerExecutionChain 对象（包含一个 Handler 处理器（页面控制器）对象、多个 HandlerInterceptor 拦截器）对象，通过这种策略模式，很容易添加新的映射策略；</li>
+<li>DispatcherServlet——&gt;HandlerAdapter，HandlerAdapter 将会把处理器包装为适配器，从而支持多种类型的处理器，即适配器设计模式的应用，从而很容易支持很多类型的处理器；</li>
+<li>HandlerAdapter——&gt;处理器功能处理方法的调用，HandlerAdapter 将会根据适配的结果调用真正的处理器的功能处理方法，完成功能处理；并返回一个 ModelAndView 对象（包含模型数据、逻辑视图名）；</li>
+<li>ModelAndView 的逻辑视图名——&gt; ViewResolver， ViewResolver 将把逻辑视图名解析为具体的 View，通过这种策略模式，很容易更换其他视图技术；</li>
+<li>View——&gt;渲染，View 会根据传进来的 Model 模型数据进行渲染，此处的 Model 实际是一个 Map 数据结构，因此很容易支持其他视图技术；</li>
+<li>返回控制权给 DispatcherServlet，由 DispatcherServlet 返回响应给用户，到此一个流程结束。<h2 id="入门（Hello）"><a href="#入门（Hello）" class="headerlink" title="入门（Hello）"></a>入门（Hello）</h2><h3 id="前端控制器（DispatcherServlet）配置"><a href="#前端控制器（DispatcherServlet）配置" class="headerlink" title="前端控制器（DispatcherServlet）配置"></a>前端控制器（DispatcherServlet）配置</h3>web.xml 配置<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!--前端控制器--&gt;</div><div class="line">&lt;servlet&gt;</div><div class="line">    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;</div><div class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div><div class="line">    &lt;init-param&gt;</div><div class="line">        &lt;!--参数定义了要装入的 Spring 配置文件。--&gt;</div><div class="line">        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;classpath:spring-mvc.xml&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">    &lt;!--</div><div class="line">        当值为0或者大于0时，表示容器在应用启动时就加载这个servlet；</div><div class="line">        当是一个负数时或者没有指定时，则指示容器在该servlet被选择时才加载。</div><div class="line">        正数的值越小，启动该servlet的优先级越高。</div><div class="line">    --&gt;</div><div class="line">    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</div><div class="line">&lt;/servlet&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="handlerMapping、handlerAdapter配置"><a href="#handlerMapping、handlerAdapter配置" class="headerlink" title="handlerMapping、handlerAdapter配置"></a>handlerMapping、handlerAdapter配置</h3><p>resources/spring-mvc.xml中配置handlerMapping、handlerAdapter<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 非注解式控制器 --&gt;</div><div class="line">    &lt;!-- 处理器映射解析器HandlerMapping --&gt;</div><div class="line">    &lt;bean class=&quot;org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping&quot;/&gt;</div><div class="line">    &lt;!-- 处理器适配器 --&gt;</div><div class="line">    &lt;bean class=&quot;org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter&quot;/&gt;</div><div class="line">    &lt;!-- 处理器 --&gt;</div><div class="line">    &lt;bean name=&quot;/hello&quot; class=&quot;com.zfy.demo.springmvc.controller.HelloController&quot;/&gt;</div><div class="line"></div><div class="line"></div><div class="line">    &lt;!-- 注解式控制器 --&gt;</div><div class="line">    &lt;!-- 开启注解式处理器支持(启用注解) 方式1 --&gt;</div><div class="line">    &lt;!--bean class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;/&gt;--&gt;</div><div class="line">    &lt;!--&lt;bean class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter&quot;/&gt;--&gt;</div><div class="line">    &lt;!-- 开启注解式处理器支持(启用注解) 方式2 --&gt;</div><div class="line">    &lt;!--&lt;mvc:annotation-driven /&gt;--&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="viewResolver"><a href="#viewResolver" class="headerlink" title="viewResolver"></a>viewResolver</h3><p>resources/spring-mvc.xml中配置viewResolver<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 视图分解器 --&gt;</div><div class="line">&lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;</div><div class="line">    &lt;property name=&quot;viewClass&quot; value=&quot;org.springframework.web.servlet.view.JstlView&quot;/&gt;</div><div class="line">    &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/jsp/&quot;/&gt;</div><div class="line">    &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="开发处理器-页面处理器"><a href="#开发处理器-页面处理器" class="headerlink" title="开发处理器/页面处理器"></a>开发处理器/页面处理器</h3><p>非注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class HelloController implements Controller &#123;</div><div class="line"></div><div class="line">    public ModelAndView handleRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception &#123;</div><div class="line">        //1、收集参数</div><div class="line">        //2、绑定参数到命令对象</div><div class="line">        //3、调用业务对象</div><div class="line">        //4、选择下一个页面</div><div class="line">        ModelAndView mv = new ModelAndView();</div><div class="line">        //添加模型数据 可以是任意的POJO对象</div><div class="line">        mv.addObject(&quot;message&quot;, &quot;Hello World!&quot;);</div><div class="line">        //设置逻辑视图名，视图解析器会根据该名字解析到具体的视图页面</div><div class="line">        mv.setViewName(&quot;/hello&quot;);</div><div class="line">        return mv;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p> <strong>ModelAndView</strong>：包含了视图要实现的模型数据和逻辑视图名；“mv.addObject(“message”, “Hello World!”);”表示添加模型数据，此处可以是任意 POJO 对象；“mv.setViewName(“/hello”);”表示设置逻辑视图名为“hello”，视图解析器会将其解析为具体的视图，如前边的视图解析器InternalResourceVi。wResolver 会将其解析为“WEB-INF/jsp/hello.jsp”。<br>注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Controller</div><div class="line">public class HelloController2 &#123;</div><div class="line">    @RequestMapping(value = &quot;/hello2&quot;)</div><div class="line">    public ModelAndView hello(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) &#123;</div><div class="line">        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</div><div class="line">        data.put(&quot;message&quot;, &quot;hello world 2&quot;);</div><div class="line">        return new ModelAndView(&quot;/hello&quot;, data);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="开发视图页面"><a href="#开发视图页面" class="headerlink" title="开发视图页面"></a>开发视图页面</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; %&gt;</div><div class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;</div><div class="line">    &lt;title&gt;Hello World&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">$&#123;message&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h3 id="运行流程分析"><a href="#运行流程分析" class="headerlink" title="运行流程分析"></a>运行流程分析</h3><p><center><img src="http://static.oschina.net/uploads/space/2016/0721/195819_3ktW_2302941.png" alt=" 运行流程分析"></center><br>运行步骤如下：</p>
+<ol>
+<li>首先用户发送请求 <a href="http://localhost:8080/hello——&gt;web" target="_blank" rel="external">http://localhost:8080/hello——&gt;web</a> 容器，web 容器根据“/hello”路径映射到DispatcherServlet（url-pattern 为/）进行处理；</li>
+<li>DispatcherServlet——&gt;BeanNameUrlHandlerMapping 进行请求到处理的映射，BeanNameUrlHandlerMapping 将“/hello”路径直接映射到名字为“/hello”的 Bean 进行处理，即 HelloWorldController，BeanNameUrlHandlerMapping将其包装为HandlerExecutionChain（只包括 HelloWorldController 处理器，没有拦截器） ；</li>
+<li>DispatcherServlet——&gt; SimpleControllerHandlerAdapter，SimpleControllerHandlerAdapter 将 HandlerExecutionChain中的处理器（HelloWorldController）适配为 SimpleControllerHandlerAdapter；</li>
+<li>SimpleControllerHandlerAdapter — — &gt; HelloWorldController 处 理 器 功 能 处 理 方 法 的 调 用 ，SimpleControllerHandlerAdapter 将会调用处理器的 handleRequest 方法进行功能处理，该处理方法返回一个 ModelAndView 给 DispatcherServlet；</li>
+<li>hello（ModelAndView 的逻辑视图名）——&gt;InternalResourceViewResolver， InternalResourceViewResolver 使用JstlView，具体视图页面在/WEB-INF/jsp/hello.jsp；</li>
+<li>JstlView（/WEB-INF/jsp/hello.jsp）——&gt;渲染，将在处理器传入的模型数据(message=HelloWorld！)在视图中展示出来；</li>
+<li>返回控制权给 DispatcherServlet，由 DispatcherServlet 返回响应给用户，到此一个流程结束。<h2 id="post中文乱码解决方案"><a href="#post中文乱码解决方案" class="headerlink" title="post中文乱码解决方案"></a>post中文乱码解决方案</h2>spring Web MVC 框架提供了 org.springframework.web.filter.CharacterEncodingFilter 用于解决 POST 方式造成的中文乱码问题，具体配置如下：<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定UTF-8编码 --&gt;</div><div class="line">&lt;filter&gt;</div><div class="line">    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</div><div class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</div><div class="line">    &lt;init-param&gt;</div><div class="line">        &lt;param-name&gt;encoding&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;utf-8&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">&lt;/filter&gt;</div><div class="line">&lt;filter-mapping&gt;</div><div class="line">    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</div><div class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div><div class="line">&lt;/filter-mapping&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Web开发-请求响应模型&quot;&gt;&lt;a href=&quot;#Web开发-请求响应模型&quot; class=&quot;headerlink&quot; title=&quot;Web开发-请求响应模型&quot;&gt;&lt;/a&gt;Web开发-请求响应模型&lt;/h2&gt;&lt;p&gt;&lt;center&gt;&lt;img src=&quot;http://stati
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="spring" scheme="http://yoursite.com/tags/spring/"/>
+    
+      <category term="springmvc" scheme="http://yoursite.com/tags/springmvc/"/>
+    
+  </entry>
+  
+</feed>

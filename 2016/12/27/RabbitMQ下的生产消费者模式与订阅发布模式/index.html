@@ -1,0 +1,809 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="大数据,RabbitMQ,MQ," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zfy-非鱼" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="前言生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。
+数据接入一个用户行为采集系统，负责从App端采集用户点击行为数据。通常会将数据上报和数据处理分离开，即App端通过REST API上报数据，后端拿到数据后放入队列中就立刻返回，而数据处理则另外使用Worker从队列中取出数据来做，如下图所示：这样做的好处有：第一，功能分离，上报的API接口不关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ下的生产消费者模式与订阅发布模式">
+<meta property="og:url" content="http://yoursite.com/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/index.html">
+<meta property="og:site_name" content="zfy-非鱼">
+<meta property="og:description" content="前言生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。
+数据接入一个用户行为采集系统，负责从App端采集用户点击行为数据。通常会将数据上报和数据处理分离开，即App端通过REST API上报数据，后端拿到数据后放入队列中就立刻返回，而数据处理则另外使用Worker从队列中取出数据来做，如下图所示：这样做的好处有：第一，功能分离，上报的API接口不关">
+<meta property="og:image" content="http://p1.bqimg.com/567571/cc3a7aa1c382177e.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/9923cb1907dbecb8.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/4e6b03c753eec38a.jpg">
+<meta property="og:image" content="http://i1.piimg.com/567571/50d6da93fec7a4e5.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/13204f61927c1570.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/c820244527b48013.jpg">
+<meta property="og:image" content="http://www.itdadao.com/articles/c15a901095p0.html">
+<meta property="og:image" content="http://www.cnblogs.com/xiazh/archive/2011/04/29/2004859.html">
+<meta property="og:image" content="http://blog.csdn.net/lk10207160511/article/details/50334173">
+<meta property="og:updated_time" content="2017-02-16T09:15:16.590Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RabbitMQ下的生产消费者模式与订阅发布模式">
+<meta name="twitter:description" content="前言生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。
+数据接入一个用户行为采集系统，负责从App端采集用户点击行为数据。通常会将数据上报和数据处理分离开，即App端通过REST API上报数据，后端拿到数据后放入队列中就立刻返回，而数据处理则另外使用Worker从队列中取出数据来做，如下图所示：这样做的好处有：第一，功能分离，上报的API接口不关">
+<meta name="twitter:image" content="http://p1.bqimg.com/567571/cc3a7aa1c382177e.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/"/>
+
+
+  <title> RabbitMQ下的生产消费者模式与订阅发布模式 | zfy-非鱼 </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ba9c902639c6fd5f12fe2a3224e1169f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zfy-非鱼</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">子非鱼焉知鱼之乐</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RabbitMQ下的生产消费者模式与订阅发布模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-27T10:08:09+08:00" content="2016-12-27">
+              2016-12-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术积累/" itemprop="url" rel="index">
+                    <span itemprop="name">技术积累</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/" class="leancloud_visitors" data-flag-title="RabbitMQ下的生产消费者模式与订阅发布模式">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。</p>
+<h2 id="数据接入"><a href="#数据接入" class="headerlink" title="数据接入"></a>数据接入</h2><p>一个用户行为采集系统，负责从App端采集用户点击行为数据。通常会将数据上报和数据处理分离开，即App端通过REST API上报数据，后端拿到数据后放入队列中就立刻返回，而数据处理则另外使用Worker从队列中取出数据来做，如下图所示：<br><img src="http://p1.bqimg.com/567571/cc3a7aa1c382177e.jpg" alt=""><br>这样做的好处有：第一，功能分离，上报的API接口不关心数据处理功能，只负责接入数据；第二，数据缓冲，数据上报的速率是不可控的，取决于用户使用频率，采用该模式可以一定程度地缓冲数据；第三，易于扩展，在数据量大时，通过增加数据处理Worker来扩展，提高处理速率。这便是典型的<strong>生产消费者模式</strong>，数据上报为生产者，数据处理为消费者。</p>
+<h2 id="事件分发"><a href="#事件分发" class="headerlink" title="事件分发"></a>事件分发</h2><p>一个电商系统，那么，用户“收藏”、“下单”、“付款”等行为都是非常重要的事件，通常后端服务在完成相应的功能处理外，还需要在这些事件点上做很多其他处理动作，比如发送短信通知、记录用户积分等等。我们可以将这些额外的处理动作放到每个模块中，但这并不是优雅的实现，不利于功能解耦和代码维护。<br>??我们需要的是一个事件分发系统，在各个功能模块中将对应的事件发布出来，由对其感兴趣的处理者进行处理。这里涉及两个角色：A对B感兴趣，A是处理者，B是事件，由事件处理器完成二者的绑定，并向消息中心订阅事件。服务模块是后端的业务逻辑服务，在不同的事件点发布事件，事件经过消息中心分发给事件处理器对应的处理者。整个流程如下图所示。这边是典型的<strong>订阅发布模式</strong>。<br><img src="http://p1.bqimg.com/567571/9923cb1907dbecb8.jpg" alt=""></p>
+<h1 id="RabbitMQ核心概念"><a href="#RabbitMQ核心概念" class="headerlink" title="RabbitMQ核心概念"></a>RabbitMQ核心概念</h1><h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><p>RabbitMQ是基于AMQP协议来实现的消息中间件。AMQP，类似于HTTP协议，也是一个应用层的协议，网络层使用TCP来通信。因此，RabbitMQ也是典型的C-S模型，准确地说是C-S-C模型，因为伴随着RabbitMQ的使用，总是会有Producer与Consumer两个Client和一个Broker Server。<br><img src="http://p1.bqimg.com/567571/4e6b03c753eec38a.jpg" alt=""><br>Client要与Server进行通信，就必须先建立连接，RabbitMQ中有Connection与Channel两个概念，前者就是一个TCP连接，后者是在这个连接上的虚拟概念，负责逻辑上的数据传递，因此，为了节省资源，一般在一个客户端中建立一个Connection，每次使用时再分配一个Channel即可。</p>
+<h2 id="消息体"><a href="#消息体" class="headerlink" title="消息体"></a>消息体</h2><p>Message是RabbitMQ中的消息体概念。类似HTTP传输中，有header和body两部分数据，Message中也有Attributes和Payload两部分数据，前者是一些元信息，后者是传递的消息数据实体。</p>
+<h2 id="消息投递"><a href="#消息投递" class="headerlink" title="消息投递"></a>消息投递</h2><p>Exchange、Queue与Routing Key三个概念是理解RabbitMQ消息投递的关键。RabbitMQ中一个核心的原则是，消息不能直接投递到Queue中。Producer只能将自己的消息投递到Exchange中，由Exchange按照routing_key投递到对应的Queue中，具体的架构参见下图。细细品味就会体会到这样设计的精妙之处。<br><img src="http://i1.piimg.com/567571/50d6da93fec7a4e5.jpg" alt=""></p>
+<ol>
+<li>在Consumer Worker中，声明自己对哪个Exchange感兴趣，并将自己的Queue绑定到自己感兴趣的一组routing_key上，建立相应的映射关系；</li>
+<li>在Producer中，将消息投递一个Exchange中，并指明它的routing_key。由此可见，Queue这个概念只是对Consumer可见，Producer并不关心消息被投递到哪个Queue中。 </li>
+<li>看过RabbitMQ的”Hello World”教程的童鞋可能会发现在那里面的图中并没有看到Exchange和routing_key的踪迹，但这并不意味着RabbitMQ可以支持直接将消息投递到Queue中，而是在内部使用了默认的Exchange和routing_key了。默认情况下，RabbitMQ使用名称为“amq.direct”的Direct Exchange，routing_key默认名字与Queue保持一致。<br>搞清楚上述概念，就不难理解Exchange的四种类型了。Direct、Fanout、Topic、Headers，区别在于如何将消息从Exchange投递到Queue中。Direct使用具体的routing_key来投递；Fanout则忽略routing_key，直接广播给所有的Queue；Topic是使用模糊匹配来对一组routing_key进行投递；Headers也是忽略routing_key，使用消息中的Headers信息来投递。<h2 id="消息可靠性"><a href="#消息可靠性" class="headerlink" title="消息可靠性"></a>消息可靠性</h2></li>
+<li>消息确认机制。Consumer处理完消息后，需要发送确认消息给Broker Server，可以选择“确认接收”、“丢弃”、“重新投递”三种方式。如果Consumer在Broker Server收到确认消息之前挂了，Broker Server便会重新投递该消息。</li>
+<li>可以选择数据持久化，这样即使RabbitMQ重启，也不会丢失消息。<h1 id="生产消费者模式"><a href="#生产消费者模式" class="headerlink" title="生产消费者模式"></a>生产消费者模式</h1><img src="http://p1.bqimg.com/567571/13204f61927c1570.jpg" alt=""><br>“数据接入”的场景，架构如上图所示，对于上报的数据，如果是special的行为，需要优先处理。从上图可以看到，数据上报端负责将数据投递到RabbitMQ对应的Exchange，并指明routing_key是common还是special。数据处理端，可以根据情况启多个Woker来消费数据，但至少需要两个，一个用来处理common数据，一个用来处理special的数据。<h1 id="订阅发布模式"><a href="#订阅发布模式" class="headerlink" title="订阅发布模式"></a>订阅发布模式</h1><img src="http://p1.bqimg.com/567571/c820244527b48013.jpg" alt=""><br>“事件分发”的场景，架构如上图所示，使用event name/id来作为RabbitMQ的routing key的名字。Event Processor 01对event 01 和event 02感兴趣，则在启动Consumer Worker时，将自己的Queue绑定到这两个routing key上即可，其他Event Processor也是如此，这样便完成了事件的订阅。当有事件发布时，消息便会按照event name/id被投递到对应的Queue中。 <h1 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h1><img src="http://www.itdadao.com/articles/c15a901095p0.html" alt=""><br><img src="http://www.cnblogs.com/xiazh/archive/2011/04/29/2004859.html" alt=""><br><img src="http://blog.csdn.net/lk10207160511/article/details/50334173" alt=""></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag">#大数据</a>
+          
+            <a href="/tags/RabbitMQ/" rel="tag">#RabbitMQ</a>
+          
+            <a href="/tags/MQ/" rel="tag">#MQ</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/08/hadoop&hbase自动化部署/" rel="next" title="Hadoop & Hbase 自动化部署">
+                <i class="fa fa-chevron-left"></i> Hadoop & Hbase 自动化部署
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/30/hive & hbase/" rel="prev" title="hive & hbase">
+                hive & hbase <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/"
+     data-title="RabbitMQ下的生产消费者模式与订阅发布模式"
+     data-content=""
+     data-url="http://yoursite.com/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/"
+           data-title="RabbitMQ下的生产消费者模式与订阅发布模式" data-url="http://yoursite.com/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Zhifeiyu" />
+          <p class="site-author-name" itemprop="name">Zhifeiyu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据接入"><span class="nav-number">1.1.</span> <span class="nav-text">数据接入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件分发"><span class="nav-number">1.2.</span> <span class="nav-text">事件分发</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RabbitMQ核心概念"><span class="nav-number">2.</span> <span class="nav-text">RabbitMQ核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通信方式"><span class="nav-number">2.1.</span> <span class="nav-text">通信方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息体"><span class="nav-number">2.2.</span> <span class="nav-text">消息体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息投递"><span class="nav-number">2.3.</span> <span class="nav-text">消息投递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息可靠性"><span class="nav-number">2.4.</span> <span class="nav-text">消息可靠性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生产消费者模式"><span class="nav-number">3.</span> <span class="nav-text">生产消费者模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#订阅发布模式"><span class="nav-number">4.</span> <span class="nav-text">订阅发布模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#消息持久化"><span class="nav-number">5.</span> <span class="nav-text">消息持久化</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhifeiyu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhifeiyu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("SiV3V3liAXpX9lFVvAt3VSKR-gzGzoHsz", "PwifGJsdtG3a8d55fWIxxFPu");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>

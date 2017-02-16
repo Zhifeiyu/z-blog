@@ -1,0 +1,831 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,spring,springmvc," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zfy-非鱼" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Web开发-请求响应模型
+
+web客户端（如：浏览器）发起请求，如访问www.baidu.com
+web服务器端（如：tomcat）接收请求，处理请求，最后产生响应
+web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）Web MVC概述Model（模型）：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 Ja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ下的生产消费者模式与订阅发布模式">
+<meta property="og:url" content="http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/index.html">
+<meta property="og:site_name" content="zfy-非鱼">
+<meta property="og:description" content="Web开发-请求响应模型
+
+web客户端（如：浏览器）发起请求，如访问www.baidu.com
+web服务器端（如：tomcat）接收请求，处理请求，最后产生响应
+web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）Web MVC概述Model（模型）：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 Ja">
+<meta property="og:image" content="http://static.oschina.net/uploads/space/2016/0721/193337_5TaM_2302941.png">
+<meta property="og:image" content="http://static.oschina.net/uploads/space/2016/0721/194538_86Xj_2302941.png">
+<meta property="og:image" content="http://static.oschina.net/uploads/space/2016/0721/194950_U1nS_2302941.png">
+<meta property="og:image" content="http://static.oschina.net/uploads/space/2016/0721/195034_qV42_2302941.png">
+<meta property="og:image" content="http://static.oschina.net/uploads/space/2016/0721/195819_3ktW_2302941.png">
+<meta property="og:updated_time" content="2017-02-15T09:47:04.882Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RabbitMQ下的生产消费者模式与订阅发布模式">
+<meta name="twitter:description" content="Web开发-请求响应模型
+
+web客户端（如：浏览器）发起请求，如访问www.baidu.com
+web服务器端（如：tomcat）接收请求，处理请求，最后产生响应
+web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）Web MVC概述Model（模型）：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 Ja">
+<meta name="twitter:image" content="http://static.oschina.net/uploads/space/2016/0721/193337_5TaM_2302941.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/"/>
+
+
+  <title> RabbitMQ下的生产消费者模式与订阅发布模式 | zfy-非鱼 </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ba9c902639c6fd5f12fe2a3224e1169f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zfy-非鱼</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">子非鱼焉知鱼之乐</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RabbitMQ下的生产消费者模式与订阅发布模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-21T10:08:09+08:00" content="2016-07-21">
+              2016-07-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术积累/" itemprop="url" rel="index">
+                    <span itemprop="name">技术积累</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/21/Spring MVC 框架及基本配置/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/Spring MVC 框架及基本配置/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/21/Spring MVC 框架及基本配置/" class="leancloud_visitors" data-flag-title="RabbitMQ下的生产消费者模式与订阅发布模式">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Web开发-请求响应模型"><a href="#Web开发-请求响应模型" class="headerlink" title="Web开发-请求响应模型"></a>Web开发-请求响应模型</h2><p><center><img src="http://static.oschina.net/uploads/space/2016/0721/193337_5TaM_2302941.png" alt="请求响应模型"></center></p>
+<ol>
+<li>web客户端（如：浏览器）发起请求，如访问www.baidu.com</li>
+<li>web服务器端（如：tomcat）接收请求，处理请求，最后产生响应</li>
+<li>web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）<h2 id="Web-MVC概述"><a href="#Web-MVC概述" class="headerlink" title="Web MVC概述"></a>Web MVC概述</h2><center><img src="http://static.oschina.net/uploads/space/2016/0721/194538_86Xj_2302941.png" alt=" MVC概述"></center><br><strong>Model（模型）</strong>：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 JavaBean 组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。<br><strong>View（视图）</strong>：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。<br><strong>Controller（控制器）</strong>：接收用户请求，委托给模型进行处理（状态改变） ，处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。<h2 id="Spring-MVC-架构"><a href="#Spring-MVC-架构" class="headerlink" title="Spring MVC 架构"></a>Spring MVC 架构</h2><h3 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h3><center><img src="http://static.oschina.net/uploads/space/2016/0721/194950_U1nS_2302941.png" alt=" 请求处理过程"></center><br>执行步骤如下：</li>
+<li>首先用户发送请求————&gt;前端控制器，前端控制器根据请求信息（如 URL）来决定选择哪一个页面控制器进行处理并把请求委托给它；上图中的 1、2 步骤；</li>
+<li>页面控制器接收到请求后，进行功能处理，首先需要收集和绑定请求参数到一个对象，并进行验证，然后将该对象对象委托给业务对象进行处理；处理完毕后返回一个 ModelAndView（模型数据和逻辑视图名） ；上图中的 3、4、5 步骤；</li>
+<li>前端控制器收回控制权，然后根据返回的逻辑视图名，选择相应的视图进行渲染，并把模型数据传入以便视图渲染；上图 中的步骤 6、7；</li>
+<li>前端控制器再次收回控制权，将响应返回给用户，图 2-1 中的步骤 8；至此整个结束。<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><center><img src="http://static.oschina.net/uploads/space/2016/0721/195034_qV42_2302941.png" alt=" 核心架构"></center><br>具体流程步骤：</li>
+<li>首先用户发送请求——&gt;DispatcherServlet，前端控制器收到请求后自己不进行处理，而是委托给其他的解析器进行处理，作为统一访问点，进行全局的流程控制；</li>
+<li>DispatcherServlet——&gt;Handlermapping（请求到处理器的映射），HandlerMapping 将会把请求映射为 HandlerExecutionChain 对象（包含一个 Handler 处理器（页面控制器）对象、多个 HandlerInterceptor 拦截器）对象，通过这种策略模式，很容易添加新的映射策略；</li>
+<li>DispatcherServlet——&gt;HandlerAdapter，HandlerAdapter 将会把处理器包装为适配器，从而支持多种类型的处理器，即适配器设计模式的应用，从而很容易支持很多类型的处理器；</li>
+<li>HandlerAdapter——&gt;处理器功能处理方法的调用，HandlerAdapter 将会根据适配的结果调用真正的处理器的功能处理方法，完成功能处理；并返回一个 ModelAndView 对象（包含模型数据、逻辑视图名）；</li>
+<li>ModelAndView 的逻辑视图名——&gt; ViewResolver， ViewResolver 将把逻辑视图名解析为具体的 View，通过这种策略模式，很容易更换其他视图技术；</li>
+<li>View——&gt;渲染，View 会根据传进来的 Model 模型数据进行渲染，此处的 Model 实际是一个 Map 数据结构，因此很容易支持其他视图技术；</li>
+<li>返回控制权给 DispatcherServlet，由 DispatcherServlet 返回响应给用户，到此一个流程结束。<h2 id="入门（Hello）"><a href="#入门（Hello）" class="headerlink" title="入门（Hello）"></a>入门（Hello）</h2><h3 id="前端控制器（DispatcherServlet）配置"><a href="#前端控制器（DispatcherServlet）配置" class="headerlink" title="前端控制器（DispatcherServlet）配置"></a>前端控制器（DispatcherServlet）配置</h3>web.xml 配置<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!--前端控制器--&gt;</div><div class="line">&lt;servlet&gt;</div><div class="line">    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;</div><div class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div><div class="line">    &lt;init-param&gt;</div><div class="line">        &lt;!--参数定义了要装入的 Spring 配置文件。--&gt;</div><div class="line">        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;classpath:spring-mvc.xml&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">    &lt;!--</div><div class="line">        当值为0或者大于0时，表示容器在应用启动时就加载这个servlet；</div><div class="line">        当是一个负数时或者没有指定时，则指示容器在该servlet被选择时才加载。</div><div class="line">        正数的值越小，启动该servlet的优先级越高。</div><div class="line">    --&gt;</div><div class="line">    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</div><div class="line">&lt;/servlet&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="handlerMapping、handlerAdapter配置"><a href="#handlerMapping、handlerAdapter配置" class="headerlink" title="handlerMapping、handlerAdapter配置"></a>handlerMapping、handlerAdapter配置</h3><p>resources/spring-mvc.xml中配置handlerMapping、handlerAdapter<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 非注解式控制器 --&gt;</div><div class="line">    &lt;!-- 处理器映射解析器HandlerMapping --&gt;</div><div class="line">    &lt;bean class=&quot;org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping&quot;/&gt;</div><div class="line">    &lt;!-- 处理器适配器 --&gt;</div><div class="line">    &lt;bean class=&quot;org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter&quot;/&gt;</div><div class="line">    &lt;!-- 处理器 --&gt;</div><div class="line">    &lt;bean name=&quot;/hello&quot; class=&quot;com.zfy.demo.springmvc.controller.HelloController&quot;/&gt;</div><div class="line"></div><div class="line"></div><div class="line">    &lt;!-- 注解式控制器 --&gt;</div><div class="line">    &lt;!-- 开启注解式处理器支持(启用注解) 方式1 --&gt;</div><div class="line">    &lt;!--bean class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;/&gt;--&gt;</div><div class="line">    &lt;!--&lt;bean class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter&quot;/&gt;--&gt;</div><div class="line">    &lt;!-- 开启注解式处理器支持(启用注解) 方式2 --&gt;</div><div class="line">    &lt;!--&lt;mvc:annotation-driven /&gt;--&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="viewResolver"><a href="#viewResolver" class="headerlink" title="viewResolver"></a>viewResolver</h3><p>resources/spring-mvc.xml中配置viewResolver<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 视图分解器 --&gt;</div><div class="line">&lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;</div><div class="line">    &lt;property name=&quot;viewClass&quot; value=&quot;org.springframework.web.servlet.view.JstlView&quot;/&gt;</div><div class="line">    &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/jsp/&quot;/&gt;</div><div class="line">    &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="开发处理器-页面处理器"><a href="#开发处理器-页面处理器" class="headerlink" title="开发处理器/页面处理器"></a>开发处理器/页面处理器</h3><p>非注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class HelloController implements Controller &#123;</div><div class="line"></div><div class="line">    public ModelAndView handleRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception &#123;</div><div class="line">        //1、收集参数</div><div class="line">        //2、绑定参数到命令对象</div><div class="line">        //3、调用业务对象</div><div class="line">        //4、选择下一个页面</div><div class="line">        ModelAndView mv = new ModelAndView();</div><div class="line">        //添加模型数据 可以是任意的POJO对象</div><div class="line">        mv.addObject(&quot;message&quot;, &quot;Hello World!&quot;);</div><div class="line">        //设置逻辑视图名，视图解析器会根据该名字解析到具体的视图页面</div><div class="line">        mv.setViewName(&quot;/hello&quot;);</div><div class="line">        return mv;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p> <strong>ModelAndView</strong>：包含了视图要实现的模型数据和逻辑视图名；“mv.addObject(“message”, “Hello World!”);”表示添加模型数据，此处可以是任意 POJO 对象；“mv.setViewName(“/hello”);”表示设置逻辑视图名为“hello”，视图解析器会将其解析为具体的视图，如前边的视图解析器InternalResourceVi。wResolver 会将其解析为“WEB-INF/jsp/hello.jsp”。<br>注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Controller</div><div class="line">public class HelloController2 &#123;</div><div class="line">    @RequestMapping(value = &quot;/hello2&quot;)</div><div class="line">    public ModelAndView hello(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) &#123;</div><div class="line">        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</div><div class="line">        data.put(&quot;message&quot;, &quot;hello world 2&quot;);</div><div class="line">        return new ModelAndView(&quot;/hello&quot;, data);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="开发视图页面"><a href="#开发视图页面" class="headerlink" title="开发视图页面"></a>开发视图页面</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; %&gt;</div><div class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;</div><div class="line">    &lt;title&gt;Hello World&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">$&#123;message&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h3 id="运行流程分析"><a href="#运行流程分析" class="headerlink" title="运行流程分析"></a>运行流程分析</h3><p><center><img src="http://static.oschina.net/uploads/space/2016/0721/195819_3ktW_2302941.png" alt=" 运行流程分析"></center><br>运行步骤如下：</p>
+<ol>
+<li>首先用户发送请求 <a href="http://localhost:8080/hello——&gt;web" target="_blank" rel="external">http://localhost:8080/hello——&gt;web</a> 容器，web 容器根据“/hello”路径映射到DispatcherServlet（url-pattern 为/）进行处理；</li>
+<li>DispatcherServlet——&gt;BeanNameUrlHandlerMapping 进行请求到处理的映射，BeanNameUrlHandlerMapping 将“/hello”路径直接映射到名字为“/hello”的 Bean 进行处理，即 HelloWorldController，BeanNameUrlHandlerMapping将其包装为HandlerExecutionChain（只包括 HelloWorldController 处理器，没有拦截器） ；</li>
+<li>DispatcherServlet——&gt; SimpleControllerHandlerAdapter，SimpleControllerHandlerAdapter 将 HandlerExecutionChain中的处理器（HelloWorldController）适配为 SimpleControllerHandlerAdapter；</li>
+<li>SimpleControllerHandlerAdapter — — &gt; HelloWorldController 处 理 器 功 能 处 理 方 法 的 调 用 ，SimpleControllerHandlerAdapter 将会调用处理器的 handleRequest 方法进行功能处理，该处理方法返回一个 ModelAndView 给 DispatcherServlet；</li>
+<li>hello（ModelAndView 的逻辑视图名）——&gt;InternalResourceViewResolver， InternalResourceViewResolver 使用JstlView，具体视图页面在/WEB-INF/jsp/hello.jsp；</li>
+<li>JstlView（/WEB-INF/jsp/hello.jsp）——&gt;渲染，将在处理器传入的模型数据(message=HelloWorld！)在视图中展示出来；</li>
+<li>返回控制权给 DispatcherServlet，由 DispatcherServlet 返回响应给用户，到此一个流程结束。<h2 id="post中文乱码解决方案"><a href="#post中文乱码解决方案" class="headerlink" title="post中文乱码解决方案"></a>post中文乱码解决方案</h2>spring Web MVC 框架提供了 org.springframework.web.filter.CharacterEncodingFilter 用于解决 POST 方式造成的中文乱码问题，具体配置如下：<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定UTF-8编码 --&gt;</div><div class="line">&lt;filter&gt;</div><div class="line">    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</div><div class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</div><div class="line">    &lt;init-param&gt;</div><div class="line">        &lt;param-name&gt;encoding&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;utf-8&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">&lt;/filter&gt;</div><div class="line">&lt;filter-mapping&gt;</div><div class="line">    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</div><div class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div><div class="line">&lt;/filter-mapping&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag">#java</a>
+          
+            <a href="/tags/spring/" rel="tag">#spring</a>
+          
+            <a href="/tags/springmvc/" rel="tag">#springmvc</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/25/JVM原理/" rel="prev" title="JVM原理">
+                JVM原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/07/21/Spring MVC 框架及基本配置/"
+     data-title="RabbitMQ下的生产消费者模式与订阅发布模式"
+     data-content=""
+     data-url="http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/21/Spring MVC 框架及基本配置/"
+           data-title="RabbitMQ下的生产消费者模式与订阅发布模式" data-url="http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Zhifeiyu" />
+          <p class="site-author-name" itemprop="name">Zhifeiyu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web开发-请求响应模型"><span class="nav-number">1.</span> <span class="nav-text">Web开发-请求响应模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-MVC概述"><span class="nav-number">2.</span> <span class="nav-text">Web MVC概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-MVC-架构"><span class="nav-number">3.</span> <span class="nav-text">Spring MVC 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#请求处理过程"><span class="nav-number">3.1.</span> <span class="nav-text">请求处理过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心架构"><span class="nav-number">3.2.</span> <span class="nav-text">核心架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入门（Hello）"><span class="nav-number">4.</span> <span class="nav-text">入门（Hello）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端控制器（DispatcherServlet）配置"><span class="nav-number">4.1.</span> <span class="nav-text">前端控制器（DispatcherServlet）配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#handlerMapping、handlerAdapter配置"><span class="nav-number">4.2.</span> <span class="nav-text">handlerMapping、handlerAdapter配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#viewResolver"><span class="nav-number">4.3.</span> <span class="nav-text">viewResolver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发处理器-页面处理器"><span class="nav-number">4.4.</span> <span class="nav-text">开发处理器/页面处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发视图页面"><span class="nav-number">4.5.</span> <span class="nav-text">开发视图页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行流程分析"><span class="nav-number">4.6.</span> <span class="nav-text">运行流程分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#post中文乱码解决方案"><span class="nav-number">5.</span> <span class="nav-text">post中文乱码解决方案</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhifeiyu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhifeiyu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("SiV3V3liAXpX9lFVvAt3VSKR-gzGzoHsz", "PwifGJsdtG3a8d55fWIxxFPu");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>

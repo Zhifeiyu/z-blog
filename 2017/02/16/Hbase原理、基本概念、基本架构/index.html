@@ -1,0 +1,848 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,Hbase,大数据," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="zfy-非鱼" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
+Hbase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hbase原理、基本概念、基本架构">
+<meta property="og:url" content="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/index.html">
+<meta property="og:site_name" content="zfy-非鱼">
+<meta property="og:description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
+Hbase">
+<meta property="og:image" content="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg">
+<meta property="og:image" content="http://p1.bpimg.com/567571/f2b44b62778590fd.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/cef3cba296a41b07.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/e5524df5446fab63.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/daa136c290a5faf5.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/bb229506635f0f77.jpg">
+<meta property="og:updated_time" content="2017-02-16T08:54:47.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hbase原理、基本概念、基本架构">
+<meta name="twitter:description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
+Hbase">
+<meta name="twitter:image" content="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/"/>
+
+
+  <title> Hbase原理、基本概念、基本架构 | zfy-非鱼 </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ba9c902639c6fd5f12fe2a3224e1169f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zfy-非鱼</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">子非鱼焉知鱼之乐</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Hbase原理、基本概念、基本架构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-16T15:02:22+08:00" content="2017-02-16">
+              2017-02-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术积累/" itemprop="url" rel="index">
+                    <span itemprop="name">技术积累</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/16/Hbase原理、基本概念、基本架构/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/16/Hbase原理、基本概念、基本架构/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/16/Hbase原理、基本概念、基本架构/" class="leancloud_visitors" data-flag-title="Hbase原理、基本概念、基本架构">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HBase是一个构建在HDFS上的分布式列存储系统；<br>HBase是基于Google BigTable模型开发的，典型的key/value系统；<br>HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；<br>从逻辑上讲，HBase将数据按照表、行和列进行存储。<br>与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。</p>
+<h2 id="Hbase-表特点"><a href="#Hbase-表特点" class="headerlink" title="Hbase 表特点"></a>Hbase 表特点</h2><ul>
+<li><strong>大</strong>：一个表可以有数十亿行，上百万列；</li>
+<li><strong>无模式</strong>：每行都有一个可排序的主键和任意多的列，列可以根据需要动态的增加，同一张表中不同的行可以有截然不同的列；</li>
+<li><strong>面向列</strong>：面向列（族）的存储和权限控制，列（族）独立检索；</li>
+<li><strong>稀疏</strong>：空（null）列并不占用存储空间，表可以设计的非常稀疏；</li>
+<li><strong>数据多版本</strong>：每个单元中的数据可以有多个版本，默认情况下版本号自动分配，是单元格插入时的时间戳；</li>
+<li><strong>数据类型单一</strong>：Hbase中的数据都是字符串，没有类型。<h1 id="Hbase-数据模型"><a href="#Hbase-数据模型" class="headerlink" title="Hbase 数据模型"></a>Hbase 数据模型</h1><h2 id="Hbase-逻辑视图"><a href="#Hbase-逻辑视图" class="headerlink" title="Hbase 逻辑视图"></a>Hbase 逻辑视图</h2><center><img src="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg" alt=""></center><h2 id="Hbase-基本概念"><a href="#Hbase-基本概念" class="headerlink" title="Hbase 基本概念"></a>Hbase 基本概念</h2></li>
+<li>RowKey：是Byte array，是表中每条记录的“主键”，方便快速查找，Rowkey的设计非常重要。</li>
+<li>Column Family：列族，拥有一个名称(string)，包含一个或者多个相关列</li>
+<li>Column：属于某一个columnfamily，familyName:columnName，每条记录可动态添加</li>
+<li>Version Number：类型为Long，默认值是系统时间戳，可由用户自定义</li>
+<li>Value(Cell)：Byte array<h1 id="Hbase-物理模型"><a href="#Hbase-物理模型" class="headerlink" title="Hbase 物理模型"></a>Hbase 物理模型</h1>每个column family存储在HDFS上的一个单独文件中，空值不会被保存。<br>Key 和 Version number在每个 column family中均有一份；<br>HBase 为每个值维护了多级索引，即：\<key, column="" family,="" name,="" timestamp\=""><h2 id="物理存储"><a href="#物理存储" class="headerlink" title="物理存储"></a>物理存储</h2></key,></li>
+<li>Table中所有行都按照row key的字典序排列；</li>
+<li>Table在行的方向上分割为多个Region；</li>
+<li>Region按大小分割的，每个表开始只有一个Region，随着数据增多，Region不断增大，当增大到一个阀值的时候，Region就会等分会两个新的Region，之后会有越来越多的Region；</li>
+<li>Region是Hbase中分布式存储和负载均衡的最小单元，不同Region分布到不同RegionServer上;<center><img src="http://p1.bpimg.com/567571/f2b44b62778590fd.png" alt=""></center></li>
+<li>Region虽然是分布式存储的最小单元，但并不是存储的最小单元。Region由一个或者多个Store组成，每个store保存一个columns family；每个Strore又由一个memStore和0至多个StoreFile组成，StoreFile包含HFile；memStore存储在内存中，StoreFile存储在HDFS上。<br><center><img src="http://i1.piimg.com/567571/cef3cba296a41b07.png" alt=""></center><h1 id="Hbase-架构及基本组件"><a href="#Hbase-架构及基本组件" class="headerlink" title="Hbase 架构及基本组件"></a>Hbase 架构及基本组件</h1><center><img src="http://i1.piimg.com/567571/e5524df5446fab63.jpg" alt=""></center><h2 id="基本组件说明"><a href="#基本组件说明" class="headerlink" title="基本组件说明"></a>基本组件说明</h2></li>
+<li><strong>Client</strong>：包含访问HBase的接口，并维护cache来加快对HBase的访问，比如Region的位置信息</li>
+<li><strong>Master</strong><ul>
+<li>为Region server分配Region</li>
+<li>负责Region server的负载均衡</li>
+<li>发现失效的Region server并重新分配其上的Region</li>
+<li>管理用户对table的增删改查操作</li>
+</ul>
+</li>
+<li><strong>Region server</strong><ul>
+<li>Regionserver维护Region，处理对这些Region的IO请求</li>
+<li>Regionserver负责切分在运行过程中变得过大的region</li>
+</ul>
+</li>
+<li><strong>Zookeeper</strong><ul>
+<li>通过选举，保证任何时候，集群中只有一个master，Master与RegionServers 启动时会向ZooKeeper注册</li>
+<li>存贮所有Region的寻址入口</li>
+<li>实时监控Region server的上线和下线信息。并实时通知给Master</li>
+<li>存储HBase的schema和table元数据</li>
+<li>默认情况下，HBase 管理ZooKeeper 实例，比如， 启动或者停止ZooKeeper</li>
+<li>Zookeeper的引入使得Master不再是单点故障</li>
+</ul>
+</li>
+<li><strong>Write-Ahead-Log（WAL）</strong>(预写式日志)<br><center><img src="http://p1.bqimg.com/567571/daa136c290a5faf5.png" alt=""></center><br>该机制用于数据的容错和恢复：<br>每个HRegionServer中都有一个HLog对象，HLog是一个实现Write Ahead Log的类，在每次用户操作写入MemStore的同时，也会写一份数据到HLog文件中，HLog文件定期会滚动出新的，并删除旧的文件（已持久化到StoreFile中的数据）。当HRegionServer意外终止后，HMaster会通过Zookeeper感知到，HMaster首先会处理遗留的 HLog文件，将其中不同Region的Log数据进行拆分，分别放到相应region的目录下，然后再将失效的region重新分配，领取到这些region的HRegionServer在Load Region的过程中，会发现有历史HLog需要处理，因此会Replay HLog中的数据到MemStore中，然后flush到StoreFiles，完成数据恢复。<h2 id="HBase容错性"><a href="#HBase容错性" class="headerlink" title="HBase容错性"></a>HBase容错性</h2></li>
+<li>Master容错：Zookeeper重新选择一个新的Master<ul>
+<li>无Master过程中，数据读取仍照常进行；</li>
+<li>无master过程中，region切分、负载均衡等无法进行；</li>
+</ul>
+</li>
+<li>RegionServer容错：定时向Zookeeper汇报心跳，如果一旦时间内未出现心跳，Master将该RegionServer上的Region重新分配到其他RegionServer上，失效服务器上“预写”日志由主服务器进行分割并派送给新的RegionServer</li>
+<li>Zookeeper容错：Zookeeper是一个可靠地服务，一般配置3或5个Zookeeper实例<h2 id="Region定位流程"><a href="#Region定位流程" class="headerlink" title="Region定位流程"></a>Region定位流程</h2><center><img src="http://i1.piimg.com/567571/bb229506635f0f77.jpg" alt=""></center></li>
+<li>寻找RegionServer<br>ZooKeeper–&gt; -ROOT-(单Region)–&gt; .META.–&gt; 用户表</li>
+<li>-ROOT-<ul>
+<li>表包含.META.表所在的region列表，该表只会有一个Region；</li>
+<li>Zookeeper中记录了-ROOT-表的location。</li>
+</ul>
+</li>
+<li>.META.<br>表包含所有的用户空间region列表，以及RegionServer的服务器地址。<h2 id="Hbase-使用场景"><a href="#Hbase-使用场景" class="headerlink" title="Hbase 使用场景"></a>Hbase 使用场景</h2></li>
+<li>大数据量存储，大数据量高并发操作</li>
+<li>需要对数据随机读写操作</li>
+<li>读写访问均是非常简单的操作<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><a href="http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html" target="_blank" rel="external">读和写的流程</a><br><a href="http://blog.csdn.net/dianacody/article/details/39530165" target="_blank" rel="external">HBase的Region机制</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag">#hadoop</a>
+          
+            <a href="/tags/Hbase/" rel="tag">#Hbase</a>
+          
+            <a href="/tags/大数据/" rel="tag">#大数据</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/06/centos7 网桥的配置/" rel="next" title="centos7 网桥的配置">
+                <i class="fa fa-chevron-left"></i> centos7 网桥的配置
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/02/16/Hbase原理、基本概念、基本架构/"
+     data-title="Hbase原理、基本概念、基本架构"
+     data-content=""
+     data-url="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/16/Hbase原理、基本概念、基本架构/"
+           data-title="Hbase原理、基本概念、基本架构" data-url="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Zhifeiyu" />
+          <p class="site-author-name" itemprop="name">Zhifeiyu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-表特点"><span class="nav-number">1.1.</span> <span class="nav-text">Hbase 表特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-数据模型"><span class="nav-number">2.</span> <span class="nav-text">Hbase 数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-逻辑视图"><span class="nav-number">2.1.</span> <span class="nav-text">Hbase 逻辑视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-基本概念"><span class="nav-number">2.2.</span> <span class="nav-text">Hbase 基本概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-物理模型"><span class="nav-number">3.</span> <span class="nav-text">Hbase 物理模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理存储"><span class="nav-number">3.1.</span> <span class="nav-text">物理存储</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-架构及基本组件"><span class="nav-number">4.</span> <span class="nav-text">Hbase 架构及基本组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本组件说明"><span class="nav-number">4.1.</span> <span class="nav-text">基本组件说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase容错性"><span class="nav-number">4.2.</span> <span class="nav-text">HBase容错性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region定位流程"><span class="nav-number">4.3.</span> <span class="nav-text">Region定位流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-使用场景"><span class="nav-number">4.4.</span> <span class="nav-text">Hbase 使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">5.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhifeiyu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhifeiyu"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("SiV3V3liAXpX9lFVvAt3VSKR-gzGzoHsz", "PwifGJsdtG3a8d55fWIxxFPu");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
