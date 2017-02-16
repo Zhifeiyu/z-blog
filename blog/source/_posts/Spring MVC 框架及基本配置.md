@@ -1,29 +1,29 @@
 ---
-title: RabbitMQ下的生产消费者模式与订阅发布模式
+title: Spring MVC 框架及基本配置
 date: 2016-07-21 10:08:09
 tags: [spring,springmvc,java]
-categories: [技术积累]
+categories: [spring]
 ---
 ## Web开发-请求响应模型
-<center>![请求响应模型](http://static.oschina.net/uploads/space/2016/0721/193337_5TaM_2302941.png)</center>
+<center>![请求响应模型](http://oflrm5g9z.bkt.clouddn.com/17-2-15/6043565-file_1487163503878_11a8c.png)</center>
 1. web客户端（如：浏览器）发起请求，如访问www.baidu.com
 2. web服务器端（如：tomcat）接收请求，处理请求，最后产生响应
 3. web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）
 ## Web MVC概述
-<center>![ MVC概述](http://static.oschina.net/uploads/space/2016/0721/194538_86Xj_2302941.png)</center>
+<center>![ MVC概述](http://oflrm5g9z.bkt.clouddn.com/17-2-15/28677677-file_1487163208601_13fe6.png)</center>
 **Model（模型）**：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 JavaBean 组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。
  **View（视图）**：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。
  **Controller（控制器）**：接收用户请求，委托给模型进行处理（状态改变） ，处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。
 ## Spring MVC 架构
 ### 请求处理过程
-<center>![ 请求处理过程](http://static.oschina.net/uploads/space/2016/0721/194950_U1nS_2302941.png)</center>
+<center>![ 请求处理过程](http://oflrm5g9z.bkt.clouddn.com/17-2-15/89018877-file_1487163563329_16205.png)</center>
   执行步骤如下：
 1. 首先用户发送请求————>前端控制器，前端控制器根据请求信息（如 URL）来决定选择哪一个页面控制器进行处理并把请求委托给它；上图中的 1、2 步骤；
 2. 页面控制器接收到请求后，进行功能处理，首先需要收集和绑定请求参数到一个对象，并进行验证，然后将该对象对象委托给业务对象进行处理；处理完毕后返回一个 ModelAndView（模型数据和逻辑视图名） ；上图中的 3、4、5 步骤；
 3. 前端控制器收回控制权，然后根据返回的逻辑视图名，选择相应的视图进行渲染，并把模型数据传入以便视图渲染；上图 中的步骤 6、7；
 4. 前端控制器再次收回控制权，将响应返回给用户，图 2-1 中的步骤 8；至此整个结束。
 ### 核心架构
-<center>![ 核心架构](http://static.oschina.net/uploads/space/2016/0721/195034_qV42_2302941.png)</center>
+<center>![ 核心架构](http://oflrm5g9z.bkt.clouddn.com/17-2-15/55267022-file_1487163626154_10138.png)</center>
 具体流程步骤：
 1. 首先用户发送请求——>DispatcherServlet，前端控制器收到请求后自己不进行处理，而是委托给其他的解析器进行处理，作为统一访问点，进行全局的流程控制；
 2. DispatcherServlet——>Handlermapping（请求到处理器的映射），HandlerMapping 将会把请求映射为 HandlerExecutionChain 对象（包含一个 Handler 处理器（页面控制器）对象、多个 HandlerInterceptor 拦截器）对象，通过这种策略模式，很容易添加新的映射策略；
@@ -129,7 +129,7 @@ ${message}
 </html>
 ```
 ### 运行流程分析
-<center>![ 运行流程分析](http://static.oschina.net/uploads/space/2016/0721/195819_3ktW_2302941.png)</center>
+<center>![ 运行流程分析](http://oflrm5g9z.bkt.clouddn.com/17-2-15/53622352-file_1487163689720_8c8.png)</center>
 运行步骤如下：
 1. 首先用户发送请求 http://localhost:8080/hello——>web 容器，web 容器根据“/hello”路径映射到DispatcherServlet（url-pattern 为/）进行处理；
 2.  DispatcherServlet——>BeanNameUrlHandlerMapping 进行请求到处理的映射，BeanNameUrlHandlerMapping 将“/hello”路径直接映射到名字为“/hello”的 Bean 进行处理，即 HelloWorldController，BeanNameUrlHandlerMapping将其包装为HandlerExecutionChain（只包括 HelloWorldController 处理器，没有拦截器） ；

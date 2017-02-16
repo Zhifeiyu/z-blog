@@ -2,7 +2,7 @@
 title: impala的原理架构
 date: 2017-02-16 20:05:26
 tags: [hadoop,impala,大数据]
-categories: [技术积累]
+categories: [大数据]
 ---
 # 概述
 由cloudera公司主导开发的大数据实时查询分析工具，宣称比原来基于MapReduce的HiveSQL查询速度提升3~90倍，且更加灵活易用。提供类SQL的查询语句，能够查询存储在Hadoop的HDFS和Hbase中的PB级大数据。查询速度快是其最大的卖点。简言之impala作为大数据实时查询分析工具，具有查询速度快，灵活性高，易整合，可伸缩性强等特点。

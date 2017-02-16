@@ -2,7 +2,7 @@
 title: 离线安装 Cloudera ( CDH 5.x )
 date: 2016-12-20 10:37:06
 tags: [cdh,大数据,hadoop]
-categories: [技术积累]
+categories: [大数据]
 ---
 ## 准备
 - 系统 centos 6.5

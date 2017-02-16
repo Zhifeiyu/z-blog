@@ -2,7 +2,7 @@
 title: hive & hbase
 date: 2016-12-30 09:23:32
 tags: [hive,hbase,大数据,hdfs]
-categories: [技术积累]
+categories: [大数据]
 ---
 **Hive 是为了简化编写MapReduce程序而生的**，使用MapReduce做过数据分析的人都知道，很多分析程序除业务逻辑不同外，程序流程基本一样。在这种 情况下，就需要Hive这样的用戶编程接口。Hive本身不存储和计算数据，它完全依赖于HDFS和MapReduce，Hive中的表纯逻辑，就是些表 的定义等，也就是表的元数据。使用SQL实现Hive是因为SQL大家都熟悉，转换成本低，类似作用的Pig就不是SQL。
 

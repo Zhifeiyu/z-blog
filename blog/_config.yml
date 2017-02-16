@@ -3,10 +3,10 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: zfy-非鱼
+title: zfylin-非鱼
 subtitle: 子非鱼焉知鱼之乐
 description:
-author: Zhifeiyu
+author: zfylin
 language: zh-Hans
 timezone: Asia/Shanghai
 
@@ -69,5 +69,5 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo:	git@github.com:Zhifeiyu/Zhifeiyu.github.io.git
+  repo:	https://github.com/Zhifeiyu/zhifeiyu.github.io.git
   branch: master

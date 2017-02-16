@@ -2,7 +2,7 @@
 title: Hadoop & Hbase 自动化部署
 date: 2016-12-08 15:50:50
 tags: [hadoop,hbase,大数据]
-categories: [技术积累]
+categories: [大数据]
 ---
 ## Hadoop & Hbase 自动化部署
 ### 前言

@@ -2,7 +2,7 @@
 title: Centos代理设置
 date: 2016-11-28 08:50:02
 tags: [centos, 代理, dokcer]
-categories: [技术积累]
+categories: [linux]
 ---
 ## 系统级代理
 vi /etc/profile

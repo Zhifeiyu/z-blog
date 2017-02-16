@@ -2,7 +2,7 @@
 title: Linux 磁盘管理
 date: 2016-10-26 16:07:42
 tags: [linux,磁盘]
-categories: [技术积累]
+categories: [linux]
 ---
 Linux磁盘管理常用的命令：**df**、**du**、**fdisk**.
 ## df

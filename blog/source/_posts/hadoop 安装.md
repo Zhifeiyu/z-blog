@@ -2,7 +2,7 @@
 title: Hadoop + Hbase 单机伪分布式安装配置
 date: 2016-10-29 11:25:31
 tags: [hadoop,hbase,大数据]
-categories: [技术积累]
+categories: [大数据]
 ---
 
 ## **环境**

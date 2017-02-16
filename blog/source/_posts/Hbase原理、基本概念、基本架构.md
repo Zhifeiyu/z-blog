@@ -2,7 +2,7 @@
 title: Hbase原理、基本概念、基本架构
 date: 2017-02-16 15:02:22
 tags: [hadoop,Hbase,大数据]
-categories: [技术积累]
+categories: [大数据]
 ---
 # 概述
 HBase是一个构建在HDFS上的分布式列存储系统；

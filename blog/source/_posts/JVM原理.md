@@ -2,7 +2,7 @@
 title: JVM原理
 date: 2016-10-25 17:15:18
 tags: [java,jvm]
-categories: [技术积累]
+categories: [java]
 ---
 ## JVM 原理
 ### 简介
