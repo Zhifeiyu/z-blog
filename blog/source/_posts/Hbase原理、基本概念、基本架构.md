@@ -17,6 +17,7 @@ HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构�
 - **稀疏**：空（null）列并不占用存储空间，表可以设计的非常稀疏；
 - **数据多版本**：每个单元中的数据可以有多个版本，默认情况下版本号自动分配，是单元格插入时的时间戳；
 - **数据类型单一**：Hbase中的数据都是字符串，没有类型。
+
 # Hbase 数据模型
 ## Hbase 逻辑视图
 <center>![](http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg)</center>
@@ -26,6 +27,7 @@ HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构�
 - Column：属于某一个columnfamily，familyName:columnName，每条记录可动态添加
 - Version Number：类型为Long，默认值是系统时间戳，可由用户自定义
 - Value(Cell)：Byte array
+
 # Hbase 物理模型
 每个column family存储在HDFS上的一个单独文件中，空值不会被保存。
 Key 和 Version number在每个 column family中均有一份；
@@ -38,6 +40,7 @@ HBase 为每个值维护了多级索引，即：\<key, column family, column nam
 <center>![](http://p1.bpimg.com/567571/f2b44b62778590fd.png)</center>
 - Region虽然是分布式存储的最小单元，但并不是存储的最小单元。Region由一个或者多个Store组成，每个store保存一个columns family；每个Strore又由一个memStore和0至多个StoreFile组成，StoreFile包含HFile；memStore存储在内存中，StoreFile存储在HDFS上。
 <center>![](http://i1.piimg.com/567571/cef3cba296a41b07.png)</center>
+
 # Hbase 架构及基本组件
 <center>![](http://i1.piimg.com/567571/e5524df5446fab63.jpg)</center>
 ## 基本组件说明
@@ -76,10 +79,12 @@ HBase 为每个值维护了多级索引，即：\<key, column family, column nam
  - Zookeeper中记录了-ROOT-表的location。
 - .META.
  表包含所有的用户空间region列表，以及RegionServer的服务器地址。
-## Hbase 使用场景
+
+# Hbase 使用场景
 - 大数据量存储，大数据量高并发操作
 - 需要对数据随机读写操作
 - 读写访问均是非常简单的操作
+
 # 参考文档
 [读和写的流程](http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html)
 [HBase的Region机制](http://blog.csdn.net/dianacody/article/details/39530165)
