@@ -19,8 +19,11 @@ Impala主要由Impalad， State Store和CLI组成。
 - **Impala State Store**: 跟踪集群中的Impalad的健康状态及位置信息，由statestored进程表示，它通过创建多个线程来处理Impalad的注册订阅和与各Impalad保持心跳连接，各Impalad都会缓存一份State Store中的信息，当State Store离线后（Impalad发现State Store处于离线时，会进入recovery模式，反复注册，当State Store重新加入集群后，自动恢复正常，更新缓存数据）因为Impalad有State Store的缓存仍然可以工作，但会因为有些Impalad失效了，而已缓存数据无法更新，导致把执行计划分配给了失效的Impalad，导致查询失败。
 - **CLI**: 提供给用户查询使用的命令行工具（Impala Shell使用python实现），同时Impala还提供了Hue，JDBC， ODBC使用接口。
 上图可以看出，位于Datanode上的每个impalad进程，都具有Query Planner,QueryCoordinator,Query ExecEnginer这几个组件，每个impala节点在功能上是对等的，也就是说，任何一个节点都能接受外部查询请求。当有一个节点发生故障后，其他节点仍然能够接管，这还得益于HDFS的数据冗余备份机制，即使某个impalad节点挂掉，只要挂掉的节点上的数据在其他节点上有备份，仍然是可以计算的。
+
 # 查询处理过程
+
 <center>![](http://i1.piimg.com/567571/3149d21b5be7b352.png)</center>
+
 # Impala VS Hive
  Impala与Hive都是构建在Hadoop之上的数据查询工具各有不同的侧重适应面，但从客户端使用来看Impala与Hive有很多的共同之处，如数据表元数据、ODBC/JDBC驱动、SQL语法、灵活的文件格式、存储资源池等。Impala与Hive在Hadoop中的关系如图 2所示。**Hive适合于长时间的批处理查询分析，而Impala适合于实时交互式SQL查询**。可以先使用hive进行数据转换处理，之后使用Impala在Hive处理后的结果数据集上进行快速的数据分析。
 <center>![](http://p1.bpimg.com/567571/f027ca73464a765a.jpg)</center>
