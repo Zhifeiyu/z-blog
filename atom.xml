@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-16T09:41:18.147Z</updated>
+  <updated>2017-02-16T09:43:36.056Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/02/16/Hbase%E5%8E%9F%E7%90%86%E3%80%81%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84/"/>
     <id>http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/</id>
     <published>2017-02-16T07:02:22.000Z</published>
-    <updated>2017-02-16T09:41:18.147Z</updated>
+    <updated>2017-02-16T09:43:36.056Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HBase是一个构建在HDFS上的分布式列存储系统；<br>HBase是基于Google BigTable模型开发的，典型的key/value系统；<br>HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；<br>从逻辑上讲，HBase将数据按照表、行和列进行存储。<br>与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。</p>
 <h2 id="Hbase-表特点"><a href="#Hbase-表特点" class="headerlink" title="Hbase 表特点"></a>Hbase 表特点</h2><ul>
@@ -76,8 +76,9 @@
 <h1 id="Hbase-使用场景"><a href="#Hbase-使用场景" class="headerlink" title="Hbase 使用场景"></a>Hbase 使用场景</h1><ul>
 <li>大数据量存储，大数据量高并发操作</li>
 <li>需要对数据随机读写操作</li>
-<li>读写访问均是非常简单的操作<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><a href="http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html" target="_blank" rel="external">读和写的流程</a><br><a href="http://blog.csdn.net/dianacody/article/details/39530165" target="_blank" rel="external">HBase的Region机制</a></li>
+<li>读写访问均是非常简单的操作</li>
 </ul>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a href="http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html" target="_blank" rel="external">读和写的流程</a><br><a href="http://blog.csdn.net/dianacody/article/details/39530165" target="_blank" rel="external">HBase的Region机制</a></p>
 </key,>]]></content>
     
     <summary type="html">
@@ -206,6 +207,81 @@
       <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
     
       <category term="MQ" scheme="http://yoursite.com/tags/MQ/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>离线安装 Cloudera ( CDH 5.x )</title>
+    <link href="http://yoursite.com/2016/12/20/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%20Cloudera%20(%20CDH%205.x%20)/"/>
+    <id>http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/</id>
+    <published>2016-12-20T02:37:06.000Z</published>
+    <updated>2017-02-16T09:41:57.795Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><ul>
+<li>系统 centos 6.5</li>
+<li>jdk 1.8</li>
+<li>三台主机节点<br>  节点角色说明</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ip</th>
+<th style="text-align:center">主机名</th>
+<th style="text-align:right">角色描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.206.2.181</td>
+<td style="text-align:center">hadoop-master</td>
+<td style="text-align:right">cm，agent</td>
+</tr>
+<tr>
+<td>10.206.2.182</td>
+<td style="text-align:center">hadoop-slave1</td>
+<td style="text-align:right">agent</td>
+</tr>
+<tr>
+<td>10.206.2.183</td>
+<td style="text-align:center">hadoop-slave2</td>
+<td style="text-align:right">agent</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>域名解析<br>配置/etc/hosts, 将以下代码追加到文件末尾即可<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo vim /etc/hosts</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">10.206.2.181 hadoop-master </div><div class="line">10.206.2.182 hadoop-slave1</div><div class="line">10.206.2.183 hadoop-slave2</div></pre></td></tr></table></figure>
+<ul>
+<li>关闭iptable 或配置 iptable策略</li>
+<li>关闭SELinux</li>
+<li>配置免密码ssh登录</li>
+<li>安装jdk（在所有节点操作）</li>
+<li>时间同步</li>
+<li>准备包（用parcel 方式安装）</li>
+<li></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;准备&quot;&gt;&lt;a href=&quot;#准备&quot; class=&quot;headerlink&quot; title=&quot;准备&quot;&gt;&lt;/a&gt;准备&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;系统 centos 6.5&lt;/li&gt;
+&lt;li&gt;jdk 1.8&lt;/li&gt;
+&lt;li&gt;三台主机节点&lt;br&gt;  节点角色说明&lt;/li&gt;
+
+    
+    </summary>
+    
+      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="cdh" scheme="http://yoursite.com/tags/cdh/"/>
     
   </entry>
   

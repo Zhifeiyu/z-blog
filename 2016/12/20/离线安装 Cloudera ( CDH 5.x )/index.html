@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="hadoop,大数据,cdh," />
 
 
 
@@ -86,12 +86,112 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="zfy-非鱼">
-<meta property="og:url" content="http://yoursite.com/tags/RabbitMQ/index.html">
+<meta name="description" content="准备
+系统 centos 6.5
+jdk 1.8
+三台主机节点  节点角色说明
+
+
+
+
+ip
+主机名
+角色描述
+
+
+
+
+10.206.2.181
+hadoop-master
+cm，agent
+
+
+10.206.2.182
+hadoop-slave1
+agent
+
+
+10.206.2.183
+hadoop-slave2
+agent
+
+
+
+
+域名解析配置/etc/hosts, 将以下代码追加到文件末尾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="离线安装 Cloudera ( CDH 5.x )">
+<meta property="og:url" content="http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/index.html">
 <meta property="og:site_name" content="zfy-非鱼">
+<meta property="og:description" content="准备
+系统 centos 6.5
+jdk 1.8
+三台主机节点  节点角色说明
+
+
+
+
+ip
+主机名
+角色描述
+
+
+
+
+10.206.2.181
+hadoop-master
+cm，agent
+
+
+10.206.2.182
+hadoop-slave1
+agent
+
+
+10.206.2.183
+hadoop-slave2
+agent
+
+
+
+
+域名解析配置/etc/hosts, 将以下代码追加到文件末尾">
+<meta property="og:updated_time" content="2017-02-16T09:41:57.795Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zfy-非鱼">
+<meta name="twitter:title" content="离线安装 Cloudera ( CDH 5.x )">
+<meta name="twitter:description" content="准备
+系统 centos 6.5
+jdk 1.8
+三台主机节点  节点角色说明
+
+
+
+
+ip
+主机名
+角色描述
+
+
+
+
+10.206.2.181
+hadoop-master
+cm，agent
+
+
+10.206.2.182
+hadoop-slave1
+agent
+
+
+10.206.2.183
+hadoop-slave2
+agent
+
+
+
+
+域名解析配置/etc/hosts, 将以下代码追加到文件末尾">
 
 
 
@@ -112,10 +212,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/RabbitMQ/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/"/>
 
 
-  <title> 标签: RabbitMQ | zfy-非鱼 </title>
+  <title> 离线安装 Cloudera ( CDH 5.x ) | zfy-非鱼 </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -146,7 +246,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -226,53 +326,246 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        RabbitMQ
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                离线安装 Cloudera ( CDH 5.x )
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-20T10:37:06+08:00" content="2016-12-20">
+              2016-12-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术积累/" itemprop="url" rel="index">
+                    <span itemprop="name">技术积累</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/20/离线安装 Cloudera ( CDH 5.x )/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/20/离线安装 Cloudera ( CDH 5.x )/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/20/离线安装 Cloudera ( CDH 5.x )/" class="leancloud_visitors" data-flag-title="离线安装 Cloudera ( CDH 5.x )">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
+      
+        <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><ul>
+<li>系统 centos 6.5</li>
+<li>jdk 1.8</li>
+<li>三台主机节点<br>  节点角色说明</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ip</th>
+<th style="text-align:center">主机名</th>
+<th style="text-align:right">角色描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.206.2.181</td>
+<td style="text-align:center">hadoop-master</td>
+<td style="text-align:right">cm，agent</td>
+</tr>
+<tr>
+<td>10.206.2.182</td>
+<td style="text-align:center">hadoop-slave1</td>
+<td style="text-align:right">agent</td>
+</tr>
+<tr>
+<td>10.206.2.183</td>
+<td style="text-align:center">hadoop-slave2</td>
+<td style="text-align:right">agent</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>域名解析<br>配置/etc/hosts, 将以下代码追加到文件末尾即可<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo vim /etc/hosts</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">10.206.2.181 hadoop-master </div><div class="line">10.206.2.182 hadoop-slave1</div><div class="line">10.206.2.183 hadoop-slave2</div></pre></td></tr></table></figure>
+<ul>
+<li>关闭iptable 或配置 iptable策略</li>
+<li>关闭SELinux</li>
+<li>配置免密码ssh登录</li>
+<li>安装jdk（在所有节点操作）</li>
+<li>时间同步</li>
+<li>准备包（用parcel 方式安装）</li>
+<li></li>
+</ul>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/" itemprop="url">
-              
-                <span itemprop="name">RabbitMQ下的生产消费者模式与订阅发布模式</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-12-27T10:08:09+08:00"
-              content="2016-12-27" >
-          12-27
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag">#hadoop</a>
+          
+            <a href="/tags/大数据/" rel="tag">#大数据</a>
+          
+            <a href="/tags/cdh/" rel="tag">#cdh</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/08/hadoop&hbase自动化部署/" rel="next" title="Hadoop & Hbase 自动化部署">
+                <i class="fa fa-chevron-left"></i> Hadoop & Hbase 自动化部署
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/" rel="prev" title="RabbitMQ下的生产消费者模式与订阅发布模式">
+                RabbitMQ下的生产消费者模式与订阅发布模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/20/离线安装 Cloudera ( CDH 5.x )/"
+     data-title="离线安装 Cloudera ( CDH 5.x )"
+     data-content=""
+     data-url="http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/20/离线安装 Cloudera ( CDH 5.x )/"
+           data-title="离线安装 Cloudera ( CDH 5.x )" data-url="http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -292,8 +585,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -350,6 +652,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -446,6 +759,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
 
   
 
