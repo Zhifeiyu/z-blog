@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-16T12:31:17.399Z</updated>
+  <updated>2017-02-16T12:34:31.518Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/02/16/impala%E7%9A%84%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84/"/>
     <id>http://yoursite.com/2017/02/16/impala的原理架构/</id>
     <published>2017-02-16T12:05:26.000Z</published>
-    <updated>2017-02-16T12:31:17.399Z</updated>
+    <updated>2017-02-16T12:34:31.518Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由cloudera公司主导开发的大数据实时查询分析工具，宣称比原来基于MapReduce的HiveSQL查询速度提升3~90倍，且更加灵活易用。提供类SQL的查询语句，能够查询存储在Hadoop的HDFS和Hbase中的PB级大数据。查询速度快是其最大的卖点。简言之impala作为大数据实时查询分析工具，具有查询速度快，灵活性高，易整合，可伸缩性强等特点。</p>
 <ol>
@@ -29,7 +29,7 @@
 <li>易整合。很容易和hadoop系统整合，并使用hadoop生态系统的资源和优势，不需要将数据迁移到特定的存储系统就能满足查询分析的要求。</li>
 <li>可伸缩性。可以很好的与一些BI应用系统协同工作，如Microstrategy、Tableau、Qlikview等。</li>
 </ol>
-<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><center><img src="http://p1.bpimg.com/567571/e5d78868e694ffd2.jpg" alt=""></center><br>Impala没有再使用缓慢的Hive+MapReduce批处理，而是通过使用与商用并行关系数据库中类似的分布式查询引擎（由Query Planner、Query Coordinator和Query Exec Engine三部分组成），可以直接从HDFS或HBase中用SELECT、JOIN和统计函数查询数据，从而大大降低了延迟。<br>Impala主要由Impalad， State Store和CLI组成。<br>- <strong>Impalad</strong>: 与DataNode运行在同一节点上，由Impalad进程表示，它接收客户端的查询请求（接收查询请求的Impalad为Coordinator，Coordinator通过JNI调用java前端解释SQL查询语句，生成查询计划树，再通过调度器把执行计划分发给具有相应数据的其它Impalad进行执行），读写数据，并行执行查询，并把结果通过网络流式的传送回给Coordinator，由Coordinator返回给客户端。同时Impalad也与State Store保持连接，用于确定哪个Impalad是健康和可以接受新的工作。在Impalad中启动三个ThriftServer: beeswax_server（连接客户端），hs2_server（借用Hive元数据）， be_server（Impalad内部使用）和一个ImpalaServer服务。<br>- <strong>Impala State Store</strong>: 跟踪集群中的Impalad的健康状态及位置信息，由statestored进程表示，它通过创建多个线程来处理Impalad的注册订阅和与各Impalad保持心跳连接，各Impalad都会缓存一份State Store中的信息，当State Store离线后（Impalad发现State Store处于离线时，会进入recovery模式，反复注册，当State Store重新加入集群后，自动恢复正常，更新缓存数据）因为Impalad有State Store的缓存仍然可以工作，但会因为有些Impalad失效了，而已缓存数据无法更新，导致把执行计划分配给了失效的Impalad，导致查询失败。<br>- <strong>CLI</strong>: 提供给用户查询使用的命令行工具（Impala Shell使用python实现），同时Impala还提供了Hue，JDBC， ODBC使用接口。<br>上图可以看出，位于Datanode上的每个impalad进程，都具有Query Planner,QueryCoordinator,Query ExecEnginer这几个组件，每个impala节点在功能上是对等的，也就是说，任何一个节点都能接受外部查询请求。当有一个节点发生故障后，其他节点仍然能够接管，这还得益于HDFS的数据冗余备份机制，即使某个impalad节点挂掉，只要挂掉的节点上的数据在其他节点上有备份，仍然是可以计算的。<br><br># 查询处理过程<br><br><center><img src="http://i1.piimg.com/567571/3149d21b5be7b352.png" alt=""></center>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><center><img src="http://p1.bpimg.com/567571/e5d78868e694ffd2.jpg" alt=""></center><br>Impala没有再使用缓慢的Hive+MapReduce批处理，而是通过使用与商用并行关系数据库中类似的分布式查询引擎（由Query Planner、Query Coordinator和Query Exec Engine三部分组成），可以直接从HDFS或HBase中用SELECT、JOIN和统计函数查询数据，从而大大降低了延迟。<br>Impala主要由Impalad， State Store和CLI组成。<br>- <strong>Impalad</strong>: 与DataNode运行在同一节点上，由Impalad进程表示，它接收客户端的查询请求（接收查询请求的Impalad为Coordinator，Coordinator通过JNI调用java前端解释SQL查询语句，生成查询计划树，再通过调度器把执行计划分发给具有相应数据的其它Impalad进行执行），读写数据，并行执行查询，并把结果通过网络流式的传送回给Coordinator，由Coordinator返回给客户端。同时Impalad也与State Store保持连接，用于确定哪个Impalad是健康和可以接受新的工作。在Impalad中启动三个ThriftServer: beeswax_server（连接客户端），hs2_server（借用Hive元数据）， be_server（Impalad内部使用）和一个ImpalaServer服务。<br>- <strong>Impala State Store</strong>: 跟踪集群中的Impalad的健康状态及位置信息，由statestored进程表示，它通过创建多个线程来处理Impalad的注册订阅和与各Impalad保持心跳连接，各Impalad都会缓存一份State Store中的信息，当State Store离线后（Impalad发现State Store处于离线时，会进入recovery模式，反复注册，当State Store重新加入集群后，自动恢复正常，更新缓存数据）因为Impalad有State Store的缓存仍然可以工作，但会因为有些Impalad失效了，而已缓存数据无法更新，导致把执行计划分配给了失效的Impalad，导致查询失败。<br>- <strong>CLI</strong>: 提供给用户查询使用的命令行工具（Impala Shell使用python实现），同时Impala还提供了Hue，JDBC， ODBC使用接口。<br>上图可以看出，位于Datanode上的每个impalad进程，都具有Query Planner,QueryCoordinator,Query ExecEnginer这几个组件，每个impala节点在功能上是对等的，也就是说，任何一个节点都能接受外部查询请求。当有一个节点发生故障后，其他节点仍然能够接管，这还得益于HDFS的数据冗余备份机制，即使某个impalad节点挂掉，只要挂掉的节点上的数据在其他节点上有备份，仍然是可以计算的。<br><br># 查询处理过程<br><center><img src="http://i1.piimg.com/567571/3149d21b5be7b352.png" alt=""></center>
 
 <h1 id="Impala-VS-Hive"><a href="#Impala-VS-Hive" class="headerlink" title="Impala VS Hive"></a>Impala VS Hive</h1><p> Impala与Hive都是构建在Hadoop之上的数据查询工具各有不同的侧重适应面，但从客户端使用来看Impala与Hive有很多的共同之处，如数据表元数据、ODBC/JDBC驱动、SQL语法、灵活的文件格式、存储资源池等。Impala与Hive在Hadoop中的关系如图 2所示。<strong>Hive适合于长时间的批处理查询分析，而Impala适合于实时交互式SQL查询</strong>。可以先使用hive进行数据转换处理，之后使用Impala在Hive处理后的结果数据集上进行快速的数据分析。</p>
 <p><center><img src="http://p1.bpimg.com/567571/f027ca73464a765a.jpg" alt=""></center></p>
