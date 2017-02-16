@@ -100,7 +100,7 @@ Hbase">
 <meta property="og:image" content="http://i1.piimg.com/567571/e5524df5446fab63.jpg">
 <meta property="og:image" content="http://p1.bqimg.com/567571/daa136c290a5faf5.png">
 <meta property="og:image" content="http://i1.piimg.com/567571/bb229506635f0f77.jpg">
-<meta property="og:updated_time" content="2017-02-16T08:54:47.383Z">
+<meta property="og:updated_time" content="2017-02-16T09:41:18.147Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase原理、基本概念、基本架构">
 <meta name="twitter:description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
@@ -343,17 +343,12 @@ Hbase">
 <li><strong>面向列</strong>：面向列（族）的存储和权限控制，列（族）独立检索；</li>
 <li><strong>稀疏</strong>：空（null）列并不占用存储空间，表可以设计的非常稀疏；</li>
 <li><strong>数据多版本</strong>：每个单元中的数据可以有多个版本，默认情况下版本号自动分配，是单元格插入时的时间戳；</li>
-<li><strong>数据类型单一</strong>：Hbase中的数据都是字符串，没有类型。<h1 id="Hbase-数据模型"><a href="#Hbase-数据模型" class="headerlink" title="Hbase 数据模型"></a>Hbase 数据模型</h1><h2 id="Hbase-逻辑视图"><a href="#Hbase-逻辑视图" class="headerlink" title="Hbase 逻辑视图"></a>Hbase 逻辑视图</h2><center><img src="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg" alt=""></center><h2 id="Hbase-基本概念"><a href="#Hbase-基本概念" class="headerlink" title="Hbase 基本概念"></a>Hbase 基本概念</h2></li>
-<li>RowKey：是Byte array，是表中每条记录的“主键”，方便快速查找，Rowkey的设计非常重要。</li>
-<li>Column Family：列族，拥有一个名称(string)，包含一个或者多个相关列</li>
-<li>Column：属于某一个columnfamily，familyName:columnName，每条记录可动态添加</li>
-<li>Version Number：类型为Long，默认值是系统时间戳，可由用户自定义</li>
-<li>Value(Cell)：Byte array<h1 id="Hbase-物理模型"><a href="#Hbase-物理模型" class="headerlink" title="Hbase 物理模型"></a>Hbase 物理模型</h1>每个column family存储在HDFS上的一个单独文件中，空值不会被保存。<br>Key 和 Version number在每个 column family中均有一份；<br>HBase 为每个值维护了多级索引，即：\<key, column="" family,="" name,="" timestamp\=""><h2 id="物理存储"><a href="#物理存储" class="headerlink" title="物理存储"></a>物理存储</h2></key,></li>
-<li>Table中所有行都按照row key的字典序排列；</li>
-<li>Table在行的方向上分割为多个Region；</li>
-<li>Region按大小分割的，每个表开始只有一个Region，随着数据增多，Region不断增大，当增大到一个阀值的时候，Region就会等分会两个新的Region，之后会有越来越多的Region；</li>
-<li>Region是Hbase中分布式存储和负载均衡的最小单元，不同Region分布到不同RegionServer上;<center><img src="http://p1.bpimg.com/567571/f2b44b62778590fd.png" alt=""></center></li>
-<li>Region虽然是分布式存储的最小单元，但并不是存储的最小单元。Region由一个或者多个Store组成，每个store保存一个columns family；每个Strore又由一个memStore和0至多个StoreFile组成，StoreFile包含HFile；memStore存储在内存中，StoreFile存储在HDFS上。<br><center><img src="http://i1.piimg.com/567571/cef3cba296a41b07.png" alt=""></center><h1 id="Hbase-架构及基本组件"><a href="#Hbase-架构及基本组件" class="headerlink" title="Hbase 架构及基本组件"></a>Hbase 架构及基本组件</h1><center><img src="http://i1.piimg.com/567571/e5524df5446fab63.jpg" alt=""></center><h2 id="基本组件说明"><a href="#基本组件说明" class="headerlink" title="基本组件说明"></a>基本组件说明</h2></li>
+<li><strong>数据类型单一</strong>：Hbase中的数据都是字符串，没有类型。</li>
+</ul>
+<h1 id="Hbase-数据模型"><a href="#Hbase-数据模型" class="headerlink" title="Hbase 数据模型"></a>Hbase 数据模型</h1><h2 id="Hbase-逻辑视图"><a href="#Hbase-逻辑视图" class="headerlink" title="Hbase 逻辑视图"></a>Hbase 逻辑视图</h2><center><img src="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg" alt=""></center><br>## Hbase 基本概念<br>- RowKey：是Byte array，是表中每条记录的“主键”，方便快速查找，Rowkey的设计非常重要。<br>- Column Family：列族，拥有一个名称(string)，包含一个或者多个相关列<br>- Column：属于某一个columnfamily，familyName:columnName，每条记录可动态添加<br>- Version Number：类型为Long，默认值是系统时间戳，可由用户自定义<br>- Value(Cell)：Byte array<br><br># Hbase 物理模型<br>每个column family存储在HDFS上的一个单独文件中，空值不会被保存。<br>Key 和 Version number在每个 column family中均有一份；<br>HBase 为每个值维护了多级索引，即：\<key, column="" family,="" name,="" timestamp\=""><br>## 物理存储<br>-  Table中所有行都按照row key的字典序排列；<br>-  Table在行的方向上分割为多个Region；<br>- Region按大小分割的，每个表开始只有一个Region，随着数据增多，Region不断增大，当增大到一个阀值的时候，Region就会等分会两个新的Region，之后会有越来越多的Region；<br>- Region是Hbase中分布式存储和负载均衡的最小单元，不同Region分布到不同RegionServer上;<br><center><img src="http://p1.bpimg.com/567571/f2b44b62778590fd.png" alt=""></center><br>- Region虽然是分布式存储的最小单元，但并不是存储的最小单元。Region由一个或者多个Store组成，每个store保存一个columns family；每个Strore又由一个memStore和0至多个StoreFile组成，StoreFile包含HFile；memStore存储在内存中，StoreFile存储在HDFS上。<br><center><img src="http://i1.piimg.com/567571/cef3cba296a41b07.png" alt=""></center>
+
+<h1 id="Hbase-架构及基本组件"><a href="#Hbase-架构及基本组件" class="headerlink" title="Hbase 架构及基本组件"></a>Hbase 架构及基本组件</h1><p><center><img src="http://i1.piimg.com/567571/e5524df5446fab63.jpg" alt=""></center></p>
+<h2 id="基本组件说明"><a href="#基本组件说明" class="headerlink" title="基本组件说明"></a>基本组件说明</h2><ul>
 <li><strong>Client</strong>：包含访问HBase的接口，并维护cache来加快对HBase的访问，比如Region的位置信息</li>
 <li><strong>Master</strong><ul>
 <li>为Region server分配Region</li>
@@ -390,12 +385,14 @@ Hbase">
 <li>Zookeeper中记录了-ROOT-表的location。</li>
 </ul>
 </li>
-<li>.META.<br>表包含所有的用户空间region列表，以及RegionServer的服务器地址。<h2 id="Hbase-使用场景"><a href="#Hbase-使用场景" class="headerlink" title="Hbase 使用场景"></a>Hbase 使用场景</h2></li>
+<li>.META.<br>表包含所有的用户空间region列表，以及RegionServer的服务器地址。</li>
+</ul>
+<h1 id="Hbase-使用场景"><a href="#Hbase-使用场景" class="headerlink" title="Hbase 使用场景"></a>Hbase 使用场景</h1><ul>
 <li>大数据量存储，大数据量高并发操作</li>
 <li>需要对数据随机读写操作</li>
 <li>读写访问均是非常简单的操作<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><a href="http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html" target="_blank" rel="external">读和写的流程</a><br><a href="http://blog.csdn.net/dianacody/article/details/39530165" target="_blank" rel="external">HBase的Region机制</a></li>
 </ul>
-
+</key,>
       
     </div>
 
@@ -583,7 +580,7 @@ Hbase">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-表特点"><span class="nav-number">1.1.</span> <span class="nav-text">Hbase 表特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-数据模型"><span class="nav-number">2.</span> <span class="nav-text">Hbase 数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-逻辑视图"><span class="nav-number">2.1.</span> <span class="nav-text">Hbase 逻辑视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-基本概念"><span class="nav-number">2.2.</span> <span class="nav-text">Hbase 基本概念</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-物理模型"><span class="nav-number">3.</span> <span class="nav-text">Hbase 物理模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理存储"><span class="nav-number">3.1.</span> <span class="nav-text">物理存储</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-架构及基本组件"><span class="nav-number">4.</span> <span class="nav-text">Hbase 架构及基本组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本组件说明"><span class="nav-number">4.1.</span> <span class="nav-text">基本组件说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase容错性"><span class="nav-number">4.2.</span> <span class="nav-text">HBase容错性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region定位流程"><span class="nav-number">4.3.</span> <span class="nav-text">Region定位流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-使用场景"><span class="nav-number">4.4.</span> <span class="nav-text">Hbase 使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">5.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-表特点"><span class="nav-number">1.1.</span> <span class="nav-text">Hbase 表特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-数据模型"><span class="nav-number">2.</span> <span class="nav-text">Hbase 数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-逻辑视图"><span class="nav-number">2.1.</span> <span class="nav-text">Hbase 逻辑视图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-架构及基本组件"><span class="nav-number">3.</span> <span class="nav-text">Hbase 架构及基本组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本组件说明"><span class="nav-number">3.1.</span> <span class="nav-text">基本组件说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase容错性"><span class="nav-number">3.2.</span> <span class="nav-text">HBase容错性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region定位流程"><span class="nav-number">3.3.</span> <span class="nav-text">Region定位流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-使用场景"><span class="nav-number">4.</span> <span class="nav-text">Hbase 使用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">5.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
           </div>
         </section>
