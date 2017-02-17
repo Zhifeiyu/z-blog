@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hadoop,Hbase,大数据," />
+  <meta name="keywords" content="java,volatile," />
 
 
 
@@ -86,26 +86,18 @@
 
 
 
-<meta name="description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
-Hbase">
+<meta name="description" content="基本概念可见性可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hbase原理、基本概念、基本架构">
-<meta property="og:url" content="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/index.html">
+<meta property="og:title" content="Java中Volatile关键字详解">
+<meta property="og:url" content="http://yoursite.com/2016/07/21/Java中Volatile关键字详解/index.html">
 <meta property="og:site_name" content="zfylin-非鱼">
-<meta property="og:description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
-Hbase">
-<meta property="og:image" content="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg">
-<meta property="og:image" content="http://p1.bpimg.com/567571/f2b44b62778590fd.png">
-<meta property="og:image" content="http://i1.piimg.com/567571/cef3cba296a41b07.png">
-<meta property="og:image" content="http://i1.piimg.com/567571/e5524df5446fab63.jpg">
-<meta property="og:image" content="http://p1.bqimg.com/567571/daa136c290a5faf5.png">
-<meta property="og:image" content="http://i1.piimg.com/567571/bb229506635f0f77.jpg">
-<meta property="og:updated_time" content="2017-02-17T02:10:12.147Z">
+<meta property="og:description" content="基本概念可见性可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见">
+<meta property="og:image" content="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png">
+<meta property="og:updated_time" content="2017-02-17T02:48:10.629Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hbase原理、基本概念、基本架构">
-<meta name="twitter:description" content="概述HBase是一个构建在HDFS上的分布式列存储系统；HBase是基于Google BigTable模型开发的，典型的key/value系统；HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；从逻辑上讲，HBase将数据按照表、行和列进行存储。与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。
-Hbase">
-<meta name="twitter:image" content="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg">
+<meta name="twitter:title" content="Java中Volatile关键字详解">
+<meta name="twitter:description" content="基本概念可见性可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见">
+<meta name="twitter:image" content="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png">
 
 
 
@@ -126,10 +118,10 @@ Hbase">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/07/21/Java中Volatile关键字详解/"/>
 
 
-  <title> Hbase原理、基本概念、基本架构 | zfylin-非鱼 </title>
+  <title> Java中Volatile关键字详解 | zfylin-非鱼 </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -261,7 +253,7 @@ Hbase">
             
             
               
-                Hbase原理、基本概念、基本架构
+                Java中Volatile关键字详解
               
             
           </h1>
@@ -273,8 +265,8 @@ Hbase">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T15:02:22+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2016-07-21T10:08:09+08:00" content="2016-07-21">
+              2016-07-21
             </time>
           </span>
 
@@ -287,8 +279,8 @@ Hbase">
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/大数据/" itemprop="url" rel="index">
-                    <span itemprop="name">大数据</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
 
@@ -303,8 +295,8 @@ Hbase">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/02/16/Hbase原理、基本概念、基本架构/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/16/Hbase原理、基本概念、基本架构/" itemprop="commentsCount"></span>
+                <a href="/2016/07/21/Java中Volatile关键字详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/Java中Volatile关键字详解/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -314,7 +306,7 @@ Hbase">
 
           
           
-             <span id="/2017/02/16/Hbase原理、基本概念、基本架构/" class="leancloud_visitors" data-flag-title="Hbase原理、基本概念、基本架构">
+             <span id="/2016/07/21/Java中Volatile关键字详解/" class="leancloud_visitors" data-flag-title="Java中Volatile关键字详解">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -336,64 +328,16 @@ Hbase">
       
 
       
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HBase是一个构建在HDFS上的分布式列存储系统；<br>HBase是基于Google BigTable模型开发的，典型的key/value系统；<br>HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；<br>从逻辑上讲，HBase将数据按照表、行和列进行存储。<br>与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。</p>
-<h2 id="Hbase-表特点"><a href="#Hbase-表特点" class="headerlink" title="Hbase 表特点"></a>Hbase 表特点</h2><ul>
-<li><strong>大</strong>：一个表可以有数十亿行，上百万列；</li>
-<li><strong>无模式</strong>：每行都有一个可排序的主键和任意多的列，列可以根据需要动态的增加，同一张表中不同的行可以有截然不同的列；</li>
-<li><strong>面向列</strong>：面向列（族）的存储和权限控制，列（族）独立检索；</li>
-<li><strong>稀疏</strong>：空（null）列并不占用存储空间，表可以设计的非常稀疏；</li>
-<li><strong>数据多版本</strong>：每个单元中的数据可以有多个版本，默认情况下版本号自动分配，是单元格插入时的时间戳；</li>
-<li><strong>数据类型单一</strong>：Hbase中的数据都是字符串，没有类型。</li>
-</ul>
-<h1 id="Hbase-数据模型"><a href="#Hbase-数据模型" class="headerlink" title="Hbase 数据模型"></a>Hbase 数据模型</h1><h2 id="Hbase-逻辑视图"><a href="#Hbase-逻辑视图" class="headerlink" title="Hbase 逻辑视图"></a>Hbase 逻辑视图</h2><center><img src="http://i1.piimg.com/567571/041186b6b6f7c6d5.jpg" alt=""></center><br>## Hbase 基本概念<br>- RowKey：是Byte array，是表中每条记录的“主键”，方便快速查找，Rowkey的设计非常重要。<br>- Column Family：列族，拥有一个名称(string)，包含一个或者多个相关列<br>- Column：属于某一个columnfamily，familyName:columnName，每条记录可动态添加<br>- Version Number：类型为Long，默认值是系统时间戳，可由用户自定义<br>- Value(Cell)：Byte array<br><br># Hbase 物理模型<br>每个column family存储在HDFS上的一个单独文件中，空值不会被保存。<br>Key 和 Version number在每个 column family中均有一份；<br>HBase 为每个值维护了多级索引，即：\<key, column="" family,="" name,="" timestamp\=""><br>## 物理存储<br>-  Table中所有行都按照row key的字典序排列；<br>-  Table在行的方向上分割为多个Region；<br>- Region按大小分割的，每个表开始只有一个Region，随着数据增多，Region不断增大，当增大到一个阀值的时候，Region就会等分会两个新的Region，之后会有越来越多的Region；<br>- Region是Hbase中分布式存储和负载均衡的最小单元，不同Region分布到不同RegionServer上;<br><center><img src="http://p1.bpimg.com/567571/f2b44b62778590fd.png" alt=""></center><br>- Region虽然是分布式存储的最小单元，但并不是存储的最小单元。Region由一个或者多个Store组成，每个store保存一个columns family；每个Strore又由一个memStore和0至多个StoreFile组成，StoreFile包含HFile；memStore存储在内存中，StoreFile存储在HDFS上。<br><center><img src="http://i1.piimg.com/567571/cef3cba296a41b07.png" alt=""></center>
+        <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性。比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
+<h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
+<p><center><img src="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png" alt=""></center><br>当对非volatile变量进行读写的时候，每个线程先从内存拷贝变量到CPU缓存中。如果计算机有多个CPU，每个线程可能在不同的CPU上被处理，这意味着每个线程可以拷贝到不同的CPU cache中。<br><strong>而声明变量是volatile的，JVM保证了每次读变量都从内存中读，跳过CPU cache这一步。</strong><br>当一个变量定义为volatile之后，将具备两种特性：</p>
+<ol>
+<li>保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，新值对于其他线程是立即得知的。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：Java内存模型）来完成。</li>
+<li>禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个内存屏障（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</li>
+</ol>
 
-<h1 id="Hbase-架构及基本组件"><a href="#Hbase-架构及基本组件" class="headerlink" title="Hbase 架构及基本组件"></a>Hbase 架构及基本组件</h1><p><center><img src="http://i1.piimg.com/567571/e5524df5446fab63.jpg" alt=""></center></p>
-<h2 id="基本组件说明"><a href="#基本组件说明" class="headerlink" title="基本组件说明"></a>基本组件说明</h2><ul>
-<li><strong>Client</strong>：包含访问HBase的接口，并维护cache来加快对HBase的访问，比如Region的位置信息</li>
-<li><strong>Master</strong><ul>
-<li>为Region server分配Region</li>
-<li>负责Region server的负载均衡</li>
-<li>发现失效的Region server并重新分配其上的Region</li>
-<li>管理用户对table的增删改查操作</li>
-</ul>
-</li>
-<li><strong>Region server</strong><ul>
-<li>Regionserver维护Region，处理对这些Region的IO请求</li>
-<li>Regionserver负责切分在运行过程中变得过大的region</li>
-</ul>
-</li>
-<li><strong>Zookeeper</strong><ul>
-<li>通过选举，保证任何时候，集群中只有一个master，Master与RegionServers 启动时会向ZooKeeper注册</li>
-<li>存贮所有Region的寻址入口</li>
-<li>实时监控Region server的上线和下线信息。并实时通知给Master</li>
-<li>存储HBase的schema和table元数据</li>
-<li>默认情况下，HBase 管理ZooKeeper 实例，比如， 启动或者停止ZooKeeper</li>
-<li>Zookeeper的引入使得Master不再是单点故障</li>
-</ul>
-</li>
-<li><strong>Write-Ahead-Log（WAL）</strong>(预写式日志)<br><center><img src="http://p1.bqimg.com/567571/daa136c290a5faf5.png" alt=""></center><br>该机制用于数据的容错和恢复：<br>每个HRegionServer中都有一个HLog对象，HLog是一个实现Write Ahead Log的类，在每次用户操作写入MemStore的同时，也会写一份数据到HLog文件中，HLog文件定期会滚动出新的，并删除旧的文件（已持久化到StoreFile中的数据）。当HRegionServer意外终止后，HMaster会通过Zookeeper感知到，HMaster首先会处理遗留的 HLog文件，将其中不同Region的Log数据进行拆分，分别放到相应region的目录下，然后再将失效的region重新分配，领取到这些region的HRegionServer在Load Region的过程中，会发现有历史HLog需要处理，因此会Replay HLog中的数据到MemStore中，然后flush到StoreFiles，完成数据恢复。<h2 id="HBase容错性"><a href="#HBase容错性" class="headerlink" title="HBase容错性"></a>HBase容错性</h2></li>
-<li>Master容错：Zookeeper重新选择一个新的Master<ul>
-<li>无Master过程中，数据读取仍照常进行；</li>
-<li>无master过程中，region切分、负载均衡等无法进行；</li>
-</ul>
-</li>
-<li>RegionServer容错：定时向Zookeeper汇报心跳，如果一旦时间内未出现心跳，Master将该RegionServer上的Region重新分配到其他RegionServer上，失效服务器上“预写”日志由主服务器进行分割并派送给新的RegionServer</li>
-<li>Zookeeper容错：Zookeeper是一个可靠地服务，一般配置3或5个Zookeeper实例<h2 id="Region定位流程"><a href="#Region定位流程" class="headerlink" title="Region定位流程"></a>Region定位流程</h2><center><img src="http://i1.piimg.com/567571/bb229506635f0f77.jpg" alt=""></center></li>
-<li>寻找RegionServer<br>ZooKeeper–&gt; -ROOT-(单Region)–&gt; .META.–&gt; 用户表</li>
-<li>-ROOT-<ul>
-<li>表包含.META.表所在的region列表，该表只会有一个Region；</li>
-<li>Zookeeper中记录了-ROOT-表的location。</li>
-</ul>
-</li>
-<li>.META.<br>表包含所有的用户空间region列表，以及RegionServer的服务器地址。</li>
-</ul>
-<h1 id="Hbase-使用场景"><a href="#Hbase-使用场景" class="headerlink" title="Hbase 使用场景"></a>Hbase 使用场景</h1><ul>
-<li>大数据量存储，大数据量高并发操作</li>
-<li>需要对数据随机读写操作</li>
-<li>读写访问均是非常简单的操作</li>
-</ul>
-<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a href="http://wenku.baidu.com/view/b46eadd228ea81c758f578f4.html" target="_blank" rel="external">读和写的流程</a><br><a href="http://blog.csdn.net/dianacody/article/details/39530165" target="_blank" rel="external">HBase的Region机制</a></p>
-</key,>
       
     </div>
 
@@ -415,11 +359,9 @@ Hbase">
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag">#hadoop</a>
+            <a href="/tags/java/" rel="tag">#java</a>
           
-            <a href="/tags/Hbase/" rel="tag">#Hbase</a>
-          
-            <a href="/tags/大数据/" rel="tag">#大数据</a>
+            <a href="/tags/volatile/" rel="tag">#volatile</a>
           
         </div>
       
@@ -428,16 +370,12 @@ Hbase">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/06/centos7 网桥的配置/" rel="next" title="centos7 网桥的配置">
-                <i class="fa fa-chevron-left"></i> centos7 网桥的配置
-              </a>
-            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/16/impala的原理架构/" rel="prev" title="impala的原理架构">
-                impala的原理架构 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/21/Spring MVC 框架及基本配置/" rel="prev" title="Spring MVC 框架及基本配置">
+                Spring MVC 框架及基本配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -453,10 +391,10 @@ Hbase">
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/02/16/Hbase原理、基本概念、基本架构/"
-     data-title="Hbase原理、基本概念、基本架构"
+        <div class="ds-share flat" data-thread-key="2016/07/21/Java中Volatile关键字详解/"
+     data-title="Java中Volatile关键字详解"
      data-content=""
-     data-url="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/">
+     data-url="http://yoursite.com/2016/07/21/Java中Volatile关键字详解/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -486,8 +424,8 @@ Hbase">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/16/Hbase原理、基本概念、基本架构/"
-           data-title="Hbase原理、基本概念、基本架构" data-url="http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/">
+      <div class="ds-thread" data-thread-key="2016/07/21/Java中Volatile关键字详解/"
+           data-title="Java中Volatile关键字详解" data-url="http://yoursite.com/2016/07/21/Java中Volatile关键字详解/">
       </div>
     
   </div>
@@ -585,7 +523,7 @@ Hbase">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-表特点"><span class="nav-number">1.1.</span> <span class="nav-text">Hbase 表特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-数据模型"><span class="nav-number">2.</span> <span class="nav-text">Hbase 数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase-逻辑视图"><span class="nav-number">2.1.</span> <span class="nav-text">Hbase 逻辑视图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-架构及基本组件"><span class="nav-number">3.</span> <span class="nav-text">Hbase 架构及基本组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本组件说明"><span class="nav-number">3.1.</span> <span class="nav-text">基本组件说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase容错性"><span class="nav-number">3.2.</span> <span class="nav-text">HBase容错性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region定位流程"><span class="nav-number">3.3.</span> <span class="nav-text">Region定位流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hbase-使用场景"><span class="nav-number">4.</span> <span class="nav-text">Hbase 使用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">5.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可见性"><span class="nav-number">1.1.</span> <span class="nav-text">可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原子性"><span class="nav-number">1.2.</span> <span class="nav-text">原子性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile-原理"><span class="nav-number">2.</span> <span class="nav-text">volatile 原理</span></a></li></ol></div>
             
           </div>
         </section>

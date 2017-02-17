@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>zfy-非鱼</title>
+  <title>zfylin-非鱼</title>
   <subtitle>子非鱼焉知鱼之乐</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-16T12:34:31.518Z</updated>
+  <updated>2017-02-17T02:10:12.314Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
-    <name>Zhifeiyu</name>
+    <name>zfylin</name>
     
   </author>
   
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/02/16/impala%E7%9A%84%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84/"/>
     <id>http://yoursite.com/2017/02/16/impala的原理架构/</id>
     <published>2017-02-16T12:05:26.000Z</published>
-    <updated>2017-02-16T12:34:31.518Z</updated>
+    <updated>2017-02-17T02:10:12.314Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由cloudera公司主导开发的大数据实时查询分析工具，宣称比原来基于MapReduce的HiveSQL查询速度提升3~90倍，且更加灵活易用。提供类SQL的查询语句，能够查询存储在Hadoop的HDFS和Hbase中的PB级大数据。查询速度快是其最大的卖点。简言之impala作为大数据实时查询分析工具，具有查询速度快，灵活性高，易整合，可伸缩性强等特点。</p>
 <ol>
@@ -29,7 +29,7 @@
 <li>易整合。很容易和hadoop系统整合，并使用hadoop生态系统的资源和优势，不需要将数据迁移到特定的存储系统就能满足查询分析的要求。</li>
 <li>可伸缩性。可以很好的与一些BI应用系统协同工作，如Microstrategy、Tableau、Qlikview等。</li>
 </ol>
-<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><center><img src="http://p1.bpimg.com/567571/e5d78868e694ffd2.jpg" alt=""></center><br>Impala没有再使用缓慢的Hive+MapReduce批处理，而是通过使用与商用并行关系数据库中类似的分布式查询引擎（由Query Planner、Query Coordinator和Query Exec Engine三部分组成），可以直接从HDFS或HBase中用SELECT、JOIN和统计函数查询数据，从而大大降低了延迟。<br>Impala主要由Impalad， State Store和CLI组成。<br>- <strong>Impalad</strong>: 与DataNode运行在同一节点上，由Impalad进程表示，它接收客户端的查询请求（接收查询请求的Impalad为Coordinator，Coordinator通过JNI调用java前端解释SQL查询语句，生成查询计划树，再通过调度器把执行计划分发给具有相应数据的其它Impalad进行执行），读写数据，并行执行查询，并把结果通过网络流式的传送回给Coordinator，由Coordinator返回给客户端。同时Impalad也与State Store保持连接，用于确定哪个Impalad是健康和可以接受新的工作。在Impalad中启动三个ThriftServer: beeswax_server（连接客户端），hs2_server（借用Hive元数据）， be_server（Impalad内部使用）和一个ImpalaServer服务。<br>- <strong>Impala State Store</strong>: 跟踪集群中的Impalad的健康状态及位置信息，由statestored进程表示，它通过创建多个线程来处理Impalad的注册订阅和与各Impalad保持心跳连接，各Impalad都会缓存一份State Store中的信息，当State Store离线后（Impalad发现State Store处于离线时，会进入recovery模式，反复注册，当State Store重新加入集群后，自动恢复正常，更新缓存数据）因为Impalad有State Store的缓存仍然可以工作，但会因为有些Impalad失效了，而已缓存数据无法更新，导致把执行计划分配给了失效的Impalad，导致查询失败。<br>- <strong>CLI</strong>: 提供给用户查询使用的命令行工具（Impala Shell使用python实现），同时Impala还提供了Hue，JDBC， ODBC使用接口。<br>上图可以看出，位于Datanode上的每个impalad进程，都具有Query Planner,QueryCoordinator,Query ExecEnginer这几个组件，每个impala节点在功能上是对等的，也就是说，任何一个节点都能接受外部查询请求。当有一个节点发生故障后，其他节点仍然能够接管，这还得益于HDFS的数据冗余备份机制，即使某个impalad节点挂掉，只要挂掉的节点上的数据在其他节点上有备份，仍然是可以计算的。<br><br># 查询处理过程<br><center><img src="http://i1.piimg.com/567571/3149d21b5be7b352.png" alt=""></center>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><center><img src="http://p1.bpimg.com/567571/e5d78868e694ffd2.jpg" alt=""></center><br>Impala没有再使用缓慢的Hive+MapReduce批处理，而是通过使用与商用并行关系数据库中类似的分布式查询引擎（由Query Planner、Query Coordinator和Query Exec Engine三部分组成），可以直接从HDFS或HBase中用SELECT、JOIN和统计函数查询数据，从而大大降低了延迟。<br>Impala主要由Impalad， State Store和CLI组成。<br>- <strong>Impalad</strong>: 与DataNode运行在同一节点上，由Impalad进程表示，它接收客户端的查询请求（接收查询请求的Impalad为Coordinator，Coordinator通过JNI调用java前端解释SQL查询语句，生成查询计划树，再通过调度器把执行计划分发给具有相应数据的其它Impalad进行执行），读写数据，并行执行查询，并把结果通过网络流式的传送回给Coordinator，由Coordinator返回给客户端。同时Impalad也与State Store保持连接，用于确定哪个Impalad是健康和可以接受新的工作。在Impalad中启动三个ThriftServer: beeswax_server（连接客户端），hs2_server（借用Hive元数据）， be_server（Impalad内部使用）和一个ImpalaServer服务。<br>- <strong>Impala State Store</strong>: 跟踪集群中的Impalad的健康状态及位置信息，由statestored进程表示，它通过创建多个线程来处理Impalad的注册订阅和与各Impalad保持心跳连接，各Impalad都会缓存一份State Store中的信息，当State Store离线后（Impalad发现State Store处于离线时，会进入recovery模式，反复注册，当State Store重新加入集群后，自动恢复正常，更新缓存数据）因为Impalad有State Store的缓存仍然可以工作，但会因为有些Impalad失效了，而已缓存数据无法更新，导致把执行计划分配给了失效的Impalad，导致查询失败。<br>- <strong>CLI</strong>: 提供给用户查询使用的命令行工具（Impala Shell使用python实现），同时Impala还提供了Hue，JDBC， ODBC使用接口。<br>上图可以看出，位于Datanode上的每个impalad进程，都具有Query Planner,QueryCoordinator,Query ExecEnginer这几个组件，每个impala节点在功能上是对等的，也就是说，任何一个节点都能接受外部查询请求。当有一个节点发生故障后，其他节点仍然能够接管，这还得益于HDFS的数据冗余备份机制，即使某个impalad节点挂掉，只要挂掉的节点上的数据在其他节点上有备份，仍然是可以计算的。<br><br># 查询处理过程<br><br><center><img src="http://i1.piimg.com/567571/3149d21b5be7b352.png" alt=""></center>
 
 <h1 id="Impala-VS-Hive"><a href="#Impala-VS-Hive" class="headerlink" title="Impala VS Hive"></a>Impala VS Hive</h1><p> Impala与Hive都是构建在Hadoop之上的数据查询工具各有不同的侧重适应面，但从客户端使用来看Impala与Hive有很多的共同之处，如数据表元数据、ODBC/JDBC驱动、SQL语法、灵活的文件格式、存储资源池等。Impala与Hive在Hadoop中的关系如图 2所示。<strong>Hive适合于长时间的批处理查询分析，而Impala适合于实时交互式SQL查询</strong>。可以先使用hive进行数据转换处理，之后使用Impala在Hive处理后的结果数据集上进行快速的数据分析。</p>
 <p><center><img src="http://p1.bpimg.com/567571/f027ca73464a765a.jpg" alt=""></center></p>
@@ -97,7 +97,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
@@ -113,7 +113,7 @@
     <link href="http://yoursite.com/2017/02/16/Hbase%E5%8E%9F%E7%90%86%E3%80%81%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%81%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84/"/>
     <id>http://yoursite.com/2017/02/16/Hbase原理、基本概念、基本架构/</id>
     <published>2017-02-16T07:02:22.000Z</published>
-    <updated>2017-02-16T09:43:36.056Z</updated>
+    <updated>2017-02-17T02:10:12.147Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HBase是一个构建在HDFS上的分布式列存储系统；<br>HBase是基于Google BigTable模型开发的，典型的key/value系统；<br>HBase是Apache Hadoop生态系统中的重要一员，主要用于海量结构化数据存储；<br>从逻辑上讲，HBase将数据按照表、行和列进行存储。<br>与hadoop一样，Hbase目标主要依靠横向扩展，通过不断增加廉价的商用服务器，来增加计算和存储能力。</p>
 <h2 id="Hbase-表特点"><a href="#Hbase-表特点" class="headerlink" title="Hbase 表特点"></a>Hbase 表特点</h2><ul>
@@ -180,7 +180,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
@@ -196,7 +196,7 @@
     <link href="http://yoursite.com/2017/01/06/centos7%20%E7%BD%91%E6%A1%A5%E7%9A%84%E9%85%8D%E7%BD%AE/"/>
     <id>http://yoursite.com/2017/01/06/centos7 网桥的配置/</id>
     <published>2017-01-06T06:11:45.000Z</published>
-    <updated>2017-01-06T06:11:45.965Z</updated>
+    <updated>2017-02-17T02:10:12.231Z</updated>
     
     <content type="html"><![CDATA[<p><a href="http://tonylit.me/2016/04/06/centos7%E7%BD%91%E6%A1%A5%E9%85%8D%E7%BD%AE/" target="_blank" rel="external">http://tonylit.me/2016/04/06/centos7%E7%BD%91%E6%A1%A5%E9%85%8D%E7%BD%AE/</a></p>
 ]]></content>
@@ -207,7 +207,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
     
     
       <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
@@ -216,8 +216,6 @@
     
       <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
     
-      <category term="net" scheme="http://yoursite.com/tags/net/"/>
-    
   </entry>
   
   <entry>
@@ -225,7 +223,7 @@
     <link href="http://yoursite.com/2016/12/30/hive%20&amp;%20hbase/"/>
     <id>http://yoursite.com/2016/12/30/hive &amp; hbase/</id>
     <published>2016-12-30T01:23:32.000Z</published>
-    <updated>2016-12-30T01:29:57.743Z</updated>
+    <updated>2017-02-17T02:10:12.307Z</updated>
     
     <content type="html"><![CDATA[<p><strong>Hive 是为了简化编写MapReduce程序而生的</strong>，使用MapReduce做过数据分析的人都知道，很多分析程序除业务逻辑不同外，程序流程基本一样。在这种 情况下，就需要Hive这样的用戶编程接口。Hive本身不存储和计算数据，它完全依赖于HDFS和MapReduce，Hive中的表纯逻辑，就是些表 的定义等，也就是表的元数据。使用SQL实现Hive是因为SQL大家都熟悉，转换成本低，类似作用的Pig就不是SQL。</p>
 <p><strong>HBase为查询而生的</strong>，它通过组织起节点內所有机器的內存，提供一個超大的內存Hash表，它需要组织自己的数据结构，包括磁盘和內存中的，而Hive是不做这个的，表在HBase中是物理表，而不是逻辑表，搜索引擎使用它來存储索引，以满足查询的实时性需求。</p>
@@ -250,7 +248,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
@@ -268,7 +266,7 @@
     <link href="http://yoursite.com/2016/12/27/RabbitMQ%E4%B8%8B%E7%9A%84%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B8%8E%E8%AE%A2%E9%98%85%E5%8F%91%E5%B8%83%E6%A8%A1%E5%BC%8F/"/>
     <id>http://yoursite.com/2016/12/27/RabbitMQ下的生产消费者模式与订阅发布模式/</id>
     <published>2016-12-27T02:08:09.000Z</published>
-    <updated>2017-02-16T09:15:16.590Z</updated>
+    <updated>2017-02-17T02:10:12.194Z</updated>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>生产消费者模式与订阅发布模式是使用消息中间件时常用的两种模式，用于功能解耦和分布式系统间的消息通信。</p>
 <h2 id="数据接入"><a href="#数据接入" class="headerlink" title="数据接入"></a>数据接入</h2><p>一个用户行为采集系统，负责从App端采集用户点击行为数据。通常会将数据上报和数据处理分离开，即App端通过REST API上报数据，后端拿到数据后放入队列中就立刻返回，而数据处理则另外使用Worker从队列中取出数据来做，如下图所示：<br><img src="http://p1.bqimg.com/567571/cc3a7aa1c382177e.jpg" alt=""><br>这样做的好处有：第一，功能分离，上报的API接口不关心数据处理功能，只负责接入数据；第二，数据缓冲，数据上报的速率是不可控的，取决于用户使用频率，采用该模式可以一定程度地缓冲数据；第三，易于扩展，在数据量大时，通过增加数据处理Worker来扩展，提高处理速率。这便是典型的<strong>生产消费者模式</strong>，数据上报为生产者，数据处理为消费者。</p>
@@ -292,7 +290,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="MQ" scheme="http://yoursite.com/categories/MQ/"/>
     
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
@@ -308,7 +306,7 @@
     <link href="http://yoursite.com/2016/12/20/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%20Cloudera%20(%20CDH%205.x%20)/"/>
     <id>http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/</id>
     <published>2016-12-20T02:37:06.000Z</published>
-    <updated>2017-02-16T09:41:57.795Z</updated>
+    <updated>2017-02-17T02:10:12.332Z</updated>
     
     <content type="html"><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><ul>
 <li>系统 centos 6.5</li>
@@ -367,7 +365,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
@@ -383,7 +381,7 @@
     <link href="http://yoursite.com/2016/12/08/hadoop&amp;hbase%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/"/>
     <id>http://yoursite.com/2016/12/08/hadoop&amp;hbase自动化部署/</id>
     <published>2016-12-08T07:50:50.000Z</published>
-    <updated>2016-12-08T08:00:28.253Z</updated>
+    <updated>2017-02-17T02:10:12.261Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Hadoop-amp-Hbase-自动化部署"><a href="#Hadoop-amp-Hbase-自动化部署" class="headerlink" title="Hadoop &amp; Hbase 自动化部署"></a>Hadoop &amp; Hbase 自动化部署</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>项目组只有一台高配的服务器，故决定使用docker搭建Hadoop&amp;Hbase等集群环境。</p>
 <h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><p>Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。</p>
@@ -422,7 +420,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
@@ -438,7 +436,7 @@
     <link href="http://yoursite.com/2016/11/28/Centos%20%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/"/>
     <id>http://yoursite.com/2016/11/28/Centos 代理设置/</id>
     <published>2016-11-28T00:50:02.000Z</published>
-    <updated>2016-12-08T08:00:28.209Z</updated>
+    <updated>2017-02-17T02:10:12.113Z</updated>
     
     <content type="html"><![CDATA[<h2 id="系统级代理"><a href="#系统级代理" class="headerlink" title="系统级代理"></a>系统级代理</h2><p>vi /etc/profile<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http_proxy = http://username:password@yourproxy:8080/</div><div class="line">ftp_proxy = http://username:password@yourproxy:8080/</div><div class="line">export http_proxy</div><div class="line">export ftp_proxy</div></pre></td></tr></table></figure></p>
 <h2 id="yum-代理"><a href="#yum-代理" class="headerlink" title="yum 代理"></a>yum 代理</h2><p>vi /etc/yum.conf<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">proxy = http://username:password@yourproxy:8080/</div></pre></td></tr></table></figure></p>
@@ -468,7 +466,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
     
     
       <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
@@ -484,7 +482,7 @@
     <link href="http://yoursite.com/2016/11/25/Centos7%20%E4%BF%AE%E6%94%B9hostname/"/>
     <id>http://yoursite.com/2016/11/25/Centos7 修改hostname/</id>
     <published>2016-11-25T01:49:53.000Z</published>
-    <updated>2017-01-05T08:54:31.497Z</updated>
+    <updated>2017-02-17T02:10:12.127Z</updated>
     
     <content type="html"><![CDATA[<p>在CentOS或RHEL中，有三种定义的主机名:a、静态的（static），b、瞬态的（transient），以及 c、灵活的（pretty）。“静态”主机名也称为内核主机名，是系统在启动时从/etc/hostname自动初始化的主机名。“瞬态”主机名是在系统运行时临时分配的主机名，例如，通过DHCP或mDNS服务器分配。静态主机名和瞬态主机名都遵从作为互联网域名同样的字符限制规则。而另一方面，“灵活”主机名则允许使用自由形式（包括特殊/空白字符）的主机名，以展示给终端用户（如Dan’s Computer）。</p>
 <p>在CentOS/RHEL 7中，有个叫hostnamectl的命令行工具，它允许你查看或修改与主机名相关的配置。<br>要查看主机名相关的设置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">$ hostnamectl status</div></pre></td></tr></table></figure></p>
@@ -500,7 +498,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
     
     
       <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
@@ -514,7 +512,7 @@
     <link href="http://yoursite.com/2016/11/24/Dockerfile%E5%91%BD%E4%BB%A4%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%9E%E4%BE%8B/"/>
     <id>http://yoursite.com/2016/11/24/Dockerfile命令介绍及实例/</id>
     <published>2016-11-24T12:04:02.000Z</published>
-    <updated>2016-12-08T08:00:28.221Z</updated>
+    <updated>2017-02-17T02:10:12.138Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Docker简介"><a href="#Docker简介" class="headerlink" title="Docker简介"></a>Docker简介</h2><p>Docker项目提供了构建在Linux内核功能之上，协同在一起的的高级工具。其目标是帮助开发和运维人员更容易地跨系统跨主机交付应用程序和他们的依赖。Docker通过Docker容器，一个安全的，基于轻量级容器的环境，来实现这个目标。这些容器由镜像创建，而镜像可以通过命令行手工创建或 者通过Dockerfile自动创建。</p>
 <h2 id="Dokcerfile"><a href="#Dokcerfile" class="headerlink" title="Dokcerfile"></a>Dokcerfile</h2><p>Dockerfile是由一系列命令和参数构成的脚本，这些命令应用于基础镜像并最终创建一个新的镜像。它们简化了从头到尾的流程并极大的简化了部署工作。Dockerfile从FROM命令开始，紧接着跟随者各种方法，命令和参数。其产出为一个新的可以用于创建容器的镜像。</p>
@@ -548,7 +546,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="docker" scheme="http://yoursite.com/categories/docker/"/>
     
     
       <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
@@ -564,7 +562,7 @@
     <link href="http://yoursite.com/2016/10/29/hadoop%20%E5%AE%89%E8%A3%85/"/>
     <id>http://yoursite.com/2016/10/29/hadoop 安装/</id>
     <published>2016-10-29T03:25:31.000Z</published>
-    <updated>2016-12-08T08:00:28.247Z</updated>
+    <updated>2017-02-17T02:10:12.248Z</updated>
     
     <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a><strong>环境</strong></h2><p>centos7 + hadoop2.7.2 + jdk1.8 + hbase1.2.3</p>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a><strong>准备工作</strong></h2><h3 id="创建hadoop用户"><a href="#创建hadoop用户" class="headerlink" title="创建hadoop用户"></a>创建hadoop用户</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># su hadoop</div><div class="line"># useradd -m hadoop -s /bin/bash   #创建新用户hadoop</div><div class="line"># passwd hadoop    #创建密码</div><div class="line"># vim /etc/sudoers  #赋予管理员权限</div></pre></td></tr></table></figure>
@@ -627,7 +625,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
@@ -643,7 +641,7 @@
     <link href="http://yoursite.com/2016/10/27/Java%20%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"/>
     <id>http://yoursite.com/2016/10/27/Java 反射机制/</id>
     <published>2016-10-27T07:39:49.000Z</published>
-    <updated>2016-12-08T08:00:28.229Z</updated>
+    <updated>2017-02-17T02:10:12.176Z</updated>
     
     <content type="html"><![CDATA[<p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。<br>Java反射机制主要提供了以下功能： 在运行时判断任意一个对象所属的类；在运行时构造任意一个类的对象；在运行时判断任意一个类所具有的成员变量和方法；在运行时调用任意一个对象的方法；生成动态代理…</p>
 <h2 id="得到某个对象属性"><a href="#得到某个对象属性" class="headerlink" title="得到某个对象属性"></a><strong>得到某个对象属性</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getProperty</span><span class="params">(Object owner, String fieldName)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">       Class ownerClass = owner.getClass();</div><div class="line">       Field field = ownerClass.getField(fieldName);<span class="comment">// 属性必须是public，否则会报java.lang.NoSuchFieldException异常</span></div><div class="line">       Object property = field.get(owner);</div><div class="line">       <span class="keyword">return</span> property;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
@@ -661,7 +659,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
     
     
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
@@ -675,7 +673,7 @@
     <link href="http://yoursite.com/2016/10/26/Linux-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/"/>
     <id>http://yoursite.com/2016/10/26/Linux-磁盘管理/</id>
     <published>2016-10-26T08:07:42.000Z</published>
-    <updated>2017-01-05T08:49:07.123Z</updated>
+    <updated>2017-02-17T02:10:12.187Z</updated>
     
     <content type="html"><![CDATA[<p>Linux磁盘管理常用的命令：<strong>df</strong>、<strong>du</strong>、<strong>fdisk</strong>.</p>
 <h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><p>df命令可以获取硬盘被占用了多少空间，目前还剩下多少空间等信息，它也可以显示所有文件系统对i节点和磁盘块的使用情况。<br>df命令各个选项的含义如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-a：显示所有文件系统的磁盘使用情况，包括0块（block）的文件系统，如/proc文件系统。</div><div class="line">-k：以k字节为单位显示。</div><div class="line">-i：显示i节点信息，而不是磁盘块。</div><div class="line">-t：显示各指定类型的文件系统的磁盘空间使用情况。</div><div class="line">-x：列出不是某一指定类型文件系统的磁盘空间使用情况（与t选项相反）。</div><div class="line">-T：显示文件系统类型。</div></pre></td></tr></table></figure></p>
@@ -693,7 +691,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
     
     
       <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
@@ -707,7 +705,7 @@
     <link href="http://yoursite.com/2016/10/25/JVM%E5%8E%9F%E7%90%86/"/>
     <id>http://yoursite.com/2016/10/25/JVM原理/</id>
     <published>2016-10-25T09:15:18.000Z</published>
-    <updated>2016-12-08T08:00:28.228Z</updated>
+    <updated>2017-02-17T02:10:12.160Z</updated>
     
     <content type="html"><![CDATA[<h2 id="JVM-原理"><a href="#JVM-原理" class="headerlink" title="JVM 原理"></a>JVM 原理</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。</p>
 <p>java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。</p>
@@ -729,7 +727,7 @@
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
     
     
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
@@ -739,21 +737,21 @@
   </entry>
   
   <entry>
-    <title>RabbitMQ下的生产消费者模式与订阅发布模式</title>
+    <title>Spring MVC 框架及基本配置</title>
     <link href="http://yoursite.com/2016/07/21/Spring%20MVC%20%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/"/>
     <id>http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/</id>
     <published>2016-07-21T02:08:09.000Z</published>
-    <updated>2017-02-15T09:47:04.882Z</updated>
+    <updated>2017-02-17T02:10:12.223Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="Web开发-请求响应模型"><a href="#Web开发-请求响应模型" class="headerlink" title="Web开发-请求响应模型"></a>Web开发-请求响应模型</h2><p><center><img src="http://static.oschina.net/uploads/space/2016/0721/193337_5TaM_2302941.png" alt="请求响应模型"></center></p>
+    <content type="html"><![CDATA[<h2 id="Web开发-请求响应模型"><a href="#Web开发-请求响应模型" class="headerlink" title="Web开发-请求响应模型"></a>Web开发-请求响应模型</h2><p><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/6043565-file_1487163503878_11a8c.png" alt="请求响应模型"></center></p>
 <ol>
 <li>web客户端（如：浏览器）发起请求，如访问www.baidu.com</li>
 <li>web服务器端（如：tomcat）接收请求，处理请求，最后产生响应</li>
-<li>web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）<h2 id="Web-MVC概述"><a href="#Web-MVC概述" class="headerlink" title="Web MVC概述"></a>Web MVC概述</h2><center><img src="http://static.oschina.net/uploads/space/2016/0721/194538_86Xj_2302941.png" alt=" MVC概述"></center><br><strong>Model（模型）</strong>：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 JavaBean 组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。<br><strong>View（视图）</strong>：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。<br><strong>Controller（控制器）</strong>：接收用户请求，委托给模型进行处理（状态改变） ，处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。<h2 id="Spring-MVC-架构"><a href="#Spring-MVC-架构" class="headerlink" title="Spring MVC 架构"></a>Spring MVC 架构</h2><h3 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h3><center><img src="http://static.oschina.net/uploads/space/2016/0721/194950_U1nS_2302941.png" alt=" 请求处理过程"></center><br>执行步骤如下：</li>
+<li>web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）<h2 id="Web-MVC概述"><a href="#Web-MVC概述" class="headerlink" title="Web MVC概述"></a>Web MVC概述</h2><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/28677677-file_1487163208601_13fe6.png" alt=" MVC概述"></center><br><strong>Model（模型）</strong>：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 JavaBean 组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。<br><strong>View（视图）</strong>：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。<br><strong>Controller（控制器）</strong>：接收用户请求，委托给模型进行处理（状态改变） ，处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。<h2 id="Spring-MVC-架构"><a href="#Spring-MVC-架构" class="headerlink" title="Spring MVC 架构"></a>Spring MVC 架构</h2><h3 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h3><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/89018877-file_1487163563329_16205.png" alt=" 请求处理过程"></center><br>执行步骤如下：</li>
 <li>首先用户发送请求————&gt;前端控制器，前端控制器根据请求信息（如 URL）来决定选择哪一个页面控制器进行处理并把请求委托给它；上图中的 1、2 步骤；</li>
 <li>页面控制器接收到请求后，进行功能处理，首先需要收集和绑定请求参数到一个对象，并进行验证，然后将该对象对象委托给业务对象进行处理；处理完毕后返回一个 ModelAndView（模型数据和逻辑视图名） ；上图中的 3、4、5 步骤；</li>
 <li>前端控制器收回控制权，然后根据返回的逻辑视图名，选择相应的视图进行渲染，并把模型数据传入以便视图渲染；上图 中的步骤 6、7；</li>
-<li>前端控制器再次收回控制权，将响应返回给用户，图 2-1 中的步骤 8；至此整个结束。<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><center><img src="http://static.oschina.net/uploads/space/2016/0721/195034_qV42_2302941.png" alt=" 核心架构"></center><br>具体流程步骤：</li>
+<li>前端控制器再次收回控制权，将响应返回给用户，图 2-1 中的步骤 8；至此整个结束。<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/55267022-file_1487163626154_10138.png" alt=" 核心架构"></center><br>具体流程步骤：</li>
 <li>首先用户发送请求——&gt;DispatcherServlet，前端控制器收到请求后自己不进行处理，而是委托给其他的解析器进行处理，作为统一访问点，进行全局的流程控制；</li>
 <li>DispatcherServlet——&gt;Handlermapping（请求到处理器的映射），HandlerMapping 将会把请求映射为 HandlerExecutionChain 对象（包含一个 Handler 处理器（页面控制器）对象、多个 HandlerInterceptor 拦截器）对象，通过这种策略模式，很容易添加新的映射策略；</li>
 <li>DispatcherServlet——&gt;HandlerAdapter，HandlerAdapter 将会把处理器包装为适配器，从而支持多种类型的处理器，即适配器设计模式的应用，从而很容易支持很多类型的处理器；</li>
@@ -768,7 +766,7 @@
 <h3 id="开发处理器-页面处理器"><a href="#开发处理器-页面处理器" class="headerlink" title="开发处理器/页面处理器"></a>开发处理器/页面处理器</h3><p>非注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class HelloController implements Controller &#123;</div><div class="line"></div><div class="line">    public ModelAndView handleRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception &#123;</div><div class="line">        //1、收集参数</div><div class="line">        //2、绑定参数到命令对象</div><div class="line">        //3、调用业务对象</div><div class="line">        //4、选择下一个页面</div><div class="line">        ModelAndView mv = new ModelAndView();</div><div class="line">        //添加模型数据 可以是任意的POJO对象</div><div class="line">        mv.addObject(&quot;message&quot;, &quot;Hello World!&quot;);</div><div class="line">        //设置逻辑视图名，视图解析器会根据该名字解析到具体的视图页面</div><div class="line">        mv.setViewName(&quot;/hello&quot;);</div><div class="line">        return mv;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
 <p> <strong>ModelAndView</strong>：包含了视图要实现的模型数据和逻辑视图名；“mv.addObject(“message”, “Hello World!”);”表示添加模型数据，此处可以是任意 POJO 对象；“mv.setViewName(“/hello”);”表示设置逻辑视图名为“hello”，视图解析器会将其解析为具体的视图，如前边的视图解析器InternalResourceVi。wResolver 会将其解析为“WEB-INF/jsp/hello.jsp”。<br>注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Controller</div><div class="line">public class HelloController2 &#123;</div><div class="line">    @RequestMapping(value = &quot;/hello2&quot;)</div><div class="line">    public ModelAndView hello(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) &#123;</div><div class="line">        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</div><div class="line">        data.put(&quot;message&quot;, &quot;hello world 2&quot;);</div><div class="line">        return new ModelAndView(&quot;/hello&quot;, data);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="开发视图页面"><a href="#开发视图页面" class="headerlink" title="开发视图页面"></a>开发视图页面</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; %&gt;</div><div class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;</div><div class="line">    &lt;title&gt;Hello World&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">$&#123;message&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<h3 id="运行流程分析"><a href="#运行流程分析" class="headerlink" title="运行流程分析"></a>运行流程分析</h3><p><center><img src="http://static.oschina.net/uploads/space/2016/0721/195819_3ktW_2302941.png" alt=" 运行流程分析"></center><br>运行步骤如下：</p>
+<h3 id="运行流程分析"><a href="#运行流程分析" class="headerlink" title="运行流程分析"></a>运行流程分析</h3><p><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/53622352-file_1487163689720_8c8.png" alt=" 运行流程分析"></center><br>运行步骤如下：</p>
 <ol>
 <li>首先用户发送请求 <a href="http://localhost:8080/hello——&gt;web" target="_blank" rel="external">http://localhost:8080/hello——&gt;web</a> 容器，web 容器根据“/hello”路径映射到DispatcherServlet（url-pattern 为/）进行处理；</li>
 <li>DispatcherServlet——&gt;BeanNameUrlHandlerMapping 进行请求到处理的映射，BeanNameUrlHandlerMapping 将“/hello”路径直接映射到名字为“/hello”的 Bean 进行处理，即 HelloWorldController，BeanNameUrlHandlerMapping将其包装为HandlerExecutionChain（只包括 HelloWorldController 处理器，没有拦截器） ；</li>
@@ -783,11 +781,11 @@
     
     <summary type="html">
     
-      &lt;h2 id=&quot;Web开发-请求响应模型&quot;&gt;&lt;a href=&quot;#Web开发-请求响应模型&quot; class=&quot;headerlink&quot; title=&quot;Web开发-请求响应模型&quot;&gt;&lt;/a&gt;Web开发-请求响应模型&lt;/h2&gt;&lt;p&gt;&lt;center&gt;&lt;img src=&quot;http://stati
+      &lt;h2 id=&quot;Web开发-请求响应模型&quot;&gt;&lt;a href=&quot;#Web开发-请求响应模型&quot; class=&quot;headerlink&quot; title=&quot;Web开发-请求响应模型&quot;&gt;&lt;/a&gt;Web开发-请求响应模型&lt;/h2&gt;&lt;p&gt;&lt;center&gt;&lt;img src=&quot;http://oflrm
     
     </summary>
     
-      <category term="技术积累" scheme="http://yoursite.com/categories/%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF/"/>
+      <category term="spring" scheme="http://yoursite.com/categories/spring/"/>
     
     
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
@@ -795,6 +793,39 @@
       <category term="spring" scheme="http://yoursite.com/tags/spring/"/>
     
       <category term="springmvc" scheme="http://yoursite.com/tags/springmvc/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java中Volatile关键字详解</title>
+    <link href="http://yoursite.com/2016/07/21/Java%E4%B8%ADVolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://yoursite.com/2016/07/21/Java中Volatile关键字详解/</id>
+    <published>2016-07-21T02:08:09.000Z</published>
+    <updated>2017-02-17T02:48:10.629Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性。比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
+<h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
+<p><center><img src="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png" alt=""></center><br>当对非volatile变量进行读写的时候，每个线程先从内存拷贝变量到CPU缓存中。如果计算机有多个CPU，每个线程可能在不同的CPU上被处理，这意味着每个线程可以拷贝到不同的CPU cache中。<br><strong>而声明变量是volatile的，JVM保证了每次读变量都从内存中读，跳过CPU cache这一步。</strong><br>当一个变量定义为volatile之后，将具备两种特性：</p>
+<ol>
+<li>保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，新值对于其他线程是立即得知的。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：Java内存模型）来完成。</li>
+<li>禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个内存屏障（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot; title=&quot;基本概念&quot;&gt;&lt;/a&gt;基本概念&lt;/h1&gt;&lt;h2 id=&quot;可见性&quot;&gt;&lt;a href=&quot;#可见性&quot; class=&quot;headerlink&quot; title=&quot;可见性&quot;&gt;&lt;/a&gt;可见
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="volatile" scheme="http://yoursite.com/tags/volatile/"/>
     
   </entry>
   
