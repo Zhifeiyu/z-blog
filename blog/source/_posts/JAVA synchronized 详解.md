@@ -1,5 +1,5 @@
 ---
-title: Java集合类
+title: JAVA synchronized 详解
 date: 2017-02-20 10:23:48
 tags: [java,并发]
 categories: [java并发]
