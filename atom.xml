@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-20T06:38:49.340Z</updated>
+  <updated>2017-02-24T06:40:14.245Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,51 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JAVA 创建线程</title>
+    <link href="http://yoursite.com/2017/02/24/JAVA%20%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B/"/>
+    <id>http://yoursite.com/2017/02/24/JAVA 创建线程/</id>
+    <published>2017-02-24T02:54:10.000Z</published>
+    <updated>2017-02-24T06:40:14.245Z</updated>
+    
+    <content type="html"><![CDATA[<p>Java提供了线程类Thread来创建多线程的程序。其实，创建线程与创建普通的类的对象的操作是一样的，而线程就是Thread类或其子类的实例对象。每个Thread对象描述了一个单独的线程。要产生一个线程，有两种方法：</p>
+<ul>
+<li>需要从Java.lang.Thread类派生一个新的线程类，重写它的run()方法； </li>
+<li>实现Runnalbe接口，重载Runnalbe接口中的run()方法。</li>
+</ul>
+<p><strong>在Java中，类仅支持单继承，也就是说，当定义一个新的类的时候，它只能扩展一个外部类.这样，如果创建自定义线程类的时候是通过扩展 Thread类的方法来实现的，那么这个自定义类就不能再去扩展其他的类，也就无法实现更加复杂的功能。因此，如果自定义类必须扩展其他的类，那么就可以使用实现Runnable接口的方法来定义该类为线程类，这样就可以避免Java单继承所带来的局限性。<br>还有一点最重要的就是使用实现Runnable接口的方式创建的线程可以处理同一资源，从而实现资源的共享.</strong></p>
+<h2 id="通过扩展Thread类来创建多线程"><a href="#通过扩展Thread类来创建多线程" class="headerlink" title="通过扩展Thread类来创建多线程"></a>通过扩展Thread类来创建多线程</h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread2</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">5</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">" ticket = "</span> + ticket--);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">new</span> MyThread2().start();</div><div class="line">        <span class="keyword">new</span> MyThread2().start();</div><div class="line">        <span class="keyword">new</span> MyThread2().start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">结果：</div><div class="line">Thread-0 ticket = 5</div><div class="line">Thread-1 ticket = 5</div><div class="line">Thread-2 ticket = 5</div><div class="line">Thread-1 ticket = 4</div><div class="line">Thread-2 ticket = 4</div><div class="line">Thread-0 ticket = 4</div><div class="line">Thread-2 ticket = 3</div><div class="line">Thread-0 ticket = 3</div><div class="line">Thread-1 ticket = 3</div><div class="line">Thread-2 ticket = 2</div><div class="line">Thread-0 ticket = 2</div><div class="line">Thread-1 ticket = 2</div><div class="line">Thread-2 ticket = 1</div><div class="line">Thread-0 ticket = 1</div><div class="line">Thread-1 ticket = 1</div></pre></td></tr></table></figure>
+<p>程序中定义一个线程类，它扩展了Thread类。利用扩展的线程类在MyThread2类的主方法中创建了三个线程对象，并通过start()方法分别将它们启动。<br>从结果可以看到，每个线程分别对应5张电影票，之间并无任何关系，这就说明每个线程之间是平等的，没有优先级关系，因此都有机会得到CPU的处理。但是结果<br>显示这三个线程并不是依次交替执行，而是在三个线程同时被执行的情况下，有的线程被分配时间片的机会多，票被提前卖完，而有的线程被分配时间片的机会比较<br>少，票迟一些卖完。<br><strong>可见，利用扩展Thread类创建的多个线程，虽然执行的是相同的代码，但彼此相互独立，且各自拥有自己的资源，互不干扰。</strong></p>
+<h2 id="通过实现Runnable接口来创建多线程"><a href="#通过实现Runnable接口来创建多线程" class="headerlink" title="通过实现Runnable接口来创建多线程"></a>通过实现Runnable接口来创建多线程</h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread3</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">5</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">" ticket = "</span> + ticket--);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunnableDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        MyThread3 my1 = <span class="keyword">new</span> MyThread3();</div><div class="line">        MyThread3 my2 = <span class="keyword">new</span> MyThread3();</div><div class="line">        MyThread3 my3 = <span class="keyword">new</span> MyThread3();</div><div class="line">        <span class="keyword">new</span> Thread(my1).start();</div><div class="line">        <span class="keyword">new</span> Thread(my2).start();</div><div class="line">        <span class="keyword">new</span> Thread(my3).start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">结果：</div><div class="line">Thread-0 ticket = 5</div><div class="line">Thread-1 ticket = 5</div><div class="line">Thread-2 ticket = 5</div><div class="line">Thread-2 ticket = 4</div><div class="line">Thread-1 ticket = 4</div><div class="line">Thread-0 ticket = 4</div><div class="line">Thread-2 ticket = 3</div><div class="line">Thread-0 ticket = 3</div><div class="line">Thread-1 ticket = 3</div><div class="line">Thread-1 ticket = 2</div><div class="line">Thread-0 ticket = 2</div><div class="line">Thread-2 ticket = 2</div><div class="line">Thread-2 ticket = 1</div><div class="line">Thread-1 ticket = 1</div><div class="line">Thread-0 ticket = 1</div></pre></td></tr></table></figure>
+<p>由于这三个线程也是彼此独立，各自拥有自己的资源，即100张电影票，因此程序输出的结果和 1 结果大同小异。均是各自线程对自己的5张票进行单独的处理，互不影响。<br>可见，只要现实的情况要求保证新建线程彼此相互独立，各自拥有资源，且互不干扰，采用哪个方式来创建多线程都是可以的。因为这两种方式创建的多线程程序能够实现相同的功能。</p>
+<h2 id="通过实现Runnable接口来实现线程间的资源共享"><a href="#通过实现Runnable接口来实现线程间的资源共享" class="headerlink" title="通过实现Runnable接口来实现线程间的资源共享"></a>通过实现Runnable接口来实现线程间的资源共享</h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread3</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">5</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">" ticket = "</span> + ticket--);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunnableDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        MyThread3 my = <span class="keyword">new</span> MyThread3();</div><div class="line">        <span class="keyword">new</span> Thread(my).start();</div><div class="line">        <span class="keyword">new</span> Thread(my).start();</div><div class="line">        <span class="keyword">new</span> Thread(my).start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">结果：</div><div class="line">Thread-2 ticket = 5</div><div class="line">Thread-1 ticket = 4</div><div class="line">Thread-0 ticket = 3</div><div class="line">Thread-2 ticket = 2</div><div class="line">Thread-0 ticket = 1</div><div class="line">Thread-1 ticket = 0</div><div class="line">Thread-2 ticket = -1</div></pre></td></tr></table></figure>
+<p>序在内存中仅创建了一个资源，而新建的三个线程都是基于访问这同一资源的，并且由于每个线程上所运行的是相同的代码，因此它们执行的功能也是相同的。可见，如果现实问题中要求必须创建多个线程来执行同一任务，而且这多个线程之间还将共享同一个资源，那么就可以使用实现Runnable接口的方式来创建多线程程序。<br>结果出现-1的原因是多线程并发访问资源ticket时，没有多线程进行线程同步。修改后代码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread3</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Integer ticket = <span class="number">5</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line"><span class="comment">//                System.out.println(Thread.currentThread().getName() + " sleep ... , i = " + i + ", ticket = " + ticket);</span></div><div class="line">                TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">synchronized</span> (ticket) &#123; <span class="comment">// 使用synchronized同步</span></div><div class="line">                <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</div><div class="line">                    System.out.println(Thread.currentThread().getName() + <span class="string">" ticket = "</span> + ticket--);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunnableDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        MyThread3 my = <span class="keyword">new</span> MyThread3();</div><div class="line">        <span class="keyword">new</span> Thread(my).start();</div><div class="line">        <span class="keyword">new</span> Thread(my).start();</div><div class="line">        <span class="keyword">new</span> Thread(my).start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">结果：</div><div class="line">Thread-1 ticket = 5</div><div class="line">Thread-0 ticket = 4</div><div class="line">Thread-2 ticket = 3</div><div class="line">Thread-0 ticket = 2</div><div class="line">Thread-2 ticket = 1</div></pre></td></tr></table></figure>
+<p><strong>实现Runnable接口相对于扩展Thread类来说，具有无可比拟的优势。这种方式不仅有利于程序的健壮性，使代码能够被多个线程共享，而且代码和数据资源相对独立，从而特别适合多个具有相同代码的线程去处理同一资源的情况。这样一来，线程、代码和数据资源三者有效分离，很好地体现了面向对象程序设计的思想。因此，几乎所有的多线程程序都是通过实现Runnable接口的方式来完成的。</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Java提供了线程类Thread来创建多线程的程序。其实，创建线程与创建普通的类的对象的操作是一样的，而线程就是Thread类或其子类的实例对象。每个Thread对象描述了一个单独的线程。要产生一个线程，有两种方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要从Java.lang.Th
+    
+    </summary>
+    
+      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+      <category term="线程" scheme="http://yoursite.com/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>JAVA synchronized 详解</title>
@@ -113,6 +158,57 @@
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
     
       <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JAVA 线程安全</title>
+    <link href="http://yoursite.com/2017/02/19/JAVA%20%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/"/>
+    <id>http://yoursite.com/2017/02/19/JAVA 线程安全/</id>
+    <published>2017-02-19T02:23:48.000Z</published>
+    <updated>2017-02-24T02:21:52.577Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="java内存模型"><a href="#java内存模型" class="headerlink" title="java内存模型"></a>java内存模型</h1><p>java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。</p>
+<h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>多个线程之间是不能互相传递数据通信的，它们之间的沟通只能通过共享变量来进行。Java内存模型（JMM）规定了jvm有主内存，主内存是多个线程共享的。当new一个对象的时候，也是被分配在主内存中，每个线程都有自己的工作内存，工作内存存储了主存的某些对象的副本，当然线程的工作内存大小是有限制的。当线程操作某个对象时，执行顺序如下：</p>
+<ul>
+<li>从主存复制变量到当前工作内存 (read and load)</li>
+<li>执行代码，改变共享变量值 (use and assign)</li>
+<li>用工作内存数据刷新主存相关内容 (store and write)<br>JVM规范定义了线程对主存的操作指令：read，load，use，assign，store，write。当一个共享变量在多个线程的工作内存中都有副本时，如果一个线程修改了这个共享变量，那么其他线程应该能够看到这个被修改后的值，这就是多线程的可见性问题。</li>
+</ul>
+<h2 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h2><p>线程在引用变量时不能直接从主内存中引用,如果线程工作内存中没有该变量,则会从主内存中拷贝一个副本到工作内存中,这个过程为read-load,完成后线程会引用该副本。当同一线程再度引用该字段时,有可能重新从主存中获取变量副本(read-load-use),也有可能直接引用原来的副本 (use),也就是说 read,load,use顺序可以由JVM实现系统决定。<br> 线程不能直接为主存中中字段赋值，它会将值指定给工作内存中的变量副本(assign),完成后这个变量副本会同步到主存储区(store- write)，至于何时同步过去，根据JVM实现系统决定.有该字段,则会从主内存中将该字段赋值到工作内存中,这个过程为read-load,完成后线程会引用该变量副本，当同一线程多次重复对字段赋值时,比如：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</div><div class="line">    a++;</div></pre></td></tr></table></figure></p>
+<p>线程有可能只对工作内存中的副本进行赋值,只到最后一次赋值后才同步到主存储区，所以assign,store,weite顺序可以由JVM实现系统决定。假设有一个共享变量x，线程a执行x=x+1。从上面的描述中可以知道x=x+1并不是一个原子操作，它的执行过程如下：</p>
+<ol>
+<li>`从主存中读取变量x副本到工作内存</li>
+<li>给x加1</li>
+<li>将x加1后的值写回主 存<br>如果另外一个线程b执行x=x-1，执行过程如下：</li>
+<li>从主存中读取变量x副本到工作内存</li>
+<li>给x减1</li>
+<li>将x减1后的值写回主存<br>那么显然，最终的x的值是不可靠的。假设x现在为10，线程a加1，线程b减1，从表面上看，似乎最终x还是为10，但是多线程情况下会有这种情况发生：</li>
+<li>线程a从主存读取x副本到工作内存，工作内存中x值为10</li>
+<li>线程b从主存读取x副本到工作内存，工作内存中x值为10</li>
+<li>线程a将工作内存中x加1，工作内存中x值为11</li>
+<li>线程a将x提交主存中，主存中x为11</li>
+<li>线程b将工作内存中x值减1，工作内存中x值为9</li>
+<li>线程b将x提交到中主存中，主存中x为9<br>同样，x有可能为11，如果x是一个银行账户，线程a存款，线程b扣款，显然这样是有严重问题的，要解决这个问题，必须保证线程a和线程b是有序执行的，并且每个线程执行的加1或减1是一个原子操作。<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2>java用synchronized关键字做为多线程并发环境的执行有序性的保证手段之一。当一段代码会修改共享变量，这一段代码成为互斥区或临界区，为了保证共享变量的正确性，synchronized标示了临界区。典型的用法如下：<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">synchronized</span>(锁)&#123;   </div><div class="line">     临界区代码   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h2><p> volatile是java提供的一种同步手段，只不过它是轻量级的同步，为什么这么说，因为<strong>volatile只能保证多线程的内存可见性，不能保证多线程的执行有序性。而最彻底的同步要保证有序性和可见性，例如synchronized</strong>。任何被volatile修饰的变量，都不拷贝副本到工作内存，任何修改都及时写在主存。因此对于Valatile修饰的变量的修改，所有线程马上就能看到，但是volatile不能保证对变量的修改是有序的。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;java内存模型&quot;&gt;&lt;a href=&quot;#java内存模型&quot; class=&quot;headerlink&quot; title=&quot;java内存模型&quot;&gt;&lt;/a&gt;java内存模型&lt;/h1&gt;&lt;p&gt;java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程
+    
+    </summary>
+    
+      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+      <category term="线程" scheme="http://yoursite.com/tags/%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
@@ -282,9 +378,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
-    
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="impala" scheme="http://yoursite.com/tags/impala/"/>
     
@@ -365,11 +461,11 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="Hbase" scheme="http://yoursite.com/tags/Hbase/"/>
-    
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -435,9 +531,9 @@
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
-    
       <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
       <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
     
@@ -475,9 +571,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="MQ" scheme="http://yoursite.com/tags/MQ/"/>
     
@@ -550,9 +646,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
-    
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="cdh" scheme="http://yoursite.com/tags/cdh/"/>
     
@@ -605,9 +701,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
-    
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
@@ -810,9 +906,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
-    
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
@@ -983,9 +1079,9 @@
     <link href="http://yoursite.com/2016/07/21/Java%E4%B8%ADVolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/"/>
     <id>http://yoursite.com/2016/07/21/Java中Volatile关键字详解/</id>
     <published>2016-07-21T02:08:09.000Z</published>
-    <updated>2017-02-17T02:48:10.629Z</updated>
+    <updated>2017-02-24T02:21:34.180Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性。比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
+    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，<strong>volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性（不保证有序性）。</strong>比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
 <h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
 <h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
@@ -1002,10 +1098,12 @@
     
     </summary>
     
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
     
     
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
     
       <category term="volatile" scheme="http://yoursite.com/tags/volatile/"/>
     
