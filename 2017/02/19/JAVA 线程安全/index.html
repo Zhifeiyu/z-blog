@@ -94,7 +94,7 @@
 <meta property="og:site_name" content="zfylin-非鱼">
 <meta property="og:description" content="java内存模型java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。
 可见性多个线程之间是不能互相传递数据通信的，它们">
-<meta property="og:updated_time" content="2017-02-24T02:21:52.577Z">
+<meta property="og:updated_time" content="2017-02-25T08:51:12.907Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA 线程安全">
 <meta name="twitter:description" content="java内存模型java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。
@@ -350,9 +350,9 @@
 <li>线程a将工作内存中x加1，工作内存中x值为11</li>
 <li>线程a将x提交主存中，主存中x为11</li>
 <li>线程b将工作内存中x值减1，工作内存中x值为9</li>
-<li>线程b将x提交到中主存中，主存中x为9<br>同样，x有可能为11，如果x是一个银行账户，线程a存款，线程b扣款，显然这样是有严重问题的，要解决这个问题，必须保证线程a和线程b是有序执行的，并且每个线程执行的加1或减1是一个原子操作。<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2>java用synchronized关键字做为多线程并发环境的执行有序性的保证手段之一。当一段代码会修改共享变量，这一段代码成为互斥区或临界区，为了保证共享变量的正确性，synchronized标示了临界区。典型的用法如下：<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">synchronized</span>(锁)&#123;   </div><div class="line">     临界区代码   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<li>线程b将x提交到中主存中，主存中x为9<br>同样，x有可能为11，如果x是一个银行账户，线程a存款，线程b扣款，显然这样是有严重问题的，要解决这个问题，必须保证线程a和线程b是有序执行的，并且每个线程执行的加1或减1是一个原子操作。</li>
 </ol>
+<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><p>java用synchronized关键字做为多线程并发环境的执行有序性的保证手段之一。当一段代码会修改共享变量，这一段代码成为互斥区或临界区，为了保证共享变量的正确性，synchronized标示了临界区。典型的用法如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">synchronized</span>(锁)&#123;   </div><div class="line">     临界区代码   </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h2><p> volatile是java提供的一种同步手段，只不过它是轻量级的同步，为什么这么说，因为<strong>volatile只能保证多线程的内存可见性，不能保证多线程的执行有序性。而最彻底的同步要保证有序性和可见性，例如synchronized</strong>。任何被volatile修饰的变量，都不拷贝副本到工作内存，任何修改都及时写在主存。因此对于Valatile修饰的变量的修改，所有线程马上就能看到，但是volatile不能保证对变量的修改是有序的。</p>
 
       

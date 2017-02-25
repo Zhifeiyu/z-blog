@@ -166,7 +166,7 @@
     <link href="http://yoursite.com/2017/02/19/JAVA%20%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/"/>
     <id>http://yoursite.com/2017/02/19/JAVA 线程安全/</id>
     <published>2017-02-19T02:23:48.000Z</published>
-    <updated>2017-02-24T02:21:52.577Z</updated>
+    <updated>2017-02-25T08:51:12.907Z</updated>
     
     <content type="html"><![CDATA[<h1 id="java内存模型"><a href="#java内存模型" class="headerlink" title="java内存模型"></a>java内存模型</h1><p>java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。</p>
 <h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>多个线程之间是不能互相传递数据通信的，它们之间的沟通只能通过共享变量来进行。Java内存模型（JMM）规定了jvm有主内存，主内存是多个线程共享的。当new一个对象的时候，也是被分配在主内存中，每个线程都有自己的工作内存，工作内存存储了主存的某些对象的副本，当然线程的工作内存大小是有限制的。当线程操作某个对象时，执行顺序如下：</p>
@@ -189,9 +189,9 @@
 <li>线程a将工作内存中x加1，工作内存中x值为11</li>
 <li>线程a将x提交主存中，主存中x为11</li>
 <li>线程b将工作内存中x值减1，工作内存中x值为9</li>
-<li>线程b将x提交到中主存中，主存中x为9<br>同样，x有可能为11，如果x是一个银行账户，线程a存款，线程b扣款，显然这样是有严重问题的，要解决这个问题，必须保证线程a和线程b是有序执行的，并且每个线程执行的加1或减1是一个原子操作。<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2>java用synchronized关键字做为多线程并发环境的执行有序性的保证手段之一。当一段代码会修改共享变量，这一段代码成为互斥区或临界区，为了保证共享变量的正确性，synchronized标示了临界区。典型的用法如下：<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">synchronized</span>(锁)&#123;   </div><div class="line">     临界区代码   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<li>线程b将x提交到中主存中，主存中x为9<br>同样，x有可能为11，如果x是一个银行账户，线程a存款，线程b扣款，显然这样是有严重问题的，要解决这个问题，必须保证线程a和线程b是有序执行的，并且每个线程执行的加1或减1是一个原子操作。</li>
 </ol>
+<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><p>java用synchronized关键字做为多线程并发环境的执行有序性的保证手段之一。当一段代码会修改共享变量，这一段代码成为互斥区或临界区，为了保证共享变量的正确性，synchronized标示了临界区。典型的用法如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">synchronized</span>(锁)&#123;   </div><div class="line">     临界区代码   </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h2><p> volatile是java提供的一种同步手段，只不过它是轻量级的同步，为什么这么说，因为<strong>volatile只能保证多线程的内存可见性，不能保证多线程的执行有序性。而最彻底的同步要保证有序性和可见性，例如synchronized</strong>。任何被volatile修饰的变量，都不拷贝副本到工作内存，任何修改都及时写在主存。因此对于Valatile修饰的变量的修改，所有线程马上就能看到，但是volatile不能保证对变量的修改是有序的。</p>
 ]]></content>
     
@@ -378,9 +378,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="impala" scheme="http://yoursite.com/tags/impala/"/>
     
@@ -461,11 +461,11 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="Hbase" scheme="http://yoursite.com/tags/Hbase/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -531,9 +531,9 @@
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
-    
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
     
       <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
     
@@ -571,9 +571,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
-    
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
     
       <category term="MQ" scheme="http://yoursite.com/tags/MQ/"/>
     
@@ -646,9 +646,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="cdh" scheme="http://yoursite.com/tags/cdh/"/>
     
@@ -701,9 +701,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
@@ -906,9 +906,9 @@
       <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
@@ -1015,6 +1015,41 @@
   </entry>
   
   <entry>
+    <title>Java中Volatile关键字详解</title>
+    <link href="http://yoursite.com/2016/07/21/Java%E4%B8%ADVolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://yoursite.com/2016/07/21/Java中Volatile关键字详解/</id>
+    <published>2016-07-21T02:08:09.000Z</published>
+    <updated>2017-02-24T02:21:34.180Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，<strong>volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性（不保证有序性）。</strong>比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
+<h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
+<p><center><img src="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png" alt=""></center><br>当对非volatile变量进行读写的时候，每个线程先从内存拷贝变量到CPU缓存中。如果计算机有多个CPU，每个线程可能在不同的CPU上被处理，这意味着每个线程可以拷贝到不同的CPU cache中。<br><strong>而声明变量是volatile的，JVM保证了每次读变量都从内存中读，跳过CPU cache这一步。</strong><br>当一个变量定义为volatile之后，将具备两种特性：</p>
+<ol>
+<li>保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，新值对于其他线程是立即得知的。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：Java内存模型）来完成。</li>
+<li>禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个内存屏障（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot; title=&quot;基本概念&quot;&gt;&lt;/a&gt;基本概念&lt;/h1&gt;&lt;h2 id=&quot;可见性&quot;&gt;&lt;a href=&quot;#可见性&quot; class=&quot;headerlink&quot; title=&quot;可见性&quot;&gt;&lt;/a&gt;可见
+    
+    </summary>
+    
+      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+      <category term="volatile" scheme="http://yoursite.com/tags/volatile/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Spring MVC 框架及基本配置</title>
     <link href="http://yoursite.com/2016/07/21/Spring%20MVC%20%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/"/>
     <id>http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/</id>
@@ -1071,41 +1106,6 @@
       <category term="spring" scheme="http://yoursite.com/tags/spring/"/>
     
       <category term="springmvc" scheme="http://yoursite.com/tags/springmvc/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java中Volatile关键字详解</title>
-    <link href="http://yoursite.com/2016/07/21/Java%E4%B8%ADVolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/2016/07/21/Java中Volatile关键字详解/</id>
-    <published>2016-07-21T02:08:09.000Z</published>
-    <updated>2017-02-24T02:21:34.180Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，<strong>volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性（不保证有序性）。</strong>比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
-<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
-<h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
-<p><center><img src="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png" alt=""></center><br>当对非volatile变量进行读写的时候，每个线程先从内存拷贝变量到CPU缓存中。如果计算机有多个CPU，每个线程可能在不同的CPU上被处理，这意味着每个线程可以拷贝到不同的CPU cache中。<br><strong>而声明变量是volatile的，JVM保证了每次读变量都从内存中读，跳过CPU cache这一步。</strong><br>当一个变量定义为volatile之后，将具备两种特性：</p>
-<ol>
-<li>保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，新值对于其他线程是立即得知的。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：Java内存模型）来完成。</li>
-<li>禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个内存屏障（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot; title=&quot;基本概念&quot;&gt;&lt;/a&gt;基本概念&lt;/h1&gt;&lt;h2 id=&quot;可见性&quot;&gt;&lt;a href=&quot;#可见性&quot; class=&quot;headerlink&quot; title=&quot;可见性&quot;&gt;&lt;/a&gt;可见
-    
-    </summary>
-    
-      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
-    
-      <category term="volatile" scheme="http://yoursite.com/tags/volatile/"/>
     
   </entry>
   
