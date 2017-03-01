@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-01T09:33:38.386Z</updated>
+  <updated>2017-03-01T09:36:45.666Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/03/01/Quartz%20%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8E%9F%E7%90%86/"/>
     <id>http://yoursite.com/2017/03/01/Quartz 基本概念及原理/</id>
     <published>2017-03-01T06:59:45.000Z</published>
-    <updated>2017-03-01T09:33:38.386Z</updated>
+    <updated>2017-03-01T09:36:45.666Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。<a href="http：//www.quartz-scheduler.org/">官网</a></p>
 <ol>
