@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="quartz，任务调度," />
 
 
 
@@ -86,28 +86,31 @@
 
 
 
-<meta name="description" content="title： Quartz 基本概念及原理date： 2017-03-01 14：59：45tags： [quartz，任务调度]
-categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。官网
+<meta name="description" content="概述Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。官网
 
-强大的调度功能，例如支持丰富多">
+强大的调度功能，例如支持丰富多样的调度方法，可以满足各种常规及特殊需求；
+灵活的应用方式，例如支持任务和调度的多种组合方式，支持调度数据的多种存储方式；
+分布式和集群能力，Terracotta 收购后在原">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zfylin-非鱼">
+<meta property="og:title" content="Quartz 基本概念及原理">
 <meta property="og:url" content="http://yoursite.com/2017/03/01/Quartz 基本概念及原理/index.html">
 <meta property="og:site_name" content="zfylin-非鱼">
-<meta property="og:description" content="title： Quartz 基本概念及原理date： 2017-03-01 14：59：45tags： [quartz，任务调度]
-categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。官网
+<meta property="og:description" content="概述Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。官网
 
-强大的调度功能，例如支持丰富多">
+强大的调度功能，例如支持丰富多样的调度方法，可以满足各种常规及特殊需求；
+灵活的应用方式，例如支持任务和调度的多种组合方式，支持调度数据的多种存储方式；
+分布式和集群能力，Terracotta 收购后在原">
 <meta property="og:image" content="https://www.ibm.com/developerworks/cn/opensource/os-cn-quartz/image001.gif">
 <meta property="og:image" content="https://www.ibm.com/developerworks/cn/opensource/os-cn-quartz/image002.gif">
 <meta property="og:image" content="https://www.ibm.com/developerworks/cn/opensource/os-cn-quartz/image003.png">
-<meta property="og:updated_time" content="2017-03-01T09:27:51.694Z">
+<meta property="og:updated_time" content="2017-03-01T09:33:38.386Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zfylin-非鱼">
-<meta name="twitter:description" content="title： Quartz 基本概念及原理date： 2017-03-01 14：59：45tags： [quartz，任务调度]
-categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。官网
+<meta name="twitter:title" content="Quartz 基本概念及原理">
+<meta name="twitter:description" content="概述Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。官网
 
-强大的调度功能，例如支持丰富多">
+强大的调度功能，例如支持丰富多样的调度方法，可以满足各种常规及特殊需求；
+灵活的应用方式，例如支持任务和调度的多种组合方式，支持调度数据的多种存储方式；
+分布式和集群能力，Terracotta 收购后在原">
 <meta name="twitter:image" content="https://www.ibm.com/developerworks/cn/opensource/os-cn-quartz/image001.gif">
 
 
@@ -132,7 +135,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
   <link rel="canonical" href="http://yoursite.com/2017/03/01/Quartz 基本概念及原理/"/>
 
 
-  <title>  | zfylin-非鱼 </title>
+  <title> Quartz 基本概念及原理 | zfylin-非鱼 </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -264,7 +267,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
             
             
               
-                
+                Quartz 基本概念及原理
               
             
           </h1>
@@ -282,6 +285,25 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/quartz/" itemprop="url" rel="index">
+                    <span itemprop="name">quartz</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
@@ -298,7 +320,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
 
           
           
-             <span id="/2017/03/01/Quartz 基本概念及原理/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2017/03/01/Quartz 基本概念及原理/" class="leancloud_visitors" data-flag-title="Quartz 基本概念及原理">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -320,9 +342,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
       
 
       
-        <hr>
-<p>title： Quartz 基本概念及原理<br>date： 2017-03-01 14：59：45<br>tags： [quartz，任务调度]</p>
-<h2 id="categories：-quartz"><a href="#categories：-quartz" class="headerlink" title="categories： [quartz]"></a>categories： [quartz]</h2><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。<a href="http：//www.quartz-scheduler.org/">官网</a></p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。<a href="http：//www.quartz-scheduler.org/">官网</a></p>
 <ol>
 <li>强大的调度功能，例如支持丰富多样的调度方法，可以满足各种常规及特殊需求；</li>
 <li>灵活的应用方式，例如支持任务和调度的多种组合方式，支持调度数据的多种存储方式；</li>
@@ -369,6 +389,12 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/quartz，任务调度/" rel="tag">#quartz，任务调度</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -396,7 +422,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
     <div class="post-spread">
       
         <div class="ds-share flat" data-thread-key="2017/03/01/Quartz 基本概念及原理/"
-     data-title=""
+     data-title="Quartz 基本概念及原理"
      data-content=""
      data-url="http://yoursite.com/2017/03/01/Quartz 基本概念及原理/">
   <div class="ds-share-inline">
@@ -421,12 +447,15 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/03/01/Quartz 基本概念及原理/"
-           data-title="" data-url="http://yoursite.com/2017/03/01/Quartz 基本概念及原理/">
+           data-title="Quartz 基本概念及原理" data-url="http://yoursite.com/2017/03/01/Quartz 基本概念及原理/">
       </div>
     
   </div>
@@ -479,7 +508,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -488,7 +517,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -524,7 +553,7 @@ categories： [quartz]概述Quartz 是 OpenSymphony 开源组织在任务调度�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#categories：-quartz"><span class="nav-number">1.</span> <span class="nav-text">categories： [quartz]</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number"></span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number"></span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本原理"><span class="nav-number"></span> <span class="nav-text">基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心元素"><span class="nav-number">1.</span> <span class="nav-text">核心元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据存储"><span class="nav-number">2.</span> <span class="nav-text">数据存储</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群配置"><span class="nav-number">3.</span> <span class="nav-text">集群配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动流程"><span class="nav-number">4.</span> <span class="nav-text">启动流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#demo"><span class="nav-number"></span> <span class="nav-text">demo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number"></span> <span class="nav-text">参考</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本原理"><span class="nav-number">3.</span> <span class="nav-text">基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心元素"><span class="nav-number">3.1.</span> <span class="nav-text">核心元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据存储"><span class="nav-number">3.2.</span> <span class="nav-text">数据存储</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群配置"><span class="nav-number">3.3.</span> <span class="nav-text">集群配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动流程"><span class="nav-number">3.4.</span> <span class="nav-text">启动流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#demo"><span class="nav-number">4.</span> <span class="nav-text">demo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>

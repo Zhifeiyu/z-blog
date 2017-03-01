@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-01T09:27:51.694Z</updated>
+  <updated>2017-03-01T09:33:38.386Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,15 +16,13 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>Quartz 基本概念及原理</title>
     <link href="http://yoursite.com/2017/03/01/Quartz%20%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8E%9F%E7%90%86/"/>
     <id>http://yoursite.com/2017/03/01/Quartz 基本概念及原理/</id>
     <published>2017-03-01T06:59:45.000Z</published>
-    <updated>2017-03-01T09:27:51.694Z</updated>
+    <updated>2017-03-01T09:33:38.386Z</updated>
     
-    <content type="html"><![CDATA[<hr>
-<p>title： Quartz 基本概念及原理<br>date： 2017-03-01 14：59：45<br>tags： [quartz，任务调度]</p>
-<h2 id="categories：-quartz"><a href="#categories：-quartz" class="headerlink" title="categories： [quartz]"></a>categories： [quartz]</h2><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。<a href="http：//www.quartz-scheduler.org/">官网</a></p>
+    <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Quartz 具有功能强大，应用灵活，易于集成。<a href="http：//www.quartz-scheduler.org/">官网</a></p>
 <ol>
 <li>强大的调度功能，例如支持丰富多样的调度方法，可以满足各种常规及特殊需求；</li>
 <li>灵活的应用方式，例如支持任务和调度的多种组合方式，支持调度数据的多种存储方式；</li>
@@ -55,12 +53,14 @@
     
     <summary type="html">
     
-      &lt;hr&gt;
-&lt;p&gt;title： Quartz 基本概念及原理&lt;br&gt;date： 2017-03-01 14：59：45&lt;br&gt;tags： [quartz，任务调度]&lt;/p&gt;
-&lt;h2 id=&quot;categories：-quartz&quot;&gt;&lt;a href=&quot;#categories：-quar
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;Quartz 是 OpenSymphony 开源组织在任务调度领域的一个开源项目，完全基于 Java 实现。作为一个优秀的开源调度框架，Qu
     
     </summary>
     
+      <category term="quartz" scheme="http://yoursite.com/categories/quartz/"/>
+    
+    
+      <category term="quartz，任务调度" scheme="http://yoursite.com/tags/quartz%EF%BC%8C%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/"/>
     
   </entry>
   
@@ -1064,62 +1064,37 @@
   </entry>
   
   <entry>
-    <title>Spring MVC 框架及基本配置</title>
-    <link href="http://yoursite.com/2016/07/21/Spring%20MVC%20%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/"/>
-    <id>http://yoursite.com/2016/07/21/Spring MVC 框架及基本配置/</id>
+    <title>Java中Volatile关键字详解</title>
+    <link href="http://yoursite.com/2016/07/21/Java%E4%B8%ADVolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://yoursite.com/2016/07/21/Java中Volatile关键字详解/</id>
     <published>2016-07-21T02:08:09.000Z</published>
-    <updated>2017-02-17T02:10:12.223Z</updated>
+    <updated>2017-02-24T02:21:34.180Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="Web开发-请求响应模型"><a href="#Web开发-请求响应模型" class="headerlink" title="Web开发-请求响应模型"></a>Web开发-请求响应模型</h2><p><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/6043565-file_1487163503878_11a8c.png" alt="请求响应模型"></center></p>
+    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，<strong>volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性（不保证有序性）。</strong>比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
+<h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
+<p><center><img src="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png" alt=""></center><br>当对非volatile变量进行读写的时候，每个线程先从内存拷贝变量到CPU缓存中。如果计算机有多个CPU，每个线程可能在不同的CPU上被处理，这意味着每个线程可以拷贝到不同的CPU cache中。<br><strong>而声明变量是volatile的，JVM保证了每次读变量都从内存中读，跳过CPU cache这一步。</strong><br>当一个变量定义为volatile之后，将具备两种特性：</p>
 <ol>
-<li>web客户端（如：浏览器）发起请求，如访问www.baidu.com</li>
-<li>web服务器端（如：tomcat）接收请求，处理请求，最后产生响应</li>
-<li>web服务器端处理完成后，返回内容给客户端，客户端对接收的内容进行处理（如web浏览器对接收到的html内容进行渲染展示）<h2 id="Web-MVC概述"><a href="#Web-MVC概述" class="headerlink" title="Web MVC概述"></a>Web MVC概述</h2><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/28677677-file_1487163208601_13fe6.png" alt=" MVC概述"></center><br><strong>Model（模型）</strong>：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或 JavaBean 组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。<br><strong>View（视图）</strong>：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。<br><strong>Controller（控制器）</strong>：接收用户请求，委托给模型进行处理（状态改变） ，处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。<h2 id="Spring-MVC-架构"><a href="#Spring-MVC-架构" class="headerlink" title="Spring MVC 架构"></a>Spring MVC 架构</h2><h3 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h3><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/89018877-file_1487163563329_16205.png" alt=" 请求处理过程"></center><br>执行步骤如下：</li>
-<li>首先用户发送请求————&gt;前端控制器，前端控制器根据请求信息（如 URL）来决定选择哪一个页面控制器进行处理并把请求委托给它；上图中的 1、2 步骤；</li>
-<li>页面控制器接收到请求后，进行功能处理，首先需要收集和绑定请求参数到一个对象，并进行验证，然后将该对象对象委托给业务对象进行处理；处理完毕后返回一个 ModelAndView（模型数据和逻辑视图名） ；上图中的 3、4、5 步骤；</li>
-<li>前端控制器收回控制权，然后根据返回的逻辑视图名，选择相应的视图进行渲染，并把模型数据传入以便视图渲染；上图 中的步骤 6、7；</li>
-<li>前端控制器再次收回控制权，将响应返回给用户，图 2-1 中的步骤 8；至此整个结束。<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/55267022-file_1487163626154_10138.png" alt=" 核心架构"></center><br>具体流程步骤：</li>
-<li>首先用户发送请求——&gt;DispatcherServlet，前端控制器收到请求后自己不进行处理，而是委托给其他的解析器进行处理，作为统一访问点，进行全局的流程控制；</li>
-<li>DispatcherServlet——&gt;Handlermapping（请求到处理器的映射），HandlerMapping 将会把请求映射为 HandlerExecutionChain 对象（包含一个 Handler 处理器（页面控制器）对象、多个 HandlerInterceptor 拦截器）对象，通过这种策略模式，很容易添加新的映射策略；</li>
-<li>DispatcherServlet——&gt;HandlerAdapter，HandlerAdapter 将会把处理器包装为适配器，从而支持多种类型的处理器，即适配器设计模式的应用，从而很容易支持很多类型的处理器；</li>
-<li>HandlerAdapter——&gt;处理器功能处理方法的调用，HandlerAdapter 将会根据适配的结果调用真正的处理器的功能处理方法，完成功能处理；并返回一个 ModelAndView 对象（包含模型数据、逻辑视图名）；</li>
-<li>ModelAndView 的逻辑视图名——&gt; ViewResolver， ViewResolver 将把逻辑视图名解析为具体的 View，通过这种策略模式，很容易更换其他视图技术；</li>
-<li>View——&gt;渲染，View 会根据传进来的 Model 模型数据进行渲染，此处的 Model 实际是一个 Map 数据结构，因此很容易支持其他视图技术；</li>
-<li>返回控制权给 DispatcherServlet，由 DispatcherServlet 返回响应给用户，到此一个流程结束。<h2 id="入门（Hello）"><a href="#入门（Hello）" class="headerlink" title="入门（Hello）"></a>入门（Hello）</h2><h3 id="前端控制器（DispatcherServlet）配置"><a href="#前端控制器（DispatcherServlet）配置" class="headerlink" title="前端控制器（DispatcherServlet）配置"></a>前端控制器（DispatcherServlet）配置</h3>web.xml 配置<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!--前端控制器--&gt;</div><div class="line">&lt;servlet&gt;</div><div class="line">    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;</div><div class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div><div class="line">    &lt;init-param&gt;</div><div class="line">        &lt;!--参数定义了要装入的 Spring 配置文件。--&gt;</div><div class="line">        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;classpath:spring-mvc.xml&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">    &lt;!--</div><div class="line">        当值为0或者大于0时，表示容器在应用启动时就加载这个servlet；</div><div class="line">        当是一个负数时或者没有指定时，则指示容器在该servlet被选择时才加载。</div><div class="line">        正数的值越小，启动该servlet的优先级越高。</div><div class="line">    --&gt;</div><div class="line">    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</div><div class="line">&lt;/servlet&gt;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="handlerMapping、handlerAdapter配置"><a href="#handlerMapping、handlerAdapter配置" class="headerlink" title="handlerMapping、handlerAdapter配置"></a>handlerMapping、handlerAdapter配置</h3><p>resources/spring-mvc.xml中配置handlerMapping、handlerAdapter<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 非注解式控制器 --&gt;</div><div class="line">    &lt;!-- 处理器映射解析器HandlerMapping --&gt;</div><div class="line">    &lt;bean class=&quot;org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping&quot;/&gt;</div><div class="line">    &lt;!-- 处理器适配器 --&gt;</div><div class="line">    &lt;bean class=&quot;org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter&quot;/&gt;</div><div class="line">    &lt;!-- 处理器 --&gt;</div><div class="line">    &lt;bean name=&quot;/hello&quot; class=&quot;com.zfy.demo.springmvc.controller.HelloController&quot;/&gt;</div><div class="line"></div><div class="line"></div><div class="line">    &lt;!-- 注解式控制器 --&gt;</div><div class="line">    &lt;!-- 开启注解式处理器支持(启用注解) 方式1 --&gt;</div><div class="line">    &lt;!--bean class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;/&gt;--&gt;</div><div class="line">    &lt;!--&lt;bean class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter&quot;/&gt;--&gt;</div><div class="line">    &lt;!-- 开启注解式处理器支持(启用注解) 方式2 --&gt;</div><div class="line">    &lt;!--&lt;mvc:annotation-driven /&gt;--&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="viewResolver"><a href="#viewResolver" class="headerlink" title="viewResolver"></a>viewResolver</h3><p>resources/spring-mvc.xml中配置viewResolver<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 视图分解器 --&gt;</div><div class="line">&lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;</div><div class="line">    &lt;property name=&quot;viewClass&quot; value=&quot;org.springframework.web.servlet.view.JstlView&quot;/&gt;</div><div class="line">    &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/jsp/&quot;/&gt;</div><div class="line">    &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="开发处理器-页面处理器"><a href="#开发处理器-页面处理器" class="headerlink" title="开发处理器/页面处理器"></a>开发处理器/页面处理器</h3><p>非注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class HelloController implements Controller &#123;</div><div class="line"></div><div class="line">    public ModelAndView handleRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception &#123;</div><div class="line">        //1、收集参数</div><div class="line">        //2、绑定参数到命令对象</div><div class="line">        //3、调用业务对象</div><div class="line">        //4、选择下一个页面</div><div class="line">        ModelAndView mv = new ModelAndView();</div><div class="line">        //添加模型数据 可以是任意的POJO对象</div><div class="line">        mv.addObject(&quot;message&quot;, &quot;Hello World!&quot;);</div><div class="line">        //设置逻辑视图名，视图解析器会根据该名字解析到具体的视图页面</div><div class="line">        mv.setViewName(&quot;/hello&quot;);</div><div class="line">        return mv;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p> <strong>ModelAndView</strong>：包含了视图要实现的模型数据和逻辑视图名；“mv.addObject(“message”, “Hello World!”);”表示添加模型数据，此处可以是任意 POJO 对象；“mv.setViewName(“/hello”);”表示设置逻辑视图名为“hello”，视图解析器会将其解析为具体的视图，如前边的视图解析器InternalResourceVi。wResolver 会将其解析为“WEB-INF/jsp/hello.jsp”。<br>注解式controller<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Controller</div><div class="line">public class HelloController2 &#123;</div><div class="line">    @RequestMapping(value = &quot;/hello2&quot;)</div><div class="line">    public ModelAndView hello(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) &#123;</div><div class="line">        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</div><div class="line">        data.put(&quot;message&quot;, &quot;hello world 2&quot;);</div><div class="line">        return new ModelAndView(&quot;/hello&quot;, data);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="开发视图页面"><a href="#开发视图页面" class="headerlink" title="开发视图页面"></a>开发视图页面</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; %&gt;</div><div class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;</div><div class="line">    &lt;title&gt;Hello World&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">$&#123;message&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<h3 id="运行流程分析"><a href="#运行流程分析" class="headerlink" title="运行流程分析"></a>运行流程分析</h3><p><center><img src="http://oflrm5g9z.bkt.clouddn.com/17-2-15/53622352-file_1487163689720_8c8.png" alt=" 运行流程分析"></center><br>运行步骤如下：</p>
-<ol>
-<li>首先用户发送请求 <a href="http://localhost:8080/hello——&gt;web" target="_blank" rel="external">http://localhost:8080/hello——&gt;web</a> 容器，web 容器根据“/hello”路径映射到DispatcherServlet（url-pattern 为/）进行处理；</li>
-<li>DispatcherServlet——&gt;BeanNameUrlHandlerMapping 进行请求到处理的映射，BeanNameUrlHandlerMapping 将“/hello”路径直接映射到名字为“/hello”的 Bean 进行处理，即 HelloWorldController，BeanNameUrlHandlerMapping将其包装为HandlerExecutionChain（只包括 HelloWorldController 处理器，没有拦截器） ；</li>
-<li>DispatcherServlet——&gt; SimpleControllerHandlerAdapter，SimpleControllerHandlerAdapter 将 HandlerExecutionChain中的处理器（HelloWorldController）适配为 SimpleControllerHandlerAdapter；</li>
-<li>SimpleControllerHandlerAdapter — — &gt; HelloWorldController 处 理 器 功 能 处 理 方 法 的 调 用 ，SimpleControllerHandlerAdapter 将会调用处理器的 handleRequest 方法进行功能处理，该处理方法返回一个 ModelAndView 给 DispatcherServlet；</li>
-<li>hello（ModelAndView 的逻辑视图名）——&gt;InternalResourceViewResolver， InternalResourceViewResolver 使用JstlView，具体视图页面在/WEB-INF/jsp/hello.jsp；</li>
-<li>JstlView（/WEB-INF/jsp/hello.jsp）——&gt;渲染，将在处理器传入的模型数据(message=HelloWorld！)在视图中展示出来；</li>
-<li>返回控制权给 DispatcherServlet，由 DispatcherServlet 返回响应给用户，到此一个流程结束。<h2 id="post中文乱码解决方案"><a href="#post中文乱码解决方案" class="headerlink" title="post中文乱码解决方案"></a>post中文乱码解决方案</h2>spring Web MVC 框架提供了 org.springframework.web.filter.CharacterEncodingFilter 用于解决 POST 方式造成的中文乱码问题，具体配置如下：<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;!-- 指定UTF-8编码 --&gt;</div><div class="line">&lt;filter&gt;</div><div class="line">    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</div><div class="line">    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</div><div class="line">    &lt;init-param&gt;</div><div class="line">        &lt;param-name&gt;encoding&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;utf-8&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">&lt;/filter&gt;</div><div class="line">&lt;filter-mapping&gt;</div><div class="line">    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</div><div class="line">    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div><div class="line">&lt;/filter-mapping&gt;</div></pre></td></tr></table></figure>
-</li>
+<li>保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，新值对于其他线程是立即得知的。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：Java内存模型）来完成。</li>
+<li>禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个内存屏障（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</li>
 </ol>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;Web开发-请求响应模型&quot;&gt;&lt;a href=&quot;#Web开发-请求响应模型&quot; class=&quot;headerlink&quot; title=&quot;Web开发-请求响应模型&quot;&gt;&lt;/a&gt;Web开发-请求响应模型&lt;/h2&gt;&lt;p&gt;&lt;center&gt;&lt;img src=&quot;http://oflrm
+      &lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot; title=&quot;基本概念&quot;&gt;&lt;/a&gt;基本概念&lt;/h1&gt;&lt;h2 id=&quot;可见性&quot;&gt;&lt;a href=&quot;#可见性&quot; class=&quot;headerlink&quot; title=&quot;可见性&quot;&gt;&lt;/a&gt;可见
     
     </summary>
     
-      <category term="spring" scheme="http://yoursite.com/categories/spring/"/>
+      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
     
     
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
     
-      <category term="spring" scheme="http://yoursite.com/tags/spring/"/>
+      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
     
-      <category term="springmvc" scheme="http://yoursite.com/tags/springmvc/"/>
+      <category term="volatile" scheme="http://yoursite.com/tags/volatile/"/>
     
   </entry>
   
