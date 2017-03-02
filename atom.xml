@@ -169,6 +169,57 @@
   </entry>
   
   <entry>
+    <title>Java final 详解</title>
+    <link href="http://yoursite.com/2017/02/20/Java%20final%20%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://yoursite.com/2017/02/20/Java final 详解/</id>
+    <published>2017-02-20T02:23:48.000Z</published>
+    <updated>2017-03-02T03:20:57.992Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>final在Java中是一个保留的关键字，可以声明成员变量、方法、类以及本地变量。<br>一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。<br><strong><font color="red">使用final修饰方法参数的目的是防止修改这个参数的值，同时也是一种声明和约定，强调这个参数是不可变的</font></strong></p>
+</blockquote>
+<h1 id="基本类型-amp-引用类型"><a href="#基本类型-amp-引用类型" class="headerlink" title="基本类型 &amp; 引用类型"></a>基本类型 &amp; 引用类型</h1><ul>
+<li>基本类型：它的值就是一个数字，一个字符或一个布尔值；</li>
+<li>引用类型：是一个对象类型，值是什么呢？<strong>它的值是指向内存空间的引用</strong>，就是地址，所指向的内存中保存着变量所表示的一个值或一组值。 </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> a;</div><div class="line">a = <span class="number">250</span>; <span class="comment">//声明变量a的同时，系统给a分配了空间。</span></div></pre></td></tr></table></figure>
+<p>引用类型就不是了，只给变量分配了引用空间，数据空间没有分配，因为谁都不知道数据是什么，整数，字符？我们看一个错误的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line">MyDate today;</div><div class="line">today.day = <span class="number">4</span>;   <span class="comment">// 发生错误，因为today对象的数据空间未分配</span></div></pre></td></tr></table></figure></p>
+<p>那我们怎么给它赋值？引用类型变量在声明后必须通过实例化开辟数据空间，才能对变量所指向的对象进行访问。如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line">MyDate today;           <span class="comment">// 将变量分配一个保存引用的空间</span></div><div class="line">today = <span class="keyword">new</span> MyDate();   <span class="comment">// 这句话是2步，首先执行new MyDate（），给today变量开辟数据空间，然后再执行赋值操作</span></div><div class="line"><span class="comment">// 引用变量赋值</span></div><div class="line">MyDate a，b;            <span class="comment">// 在内存开辟两个引用空间</span></div><div class="line">a = <span class="keyword">new</span> MyDate();       <span class="comment">// 开辟MyDate对象的数据空间，并把该空间的首地址赋给a</span></div><div class="line">b = a;                  <span class="comment">// 将a存储空间中的地址写到b的存储空间中</span></div></pre></td></tr></table></figure></p>
+<p>内存模型如下图：<br><img src="http://p1.bqimg.com/567571/0c171661e31446bc.png" alt=""></p>
+<h1 id="引用传递-amp-纸传递"><a href="#引用传递-amp-纸传递" class="headerlink" title="引用传递 &amp; 纸传递"></a>引用传递 &amp; 纸传递</h1><ul>
+<li>引用传递：除了在函数传值的时候是”引用传递”，在任何用”＝”向对象变量赋值的时候都是”引用传递”。</li>
+<li>值传递：基本类型的传递都属于值传递，和C语言一样，当把Java的基本数据类型（如 int，char，double等）作为入口参数传给函数体的时候，传入的参数在函数体内部变成了局部变量，这个局部变量是输入参数的一个拷贝，所有的函 数体内部的操作都是针对这个拷贝的操作，函数执行结束后，这个局部变量也就完成了它的使命，它影响不到作为输入参数的变量。这种方式的参数传递被称为”值 传递”。</li>
+</ul>
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><h2 id="final-变量"><a href="#final-变量" class="headerlink" title="final 变量"></a>final 变量</h2><p>对于一个final变量，如果是<strong>基本数据类型的变量，则其数值一旦在初始化之后便不能更改</strong>；如果是<strong>引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象</strong>。<br>当用final作用于类的成员变量时，成员变量（注意是类的成员变量，局部变量只需要保证在使用之前被初始化赋值即可）必须在定义时或者构造器中进行初始化赋值，而且final变量一旦被初始化赋值之后，就不能再被赋值了。<br>在上面提到被final修饰的引用变量一旦初始化赋值之后就不能再指向其他的对象，那么该引用变量指向的对象的内容可变吗？看下面这个例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>  </span>&#123;</div><div class="line">        <span class="keyword">final</span> MyClass myClass = <span class="keyword">new</span> MyClass();</div><div class="line">        System.out.println(++myClass.i);</div><div class="line"> </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码可以顺利编译通过并且有输出结果，输出结果为1。<strong>这说明引用变量被final修饰之后，虽然不能再指向其他对象，但是它指向的对象的内容是可变的。</strong></p>
+<h2 id="final-方法"><a href="#final-方法" class="headerlink" title="final 方法"></a>final 方法</h2><p>使用final方法的原因有两个。第一个原因是<strong>把方法锁定，以防任何继承类修改它的含义</strong>；第二个原因是<strong>效率</strong>。在早期的Java实现版本中，会将final方法转为内嵌调用。但是如果方法过于庞大，可能看不到内嵌调用带来的任何性能提升。在最近的Java版本中，不需要使用final方法进行这些优化了。<br>因此，<strong><font color="red">只有在想明确禁止该方法在子类中被覆盖的情况下才将方法设置为final的</font></strong>。<br><strong><em>注：类的private方法会隐式地被指定为final方法。</em></strong></p>
+<h2 id="final-类"><a href="#final-类" class="headerlink" title="final 类"></a>final 类</h2><p>当用final修饰一个类时，表明这个类不能被继承。也就是说，如果一个类你永远不会让他被继承，就可以用final进行修饰。final类中的成员变量可以根据需要设为final，但是要注意final类中的所有成员方法都会被隐式地指定为final方法。<br><strong>在使用final修饰类的时候，要注意谨慎选择，除非这个类真的在以后不会用来继承或者出于安全的考虑，尽量不要将类设计为final类。</strong></p>
+<h1 id="final-amp-static"><a href="#final-amp-static" class="headerlink" title="final &amp; static"></a>final &amp; static</h1><p>很多时候会容易把static和final关键字混淆，<strong><font color="red">static作用于成员变量用来表示只保存一份副本，而final的作用是用来保证变量不可变。</font></strong><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>  </span>&#123;</div><div class="line">        MyClass myClass1 = <span class="keyword">new</span> MyClass();</div><div class="line">        MyClass myClass2 = <span class="keyword">new</span> MyClass();</div><div class="line">        System.out.println(myClass1.i);</div><div class="line">        System.out.println(myClass1.j);</div><div class="line">        System.out.println(myClass2.i);</div><div class="line">        System.out.println(myClass2.j);</div><div class="line"> </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">double</span> i = Math.random();</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> j = Math.random();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行这段代码就会发现，每次打印的两个j值都是一样的，而i的值却是不同的。从这里就可以知道final和static变量的区别了。</p>
+<h1 id="final-参数"><a href="#final-参数" class="headerlink" title="final 参数"></a>final 参数</h1><p><strong>在方法参数前面加final关键字就是为了防止数据在方法体中被修改。</strong></p>
+<ul>
+<li><strong>用final修饰基本数据类型</strong>：这时参数的值在方法体内是不能被修改的，即不能被重新赋值。否则编译就通不过。</li>
+<li><strong>用final修饰引用类型</strong>：这时参数变量所引用的对象是不能被改变的。作为引用的拷贝，参数在方法体里面不能再引用新的对象。否则编译通不过。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;final在Java中是一个保留的关键字，可以声明成员变量、方法、类以及本地变量。&lt;br&gt;一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。&lt;br&gt;&lt;strong&gt;&lt;font
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="final" scheme="http://yoursite.com/tags/final/"/>
+    
+  </entry>
+  
+  <entry>
     <title>JAVA synchronized 详解</title>
     <link href="http://yoursite.com/2017/02/20/JAVA%20synchronized%20%E8%AF%A6%E8%A7%A3/"/>
     <id>http://yoursite.com/2017/02/20/JAVA synchronized 详解/</id>
@@ -1119,41 +1170,6 @@
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
     
       <category term="jvm" scheme="http://yoursite.com/tags/jvm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java中Volatile关键字详解</title>
-    <link href="http://yoursite.com/2016/07/21/Java%E4%B8%ADVolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/2016/07/21/Java中Volatile关键字详解/</id>
-    <published>2016-07-21T02:08:09.000Z</published>
-    <updated>2017-02-24T02:21:34.180Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。<br><strong>可见性，是指线程之间的可见性，一个线程修改的状态对另一个线程是可见的</strong>。也就是一个线程修改的结果。另一个线程马上就能看到。比如：用volatile修饰的变量，就会具有可见性。volatile修饰的变量不允许线程内部缓存和重排序，即直接修改内存。所以对其他线程是可见的。但是这里需要注意一个问题，<strong>volatile只能让被他修饰内容具有可见性，但不能保证它具有原子性（不保证有序性）。</strong>比如 volatile int a = 0；之后有一个操作 a++；这个变量a具有可见性，但是a++ 依然是一个非原子操作，也就是这个操作同样存在线程安全问题。</p>
-<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>　<strong>原子是世界上的最小单位，具有不可分割性</strong>。比如 a=0；（a非long和double类型） 这个操作是不可分割的，那么我们说这个操作时原子操作。再比如：a++； 这个操作实际是a = a + 1；是可分割的，所以他不是一个原子操作。非原子操作都会存在线程安全问题，需要我们使用同步技术（sychronized）来让它变成一个原子操作。一个操作是原子操作，那么我们称它具有原子性。java的concurrent包下提供了一些原子类，我们可以通过阅读API来了解这些原子类的用法。比如：AtomicInteger、AtomicLong、AtomicReference等。<br>下面一段代码在多线程环境下，将存在问题。<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class NoVisibility &#123;</div><div class="line">    private static boolean ready;</div><div class="line">    private static int number;</div><div class="line">    private static class ReaderThread extends Thread &#123;</div><div class="line">        @Override</div><div class="line">        public void run() &#123;</div><div class="line">            while(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ReaderThread().start();</div><div class="line">        number = 42;</div><div class="line">        ready = true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>NoVisibility可能会持续循环下去，因为读线程可能永远都看不到ready的值。甚至NoVisibility可能会输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入number的值，这种现象被称为“重排序</strong>”。只要在某个线程中无法检测到重排序情况（即使在其他线程中可以明显地看到该线程中的重排序），那么就无法确保线程中的操作将按照程序中指定的顺序来执行。当主线程首先写入number，然后在没有同步的情况下写入ready，那么读线程看到的顺序可能与写入的顺序完全相反。<br>在没有同步的情况下，编译器、处理器以及运行时等都可能对操作的执行顺序进行一些意想不到的调整。在缺乏足够同步的多线程程序中，要想对内存操作的执行春旭进行判断，无法得到正确的结论。<br>这个看上去像是一个失败的设计，但却能使JVM充分地利用现代多核处理器的强大性能。例如，在缺少同步的情况下，Java内存模型允许编译器对操作顺序进行重排序，并将数值缓存在寄存器中。此外，它还允许CPU对操作顺序进行重排序，并将数值缓存在处理器特定的缓存中。</p>
-<h1 id="volatile-原理"><a href="#volatile-原理" class="headerlink" title="volatile 原理"></a>volatile 原理</h1><p>Java语言提供了一种稍弱的同步机制，即volatile变量，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，<strong>因此不会将该变量上的操作与其他内存操作一起重排序</strong>。volatile变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取volatile类型的变量时总会返回最新写入的值。<br><strong>在访问volatile变量时不会执行加锁操作，因此也就不会使执行线程阻塞，因此volatile变量是一种比sychronized关键字更轻量级的同步机制。</strong></p>
-<p><center><img src="http://i1.piimg.com/567571/b9abf6981bbe1dc6.png" alt=""></center><br>当对非volatile变量进行读写的时候，每个线程先从内存拷贝变量到CPU缓存中。如果计算机有多个CPU，每个线程可能在不同的CPU上被处理，这意味着每个线程可以拷贝到不同的CPU cache中。<br><strong>而声明变量是volatile的，JVM保证了每次读变量都从内存中读，跳过CPU cache这一步。</strong><br>当一个变量定义为volatile之后，将具备两种特性：</p>
-<ol>
-<li>保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，新值对于其他线程是立即得知的。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：Java内存模型）来完成。</li>
-<li>禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个内存屏障（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot; title=&quot;基本概念&quot;&gt;&lt;/a&gt;基本概念&lt;/h1&gt;&lt;h2 id=&quot;可见性&quot;&gt;&lt;a href=&quot;#可见性&quot; class=&quot;headerlink&quot; title=&quot;可见性&quot;&gt;&lt;/a&gt;可见
-    
-    </summary>
-    
-      <category term="java并发" scheme="http://yoursite.com/categories/java%E5%B9%B6%E5%8F%91/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
-    
-      <category term="volatile" scheme="http://yoursite.com/tags/volatile/"/>
     
   </entry>
   
