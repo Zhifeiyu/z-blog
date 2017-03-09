@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-01T09:45:19.249Z</updated>
+  <updated>2017-03-09T02:42:48.849Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,77 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>UML类图关系总结</title>
+    <link href="http://yoursite.com/2017/03/09/UML%E7%B1%BB%E5%9B%BE%E5%85%B3%E7%B3%BB%E6%80%BB%E7%BB%93/"/>
+    <id>http://yoursite.com/2017/03/09/UML类图关系总结/</id>
+    <published>2017-03-09T01:30:09.000Z</published>
+    <updated>2017-03-09T02:42:48.849Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization），关联（Association)，聚合（Aggregation），组合(Composition)，依赖(Dependency)</p>
+</blockquote>
+<h1 id="泛化（Generalization）"><a href="#泛化（Generalization）" class="headerlink" title="泛化（Generalization）"></a><strong>泛化（Generalization）</strong></h1><ul>
+<li><strong>泛化关系</strong>：是一种继承关系，表示一般与特殊的关系，它指定了子类如何特化父类的所有特征和行为。例如：老虎是动物的一种，即有老虎的特性也有动物的共性。</li>
+<li><strong>箭头指向</strong>：带三角箭头的实线，箭头指向父类。</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/8bb8a8d6ae956e7e.jpg" alt=""></center>
+
+<h1 id="实现（Realization）"><a href="#实现（Realization）" class="headerlink" title="实现（Realization）"></a><strong>实现（Realization）</strong></h1><ul>
+<li><strong>实现关系</strong>：是一种类与接口的关系，表示类是接口所有特征和行为的实现。</li>
+<li><strong>箭头指向</strong>：带三角箭头的虚线，箭头指向接口。</li>
+</ul>
+<center><img src="http://p1.bqimg.com/567571/ad739d8b8fb0bf74.jpg" alt=""></center>
+
+<h1 id="关联（Association"><a href="#关联（Association" class="headerlink" title="关联（Association)"></a><strong>关联（Association)</strong></h1><ul>
+<li><strong>关联关系</strong>：是一种拥有的关系，它使一个类知道另一个类的属性和方法；如：老师与学生，丈夫与妻子关联可以是双向的，也可以是单向的。双向的关联可以有两个箭头或者没有箭头，单向的关联有一个箭头。</li>
+<li><strong>代码体现</strong> : 成员变量</li>
+<li><strong>箭头及指向</strong> : 带普通箭头的实心线，指向被拥有者</li>
+</ul>
+<center><img src="http://p1.bpimg.com/567571/4181134e316a8b07.jpg" alt=""></center>
+
+<h1 id="聚合（Aggregation）"><a href="#聚合（Aggregation）" class="headerlink" title="聚合（Aggregation）"></a><strong>聚合（Aggregation）</strong></h1><ul>
+<li><strong>聚合关系</strong>：是整体与部分的关系，且部分可以离开整体而单独存在。如车和轮胎是整体和部分的关系，轮胎离开车仍然可以存在。<strong>聚合关系是关联关系的一种，是强的关联关系</strong>；关联和聚合在语法上无法区分，必须考察具体的逻辑关系。</li>
+<li><strong>代码体现</strong>： 成员变量</li>
+<li><strong>箭头及指向</strong>：带空心菱形的实心线，菱形指向整体</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/344243f0dbdc8c11.jpg" alt=""></center>
+
+<h1 id="组合-Composition"><a href="#组合-Composition" class="headerlink" title="组合(Composition)"></a><strong>组合(Composition)</strong></h1><ul>
+<li><strong>组合关系</strong>：是整体与部分的关系，但部分不能离开整体而单独存在。如公司和部门是整体和部分的关系，没有公司就不存在部门。 <strong>组合关系是关联关系的一种，是比聚合关系还要强的关系</strong>，它要求普通的聚合关系中代表整体的对象负责代表部分的对象的生命周期。</li>
+<li><strong>代码实现</strong>：成员变量</li>
+<li><strong>箭头及指向</strong> ：带实心菱形的实线，菱形指向整体</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/ed127ef86b26d6a9.jpg" alt=""></center>
+
+<h1 id="依赖-Dependency"><a href="#依赖-Dependency" class="headerlink" title="依赖(Dependency)"></a><strong>依赖(Dependency)</strong></h1><ul>
+<li><strong>依赖关系</strong>：是一种使用的关系，即一个类的实现需要另一个类的协助，所以要尽量不使用双向的互相依赖。</li>
+<li><strong>代码表现</strong>：局部变量、方法的参数或者对静态方法的调用</li>
+<li><strong>箭头及指向</strong>：带箭头的虚线，指向被使用者</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/b456971cef8542cf.jpg" alt=""></center>
+
+<h1 id="各种关系的强弱顺序："><a href="#各种关系的强弱顺序：" class="headerlink" title="各种关系的强弱顺序："></a>各种关系的强弱顺序：</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">泛化 = 实现 &gt; 组合 &gt; 聚合 &gt; 关联 &gt; 依赖</div></pre></td></tr></table></figure>
+<p><a href="http://www.open-open.com/lib/view/open1328059700311.html" target="_blank" rel="external">转载</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization），关联（Association)，聚合（Aggregation），组合(Composition)，依赖(Dependency)&lt;/p&gt;
+
+    
+    </summary>
+    
+      <category term="UML" scheme="http://yoursite.com/categories/UML/"/>
+    
+    
+      <category term="UML" scheme="http://yoursite.com/tags/UML/"/>
+    
+      <category term="类图" scheme="http://yoursite.com/tags/%E7%B1%BB%E5%9B%BE/"/>
+    
+  </entry>
   
   <entry>
     <title>Quartz 基本概念及原理</title>
@@ -169,57 +240,6 @@
   </entry>
   
   <entry>
-    <title>Java final 详解</title>
-    <link href="http://yoursite.com/2017/02/20/Java%20final%20%E8%AF%A6%E8%A7%A3/"/>
-    <id>http://yoursite.com/2017/02/20/Java final 详解/</id>
-    <published>2017-02-20T02:23:48.000Z</published>
-    <updated>2017-03-02T03:26:11.683Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>final在Java中是一个保留的关键字，可以声明成员变量、方法、类以及本地变量。<br>一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。<br><strong><font color="red">使用final修饰方法参数的目的是防止修改这个参数的值，同时也是一种声明和约定，强调这个参数是不可变的</font></strong></p>
-</blockquote>
-<h1 id="基本类型-amp-引用类型"><a href="#基本类型-amp-引用类型" class="headerlink" title="基本类型 &amp; 引用类型"></a>基本类型 &amp; 引用类型</h1><ul>
-<li>基本类型：它的值就是一个数字，一个字符或一个布尔值；</li>
-<li>引用类型：是一个对象类型，值是什么呢？<strong>它的值是指向内存空间的引用</strong>，就是地址，所指向的内存中保存着变量所表示的一个值或一组值。 </li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> a;</div><div class="line">a = <span class="number">250</span>; <span class="comment">//声明变量a的同时，系统给a分配了空间。</span></div></pre></td></tr></table></figure>
-<p>引用类型就不是了，只给变量分配了引用空间，数据空间没有分配，因为谁都不知道数据是什么，整数，字符？我们看一个错误的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line">MyDate today;</div><div class="line">today.day = <span class="number">4</span>;   <span class="comment">// 发生错误，因为today对象的数据空间未分配</span></div></pre></td></tr></table></figure></p>
-<p>那我们怎么给它赋值？引用类型变量在声明后必须通过实例化开辟数据空间，才能对变量所指向的对象进行访问。如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line">MyDate today;           <span class="comment">// 将变量分配一个保存引用的空间</span></div><div class="line">today = <span class="keyword">new</span> MyDate();   <span class="comment">// 这句话是2步，首先执行new MyDate（），给today变量开辟数据空间，然后再执行赋值操作</span></div><div class="line"><span class="comment">// 引用变量赋值</span></div><div class="line">MyDate a，b;            <span class="comment">// 在内存开辟两个引用空间</span></div><div class="line">a = <span class="keyword">new</span> MyDate();       <span class="comment">// 开辟MyDate对象的数据空间，并把该空间的首地址赋给a</span></div><div class="line">b = a;                  <span class="comment">// 将a存储空间中的地址写到b的存储空间中</span></div></pre></td></tr></table></figure></p>
-<p>内存模型如下图：<br><img src="http://p1.bqimg.com/567571/0c171661e31446bc.png" alt=""></p>
-<h1 id="引用传递-amp-值传递"><a href="#引用传递-amp-值传递" class="headerlink" title="引用传递 &amp; 值传递"></a>引用传递 &amp; 值传递</h1><ul>
-<li>引用传递：除了在函数传值的时候是”引用传递”，在任何用”＝”向对象变量赋值的时候都是”引用传递”。</li>
-<li>值传递：基本类型的传递都属于值传递，和C语言一样，当把Java的基本数据类型（如 int，char，double等）作为入口参数传给函数体的时候，传入的参数在函数体内部变成了局部变量，这个局部变量是输入参数的一个拷贝，所有的函 数体内部的操作都是针对这个拷贝的操作，函数执行结束后，这个局部变量也就完成了它的使命，它影响不到作为输入参数的变量。这种方式的参数传递被称为”值 传递”。</li>
-</ul>
-<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><h2 id="final-变量"><a href="#final-变量" class="headerlink" title="final 变量"></a>final 变量</h2><p>对于一个final变量，如果是<strong>基本数据类型的变量，则其数值一旦在初始化之后便不能更改</strong>；如果是<strong>引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象</strong>。<br>当用final作用于类的成员变量时，成员变量（注意是类的成员变量，局部变量只需要保证在使用之前被初始化赋值即可）必须在定义时或者构造器中进行初始化赋值，而且final变量一旦被初始化赋值之后，就不能再被赋值了。<br>在上面提到被final修饰的引用变量一旦初始化赋值之后就不能再指向其他的对象，那么该引用变量指向的对象的内容可变吗？看下面这个例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>  </span>&#123;</div><div class="line">        <span class="keyword">final</span> MyClass myClass = <span class="keyword">new</span> MyClass();</div><div class="line">        System.out.println(++myClass.i);</div><div class="line"> </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这段代码可以顺利编译通过并且有输出结果，输出结果为1。<strong>这说明引用变量被final修饰之后，虽然不能再指向其他对象，但是它指向的对象的内容是可变的。</strong></p>
-<h2 id="final-方法"><a href="#final-方法" class="headerlink" title="final 方法"></a>final 方法</h2><p>使用final方法的原因有两个。第一个原因是<strong>把方法锁定，以防任何继承类修改它的含义</strong>；第二个原因是<strong>效率</strong>。在早期的Java实现版本中，会将final方法转为内嵌调用。但是如果方法过于庞大，可能看不到内嵌调用带来的任何性能提升。在最近的Java版本中，不需要使用final方法进行这些优化了。<br>因此，<strong><font color="red">只有在想明确禁止该方法在子类中被覆盖的情况下才将方法设置为final的</font></strong>。<br><strong><em>注：类的private方法会隐式地被指定为final方法。</em></strong></p>
-<h2 id="final-类"><a href="#final-类" class="headerlink" title="final 类"></a>final 类</h2><p>当用final修饰一个类时，表明这个类不能被继承。也就是说，如果一个类你永远不会让他被继承，就可以用final进行修饰。final类中的成员变量可以根据需要设为final，但是要注意final类中的所有成员方法都会被隐式地指定为final方法。<br><strong>在使用final修饰类的时候，要注意谨慎选择，除非这个类真的在以后不会用来继承或者出于安全的考虑，尽量不要将类设计为final类。</strong></p>
-<h1 id="final-amp-static"><a href="#final-amp-static" class="headerlink" title="final &amp; static"></a>final &amp; static</h1><p>很多时候会容易把static和final关键字混淆，<strong><font color="red">static作用于成员变量用来表示只保存一份副本，而final的作用是用来保证变量不可变。</font></strong><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>  </span>&#123;</div><div class="line">        MyClass myClass1 = <span class="keyword">new</span> MyClass();</div><div class="line">        MyClass myClass2 = <span class="keyword">new</span> MyClass();</div><div class="line">        System.out.println(myClass1.i);</div><div class="line">        System.out.println(myClass1.j);</div><div class="line">        System.out.println(myClass2.i);</div><div class="line">        System.out.println(myClass2.j);</div><div class="line"> </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">double</span> i = Math.random();</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> j = Math.random();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行这段代码就会发现，每次打印的两个j值都是一样的，而i的值却是不同的。从这里就可以知道final和static变量的区别了。</p>
-<h1 id="final-参数"><a href="#final-参数" class="headerlink" title="final 参数"></a>final 参数</h1><p><strong>在方法参数前面加final关键字就是为了防止数据在方法体中被修改。</strong></p>
-<ul>
-<li><strong>用final修饰基本数据类型</strong>：这时参数的值在方法体内是不能被修改的，即不能被重新赋值。否则编译就通不过。</li>
-<li><strong>用final修饰引用类型</strong>：这时参数变量所引用的对象是不能被改变的。作为引用的拷贝，参数在方法体里面不能再引用新的对象。否则编译通不过。</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;final在Java中是一个保留的关键字，可以声明成员变量、方法、类以及本地变量。&lt;br&gt;一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。&lt;br&gt;&lt;strong&gt;&lt;font
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="final" scheme="http://yoursite.com/tags/final/"/>
-    
-  </entry>
-  
-  <entry>
     <title>JAVA synchronized 详解</title>
     <link href="http://yoursite.com/2017/02/20/JAVA%20synchronized%20%E8%AF%A6%E8%A7%A3/"/>
     <id>http://yoursite.com/2017/02/20/JAVA synchronized 详解/</id>
@@ -317,6 +337,57 @@
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
     
       <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java final 详解</title>
+    <link href="http://yoursite.com/2017/02/20/Java%20final%20%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://yoursite.com/2017/02/20/Java final 详解/</id>
+    <published>2017-02-20T02:23:48.000Z</published>
+    <updated>2017-03-02T03:26:11.683Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>final在Java中是一个保留的关键字，可以声明成员变量、方法、类以及本地变量。<br>一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。<br><strong><font color="red">使用final修饰方法参数的目的是防止修改这个参数的值，同时也是一种声明和约定，强调这个参数是不可变的</font></strong></p>
+</blockquote>
+<h1 id="基本类型-amp-引用类型"><a href="#基本类型-amp-引用类型" class="headerlink" title="基本类型 &amp; 引用类型"></a>基本类型 &amp; 引用类型</h1><ul>
+<li>基本类型：它的值就是一个数字，一个字符或一个布尔值；</li>
+<li>引用类型：是一个对象类型，值是什么呢？<strong>它的值是指向内存空间的引用</strong>，就是地址，所指向的内存中保存着变量所表示的一个值或一组值。 </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> a;</div><div class="line">a = <span class="number">250</span>; <span class="comment">//声明变量a的同时，系统给a分配了空间。</span></div></pre></td></tr></table></figure>
+<p>引用类型就不是了，只给变量分配了引用空间，数据空间没有分配，因为谁都不知道数据是什么，整数，字符？我们看一个错误的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line">MyDate today;</div><div class="line">today.day = <span class="number">4</span>;   <span class="comment">// 发生错误，因为today对象的数据空间未分配</span></div></pre></td></tr></table></figure></p>
+<p>那我们怎么给它赋值？引用类型变量在声明后必须通过实例化开辟数据空间，才能对变量所指向的对象进行访问。如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line">MyDate today;           <span class="comment">// 将变量分配一个保存引用的空间</span></div><div class="line">today = <span class="keyword">new</span> MyDate();   <span class="comment">// 这句话是2步，首先执行new MyDate（），给today变量开辟数据空间，然后再执行赋值操作</span></div><div class="line"><span class="comment">// 引用变量赋值</span></div><div class="line">MyDate a，b;            <span class="comment">// 在内存开辟两个引用空间</span></div><div class="line">a = <span class="keyword">new</span> MyDate();       <span class="comment">// 开辟MyDate对象的数据空间，并把该空间的首地址赋给a</span></div><div class="line">b = a;                  <span class="comment">// 将a存储空间中的地址写到b的存储空间中</span></div></pre></td></tr></table></figure></p>
+<p>内存模型如下图：<br><img src="http://p1.bqimg.com/567571/0c171661e31446bc.png" alt=""></p>
+<h1 id="引用传递-amp-值传递"><a href="#引用传递-amp-值传递" class="headerlink" title="引用传递 &amp; 值传递"></a>引用传递 &amp; 值传递</h1><ul>
+<li>引用传递：除了在函数传值的时候是”引用传递”，在任何用”＝”向对象变量赋值的时候都是”引用传递”。</li>
+<li>值传递：基本类型的传递都属于值传递，和C语言一样，当把Java的基本数据类型（如 int，char，double等）作为入口参数传给函数体的时候，传入的参数在函数体内部变成了局部变量，这个局部变量是输入参数的一个拷贝，所有的函 数体内部的操作都是针对这个拷贝的操作，函数执行结束后，这个局部变量也就完成了它的使命，它影响不到作为输入参数的变量。这种方式的参数传递被称为”值 传递”。</li>
+</ul>
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><h2 id="final-变量"><a href="#final-变量" class="headerlink" title="final 变量"></a>final 变量</h2><p>对于一个final变量，如果是<strong>基本数据类型的变量，则其数值一旦在初始化之后便不能更改</strong>；如果是<strong>引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象</strong>。<br>当用final作用于类的成员变量时，成员变量（注意是类的成员变量，局部变量只需要保证在使用之前被初始化赋值即可）必须在定义时或者构造器中进行初始化赋值，而且final变量一旦被初始化赋值之后，就不能再被赋值了。<br>在上面提到被final修饰的引用变量一旦初始化赋值之后就不能再指向其他的对象，那么该引用变量指向的对象的内容可变吗？看下面这个例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>  </span>&#123;</div><div class="line">        <span class="keyword">final</span> MyClass myClass = <span class="keyword">new</span> MyClass();</div><div class="line">        System.out.println(++myClass.i);</div><div class="line"> </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码可以顺利编译通过并且有输出结果，输出结果为1。<strong>这说明引用变量被final修饰之后，虽然不能再指向其他对象，但是它指向的对象的内容是可变的。</strong></p>
+<h2 id="final-方法"><a href="#final-方法" class="headerlink" title="final 方法"></a>final 方法</h2><p>使用final方法的原因有两个。第一个原因是<strong>把方法锁定，以防任何继承类修改它的含义</strong>；第二个原因是<strong>效率</strong>。在早期的Java实现版本中，会将final方法转为内嵌调用。但是如果方法过于庞大，可能看不到内嵌调用带来的任何性能提升。在最近的Java版本中，不需要使用final方法进行这些优化了。<br>因此，<strong><font color="red">只有在想明确禁止该方法在子类中被覆盖的情况下才将方法设置为final的</font></strong>。<br><strong><em>注：类的private方法会隐式地被指定为final方法。</em></strong></p>
+<h2 id="final-类"><a href="#final-类" class="headerlink" title="final 类"></a>final 类</h2><p>当用final修饰一个类时，表明这个类不能被继承。也就是说，如果一个类你永远不会让他被继承，就可以用final进行修饰。final类中的成员变量可以根据需要设为final，但是要注意final类中的所有成员方法都会被隐式地指定为final方法。<br><strong>在使用final修饰类的时候，要注意谨慎选择，除非这个类真的在以后不会用来继承或者出于安全的考虑，尽量不要将类设计为final类。</strong></p>
+<h1 id="final-amp-static"><a href="#final-amp-static" class="headerlink" title="final &amp; static"></a>final &amp; static</h1><p>很多时候会容易把static和final关键字混淆，<strong><font color="red">static作用于成员变量用来表示只保存一份副本，而final的作用是用来保证变量不可变。</font></strong><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>  </span>&#123;</div><div class="line">        MyClass myClass1 = <span class="keyword">new</span> MyClass();</div><div class="line">        MyClass myClass2 = <span class="keyword">new</span> MyClass();</div><div class="line">        System.out.println(myClass1.i);</div><div class="line">        System.out.println(myClass1.j);</div><div class="line">        System.out.println(myClass2.i);</div><div class="line">        System.out.println(myClass2.j);</div><div class="line"> </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">double</span> i = Math.random();</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> j = Math.random();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行这段代码就会发现，每次打印的两个j值都是一样的，而i的值却是不同的。从这里就可以知道final和static变量的区别了。</p>
+<h1 id="final-参数"><a href="#final-参数" class="headerlink" title="final 参数"></a>final 参数</h1><p><strong>在方法参数前面加final关键字就是为了防止数据在方法体中被修改。</strong></p>
+<ul>
+<li><strong>用final修饰基本数据类型</strong>：这时参数的值在方法体内是不能被修改的，即不能被重新赋值。否则编译就通不过。</li>
+<li><strong>用final修饰引用类型</strong>：这时参数变量所引用的对象是不能被改变的。作为引用的拷贝，参数在方法体里面不能再引用新的对象。否则编译通不过。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;final在Java中是一个保留的关键字，可以声明成员变量、方法、类以及本地变量。&lt;br&gt;一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。&lt;br&gt;&lt;strong&gt;&lt;font
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="final" scheme="http://yoursite.com/tags/final/"/>
     
   </entry>
   
@@ -690,9 +761,9 @@
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
-    
       <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
       <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
     
@@ -1134,42 +1205,6 @@
       <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
     
       <category term="磁盘" scheme="http://yoursite.com/tags/%E7%A3%81%E7%9B%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JVM原理</title>
-    <link href="http://yoursite.com/2016/10/25/JVM%E5%8E%9F%E7%90%86/"/>
-    <id>http://yoursite.com/2016/10/25/JVM原理/</id>
-    <published>2016-10-25T09:15:18.000Z</published>
-    <updated>2017-02-17T02:10:12.160Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="JVM-原理"><a href="#JVM-原理" class="headerlink" title="JVM 原理"></a>JVM 原理</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。</p>
-<p>java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。</p>
-<h3 id="JAVA运行过程"><a href="#JAVA运行过程" class="headerlink" title="JAVA运行过程"></a>JAVA运行过程</h3><p>Java语言写的源程序通过Java编译器，编译成与平台无关的‘字节码程序’(.class文件，也就是0，1二进制程序)，然后在OS之上的Java解释器中解释执行。</p>
-<p><img src="http://oflrm5g9z.bkt.clouddn.com/16-10-25/87103552.jpg" alt="java运行过程"></p>
-<h3 id="JVM执行过程"><a href="#JVM执行过程" class="headerlink" title="JVM执行过程"></a>JVM执行过程</h3><ul>
-<li>加载 .class文件</li>
-<li>管理并分配内存</li>
-<li>执行垃圾收集</li>
-</ul>
-<p><img src="http://oflrm5g9z.bkt.clouddn.com/16-10-25/46394905.jpg" alt="jvm运行过程"></p>
-<p>JRE/JDK（java运行时环境）由JVM构造JAVA运行程序</p>
-<p><a href="http://www.codeceo.com/article/jvm-stack-heap.html" target="_blank" rel="external">参考链接</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;JVM-原理&quot;&gt;&lt;a href=&quot;#JVM-原理&quot; class=&quot;headerlink&quot; title=&quot;JVM 原理&quot;&gt;&lt;/a&gt;JVM 原理&lt;/h2&gt;&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="jvm" scheme="http://yoursite.com/tags/jvm/"/>
     
   </entry>
   

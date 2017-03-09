@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,jvm," />
+  <meta name="keywords" content="UML,类图," />
 
 
 
@@ -86,25 +86,32 @@
 
 
 
-<meta name="description" content="JVM 原理简介Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。
-java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。
-JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平台无">
+<meta name="description" content="在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization），关联（Association)，聚合（Aggregation），组合(Composition)，依赖(Dependency)
+
+泛化（Generalization）
+泛化关系：是一种继承关系，表示一般与特殊的关系，它指定了子类如何特化父类的所有特征和行为。例如：老虎是动物的一种，即有">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JVM原理">
-<meta property="og:url" content="http://yoursite.com/2016/10/25/JVM原理/index.html">
+<meta property="og:title" content="UML类图关系总结">
+<meta property="og:url" content="http://yoursite.com/2017/03/09/UML类图关系总结/index.html">
 <meta property="og:site_name" content="zfylin-非鱼">
-<meta property="og:description" content="JVM 原理简介Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。
-java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。
-JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平台无">
-<meta property="og:image" content="http://oflrm5g9z.bkt.clouddn.com/16-10-25/87103552.jpg">
-<meta property="og:image" content="http://oflrm5g9z.bkt.clouddn.com/16-10-25/46394905.jpg">
-<meta property="og:updated_time" content="2017-02-17T02:10:12.160Z">
+<meta property="og:description" content="在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization），关联（Association)，聚合（Aggregation），组合(Composition)，依赖(Dependency)
+
+泛化（Generalization）
+泛化关系：是一种继承关系，表示一般与特殊的关系，它指定了子类如何特化父类的所有特征和行为。例如：老虎是动物的一种，即有">
+<meta property="og:image" content="http://i1.piimg.com/567571/8bb8a8d6ae956e7e.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/ad739d8b8fb0bf74.jpg">
+<meta property="og:image" content="http://p1.bpimg.com/567571/4181134e316a8b07.jpg">
+<meta property="og:image" content="http://i1.piimg.com/567571/344243f0dbdc8c11.jpg">
+<meta property="og:image" content="http://i1.piimg.com/567571/ed127ef86b26d6a9.jpg">
+<meta property="og:image" content="http://i1.piimg.com/567571/b456971cef8542cf.jpg">
+<meta property="og:updated_time" content="2017-03-09T02:42:48.849Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JVM原理">
-<meta name="twitter:description" content="JVM 原理简介Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。
-java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。
-JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平台无">
-<meta name="twitter:image" content="http://oflrm5g9z.bkt.clouddn.com/16-10-25/87103552.jpg">
+<meta name="twitter:title" content="UML类图关系总结">
+<meta name="twitter:description" content="在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization），关联（Association)，聚合（Aggregation），组合(Composition)，依赖(Dependency)
+
+泛化（Generalization）
+泛化关系：是一种继承关系，表示一般与特殊的关系，它指定了子类如何特化父类的所有特征和行为。例如：老虎是动物的一种，即有">
+<meta name="twitter:image" content="http://i1.piimg.com/567571/8bb8a8d6ae956e7e.jpg">
 
 
 
@@ -125,10 +132,10 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/10/25/JVM原理/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/09/UML类图关系总结/"/>
 
 
-  <title> JVM原理 | zfylin-非鱼 </title>
+  <title> UML类图关系总结 | zfylin-非鱼 </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -260,7 +267,7 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
             
             
               
-                JVM原理
+                UML类图关系总结
               
             
           </h1>
@@ -272,8 +279,8 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-25T17:15:18+08:00" content="2016-10-25">
-              2016-10-25
+            <time itemprop="dateCreated" datetime="2017-03-09T09:30:09+08:00" content="2017-03-09">
+              2017-03-09
             </time>
           </span>
 
@@ -286,8 +293,8 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/UML/" itemprop="url" rel="index">
+                    <span itemprop="name">UML</span>
                   </a>
                 </span>
 
@@ -302,8 +309,8 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/25/JVM原理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/25/JVM原理/" itemprop="commentsCount"></span>
+                <a href="/2017/03/09/UML类图关系总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/09/UML类图关系总结/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -313,7 +320,7 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
 
           
           
-             <span id="/2016/10/25/JVM原理/" class="leancloud_visitors" data-flag-title="JVM原理">
+             <span id="/2017/03/09/UML类图关系总结/" class="leancloud_visitors" data-flag-title="UML类图关系总结">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -335,18 +342,51 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
       
 
       
-        <h2 id="JVM-原理"><a href="#JVM-原理" class="headerlink" title="JVM 原理"></a>JVM 原理</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Java编译器和OS平台之间的虚拟处理器。它是一种利用软件方法实现的抽象的计算机基于下层的操作系统和硬件平台，可以在上面执行java的字节码程序。</p>
-<p>java编译器只要面向JVM，生成JVM能理解的代码或字节码文件。Java源文件经编译成字节码程序，通过JVM将每一条指令翻译成不同平台机器码，通过特定平台运行。</p>
-<h3 id="JAVA运行过程"><a href="#JAVA运行过程" class="headerlink" title="JAVA运行过程"></a>JAVA运行过程</h3><p>Java语言写的源程序通过Java编译器，编译成与平台无关的‘字节码程序’(.class文件，也就是0，1二进制程序)，然后在OS之上的Java解释器中解释执行。</p>
-<p><img src="http://oflrm5g9z.bkt.clouddn.com/16-10-25/87103552.jpg" alt="java运行过程"></p>
-<h3 id="JVM执行过程"><a href="#JVM执行过程" class="headerlink" title="JVM执行过程"></a>JVM执行过程</h3><ul>
-<li>加载 .class文件</li>
-<li>管理并分配内存</li>
-<li>执行垃圾收集</li>
+        <blockquote>
+<p>在UML类图中，常见的有以下几种关系: 泛化（Generalization）,  实现（Realization），关联（Association)，聚合（Aggregation），组合(Composition)，依赖(Dependency)</p>
+</blockquote>
+<h1 id="泛化（Generalization）"><a href="#泛化（Generalization）" class="headerlink" title="泛化（Generalization）"></a><strong>泛化（Generalization）</strong></h1><ul>
+<li><strong>泛化关系</strong>：是一种继承关系，表示一般与特殊的关系，它指定了子类如何特化父类的所有特征和行为。例如：老虎是动物的一种，即有老虎的特性也有动物的共性。</li>
+<li><strong>箭头指向</strong>：带三角箭头的实线，箭头指向父类。</li>
 </ul>
-<p><img src="http://oflrm5g9z.bkt.clouddn.com/16-10-25/46394905.jpg" alt="jvm运行过程"></p>
-<p>JRE/JDK（java运行时环境）由JVM构造JAVA运行程序</p>
-<p><a href="http://www.codeceo.com/article/jvm-stack-heap.html" target="_blank" rel="external">参考链接</a></p>
+<center><img src="http://i1.piimg.com/567571/8bb8a8d6ae956e7e.jpg" alt=""></center>
+
+<h1 id="实现（Realization）"><a href="#实现（Realization）" class="headerlink" title="实现（Realization）"></a><strong>实现（Realization）</strong></h1><ul>
+<li><strong>实现关系</strong>：是一种类与接口的关系，表示类是接口所有特征和行为的实现。</li>
+<li><strong>箭头指向</strong>：带三角箭头的虚线，箭头指向接口。</li>
+</ul>
+<center><img src="http://p1.bqimg.com/567571/ad739d8b8fb0bf74.jpg" alt=""></center>
+
+<h1 id="关联（Association"><a href="#关联（Association" class="headerlink" title="关联（Association)"></a><strong>关联（Association)</strong></h1><ul>
+<li><strong>关联关系</strong>：是一种拥有的关系，它使一个类知道另一个类的属性和方法；如：老师与学生，丈夫与妻子关联可以是双向的，也可以是单向的。双向的关联可以有两个箭头或者没有箭头，单向的关联有一个箭头。</li>
+<li><strong>代码体现</strong> : 成员变量</li>
+<li><strong>箭头及指向</strong> : 带普通箭头的实心线，指向被拥有者</li>
+</ul>
+<center><img src="http://p1.bpimg.com/567571/4181134e316a8b07.jpg" alt=""></center>
+
+<h1 id="聚合（Aggregation）"><a href="#聚合（Aggregation）" class="headerlink" title="聚合（Aggregation）"></a><strong>聚合（Aggregation）</strong></h1><ul>
+<li><strong>聚合关系</strong>：是整体与部分的关系，且部分可以离开整体而单独存在。如车和轮胎是整体和部分的关系，轮胎离开车仍然可以存在。<strong>聚合关系是关联关系的一种，是强的关联关系</strong>；关联和聚合在语法上无法区分，必须考察具体的逻辑关系。</li>
+<li><strong>代码体现</strong>： 成员变量</li>
+<li><strong>箭头及指向</strong>：带空心菱形的实心线，菱形指向整体</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/344243f0dbdc8c11.jpg" alt=""></center>
+
+<h1 id="组合-Composition"><a href="#组合-Composition" class="headerlink" title="组合(Composition)"></a><strong>组合(Composition)</strong></h1><ul>
+<li><strong>组合关系</strong>：是整体与部分的关系，但部分不能离开整体而单独存在。如公司和部门是整体和部分的关系，没有公司就不存在部门。 <strong>组合关系是关联关系的一种，是比聚合关系还要强的关系</strong>，它要求普通的聚合关系中代表整体的对象负责代表部分的对象的生命周期。</li>
+<li><strong>代码实现</strong>：成员变量</li>
+<li><strong>箭头及指向</strong> ：带实心菱形的实线，菱形指向整体</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/ed127ef86b26d6a9.jpg" alt=""></center>
+
+<h1 id="依赖-Dependency"><a href="#依赖-Dependency" class="headerlink" title="依赖(Dependency)"></a><strong>依赖(Dependency)</strong></h1><ul>
+<li><strong>依赖关系</strong>：是一种使用的关系，即一个类的实现需要另一个类的协助，所以要尽量不使用双向的互相依赖。</li>
+<li><strong>代码表现</strong>：局部变量、方法的参数或者对静态方法的调用</li>
+<li><strong>箭头及指向</strong>：带箭头的虚线，指向被使用者</li>
+</ul>
+<center><img src="http://i1.piimg.com/567571/b456971cef8542cf.jpg" alt=""></center>
+
+<h1 id="各种关系的强弱顺序："><a href="#各种关系的强弱顺序：" class="headerlink" title="各种关系的强弱顺序："></a>各种关系的强弱顺序：</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">泛化 = 实现 &gt; 组合 &gt; 聚合 &gt; 关联 &gt; 依赖</div></pre></td></tr></table></figure>
+<p><a href="http://www.open-open.com/lib/view/open1328059700311.html" target="_blank" rel="external">转载</a></p>
 
       
     </div>
@@ -369,9 +409,9 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag">#java</a>
+            <a href="/tags/UML/" rel="tag">#UML</a>
           
-            <a href="/tags/jvm/" rel="tag">#jvm</a>
+            <a href="/tags/类图/" rel="tag">#类图</a>
           
         </div>
       
@@ -380,17 +420,13 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/21/Spring MVC 框架及基本配置/" rel="next" title="Spring MVC 框架及基本配置">
-                <i class="fa fa-chevron-left"></i> Spring MVC 框架及基本配置
+              <a href="/2017/03/01/Quartz 基本概念及原理/" rel="next" title="Quartz 基本概念及原理">
+                <i class="fa fa-chevron-left"></i> Quartz 基本概念及原理
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/26/Linux-磁盘管理/" rel="prev" title="Linux 磁盘管理">
-                Linux 磁盘管理 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -405,10 +441,10 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/10/25/JVM原理/"
-     data-title="JVM原理"
+        <div class="ds-share flat" data-thread-key="2017/03/09/UML类图关系总结/"
+     data-title="UML类图关系总结"
      data-content=""
-     data-url="http://yoursite.com/2016/10/25/JVM原理/">
+     data-url="http://yoursite.com/2017/03/09/UML类图关系总结/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -438,8 +474,8 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/25/JVM原理/"
-           data-title="JVM原理" data-url="http://yoursite.com/2016/10/25/JVM原理/">
+      <div class="ds-thread" data-thread-key="2017/03/09/UML类图关系总结/"
+           data-title="UML类图关系总结" data-url="http://yoursite.com/2017/03/09/UML类图关系总结/">
       </div>
     
   </div>
@@ -537,7 +573,7 @@ JAVA运行过程Java语言写的源程序通过Java编译器，编译成与平�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-原理"><span class="nav-number">1.</span> <span class="nav-text">JVM 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA运行过程"><span class="nav-number">1.2.</span> <span class="nav-text">JAVA运行过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM执行过程"><span class="nav-number">1.3.</span> <span class="nav-text">JVM执行过程</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#泛化（Generalization）"><span class="nav-number">1.</span> <span class="nav-text">泛化（Generalization）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现（Realization）"><span class="nav-number">2.</span> <span class="nav-text">实现（Realization）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关联（Association"><span class="nav-number">3.</span> <span class="nav-text">关联（Association)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合（Aggregation）"><span class="nav-number">4.</span> <span class="nav-text">聚合（Aggregation）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组合-Composition"><span class="nav-number">5.</span> <span class="nav-text">组合(Composition)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#依赖-Dependency"><span class="nav-number">6.</span> <span class="nav-text">依赖(Dependency)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#各种关系的强弱顺序："><span class="nav-number">7.</span> <span class="nav-text">各种关系的强弱顺序：</span></a></li></ol></div>
             
           </div>
         </section>
