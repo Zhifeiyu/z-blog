@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://p1.bpimg.com/567571/782bf941ee647106.png">
 <meta property="og:image" content="http://p1.bpimg.com/567571/8c0a589b9cf56e5c.png">
 <meta property="og:image" content="http://p1.bpimg.com/567571/1ae5e3582108b3aa.png">
-<meta property="og:updated_time" content="2017-03-15T09:37:41.183Z">
+<meta property="og:updated_time" content="2017-03-15T09:44:01.218Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop MR && YARN">
 <meta name="twitter:description" content="Apache Hadoop 是一个开源软件框架，可安装在一个商用机器集群中，使机器可彼此通信并协同工作，以高度分布式的方式共同存储和处理大量数据。最初，Hadoop 包含以下两个主要组件：Hadoop Distributed File System (HDFS) 和一个分布式计算引擎，该引擎支持以 MapReduce 作业的形式实现和运行程序。MapReduce 是 Google 推广的一个简单">
@@ -381,7 +381,7 @@
 <li>对多框架支持</li>
 <li>框架升级更容易</li>
 </ol>
-<center><img src="http://p1.bpimg.com/567571/1ae5e3582108b3aa.png" alt=""><center><br><center>YARN</center>
+<center><img src="http://p1.bpimg.com/567571/1ae5e3582108b3aa.png" alt=""></center><br><center>YARN</center>
 
 <ul>
 <li>ResourceManager 代替集群管理器</li>
@@ -390,7 +390,7 @@
 <li>一个分布式应用程序代替一个 MapReduce 作业</li>
 </ul>
 <p>一个全局 ResourceManager 以主要后台进程的形式运行，它通常在专用机器上运行，在各种竞争的应用程序之间仲裁可用的集群资源。<br>在用户提交一个应用程序时，一个称为 ApplicationMaster 的轻量型进程实例会启动来协调应用程序内的所有任务的执行。这包括监视任务，重新启动失败的任务，推测性地运行缓慢的任务，以及计算应用程序计数器值的总和。有趣的是，ApplicationMaster 可在容器内运行任何类型的任务。<br>NodeManager 是 TaskTracker 的一种更加普通和高效的版本。没有固定数量的 map 和 reduce slots，NodeManager 拥有许多动态创建的资源容器。</p>
-</center></center>
+
       
     </div>
 

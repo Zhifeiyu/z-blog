@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-15T09:37:41.183Z</updated>
+  <updated>2017-03-15T09:44:01.218Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/03/15/Hadoop%20MR%20&amp;&amp;%20YARN/"/>
     <id>http://yoursite.com/2017/03/15/Hadoop MR &amp;&amp; YARN/</id>
     <published>2017-03-15T09:37:40.000Z</published>
-    <updated>2017-03-15T09:37:41.183Z</updated>
+    <updated>2017-03-15T09:44:01.218Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>Apache Hadoop 是一个开源软件框架，可安装在一个商用机器集群中，使机器可彼此通信并协同工作，以高度分布式的方式共同存储和处理大量数据。最初，Hadoop 包含以下两个主要组件：<strong>Hadoop Distributed File System (HDFS)</strong> 和<strong>一个分布式计算引擎</strong>，该引擎支持以 MapReduce 作业的形式实现和运行程序。<br><strong>MapReduce</strong> 是 Google 推广的一个简单的编程模型，它对以高度并行和可扩展的方式处理大数据集很有用。MapReduce 的灵感来源于函数式编程，用户可将他们的计算表达为 map 和 reduce 函数，将数据作为键值对来处理。Hadoop 提供了一个高级 API 来在各种语言中实现自定义的 map 和 reduce 函数。<br>Hadoop 还提供了软件基础架构，以一系列 map 和 reduce 任务的形式运行 MapReduce 作业。Map 任务 在输入数据的子集上调用 map 函数。在完成这些调用后，reduce 任务 开始在 map 函数所生成的中间数据上调用 reduce 任务，生成最终的输出。 map 和 reduce 任务彼此单独运行，这支持并行和容错的计算。<br>最重要的是，Hadoop 基础架构负责处理分布式处理的所有复杂方面：并行化、调度、资源管理、机器间通信、软件和硬件故障处理，等等。得益于这种干净的抽象，实现处理数百（或者甚至数千）个机器上的数 TB 数据的分布式应用程序从未像现在这么容易过，甚至对于之前没有使用分布式系统的经验的开发人员也是如此。</p>
@@ -73,7 +73,7 @@
 <li>对多框架支持</li>
 <li>框架升级更容易</li>
 </ol>
-<center><img src="http://p1.bpimg.com/567571/1ae5e3582108b3aa.png" alt=""><center><br><center>YARN</center>
+<center><img src="http://p1.bpimg.com/567571/1ae5e3582108b3aa.png" alt=""></center><br><center>YARN</center>
 
 <ul>
 <li>ResourceManager 代替集群管理器</li>
@@ -82,7 +82,7 @@
 <li>一个分布式应用程序代替一个 MapReduce 作业</li>
 </ul>
 <p>一个全局 ResourceManager 以主要后台进程的形式运行，它通常在专用机器上运行，在各种竞争的应用程序之间仲裁可用的集群资源。<br>在用户提交一个应用程序时，一个称为 ApplicationMaster 的轻量型进程实例会启动来协调应用程序内的所有任务的执行。这包括监视任务，重新启动失败的任务，推测性地运行缓慢的任务，以及计算应用程序计数器值的总和。有趣的是，ApplicationMaster 可在容器内运行任何类型的任务。<br>NodeManager 是 TaskTracker 的一种更加普通和高效的版本。没有固定数量的 map 和 reduce slots，NodeManager 拥有许多动态创建的资源容器。</p>
-</center></center>]]></content>
+]]></content>
     
     <summary type="html">
     
