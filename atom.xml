@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-09T02:42:48.849Z</updated>
+  <updated>2017-03-09T06:54:36.102Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>工厂模式</title>
+    <link href="http://yoursite.com/2017/03/09/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/03/09/工厂模式/</id>
+    <published>2017-03-09T06:30:54.000Z</published>
+    <updated>2017-03-09T06:54:36.102Z</updated>
+    
+    <content type="html"><![CDATA[<p># </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;# &lt;/p&gt;
+
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+      <category term="工模式" scheme="http://yoursite.com/tags/%E5%B7%A5%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>UML类图关系总结</title>
@@ -693,9 +719,9 @@
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
-      <category term="Hbase" scheme="http://yoursite.com/tags/Hbase/"/>
-    
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="Hbase" scheme="http://yoursite.com/tags/Hbase/"/>
     
   </entry>
   
@@ -761,9 +787,9 @@
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
-    
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
     
       <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
     
@@ -881,6 +907,91 @@
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="cdh" scheme="http://yoursite.com/tags/cdh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hadoop MR &amp;&amp; YARN</title>
+    <link href="http://yoursite.com/2016/12/08/Hadoop%20%E6%A1%86%E6%9E%B6/"/>
+    <id>http://yoursite.com/2016/12/08/Hadoop 框架/</id>
+    <published>2016-12-08T07:50:50.000Z</published>
+    <updated>2017-03-15T09:30:31.562Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>Apache Hadoop 是一个开源软件框架，可安装在一个商用机器集群中，使机器可彼此通信并协同工作，以高度分布式的方式共同存储和处理大量数据。最初，Hadoop 包含以下两个主要组件：<strong>Hadoop Distributed File System (HDFS)</strong> 和<strong>一个分布式计算引擎</strong>，该引擎支持以 MapReduce 作业的形式实现和运行程序。<br><strong>MapReduce</strong> 是 Google 推广的一个简单的编程模型，它对以高度并行和可扩展的方式处理大数据集很有用。MapReduce 的灵感来源于函数式编程，用户可将他们的计算表达为 map 和 reduce 函数，将数据作为键值对来处理。Hadoop 提供了一个高级 API 来在各种语言中实现自定义的 map 和 reduce 函数。<br>Hadoop 还提供了软件基础架构，以一系列 map 和 reduce 任务的形式运行 MapReduce 作业。Map 任务 在输入数据的子集上调用 map 函数。在完成这些调用后，reduce 任务 开始在 map 函数所生成的中间数据上调用 reduce 任务，生成最终的输出。 map 和 reduce 任务彼此单独运行，这支持并行和容错的计算。<br>最重要的是，Hadoop 基础架构负责处理分布式处理的所有复杂方面：并行化、调度、资源管理、机器间通信、软件和硬件故障处理，等等。得益于这种干净的抽象，实现处理数百（或者甚至数千）个机器上的数 TB 数据的分布式应用程序从未像现在这么容易过，甚至对于之前没有使用分布式系统的经验的开发人员也是如此。</p>
+</blockquote>
+<h2 id="MR架构"><a href="#MR架构" class="headerlink" title="MR架构"></a>MR架构</h2><p>在运行一个mapreduce计算任务时候，任务过程被分为两个阶段：map阶段和reduce阶段，每个阶段都是用键值对（key/value）作为输入（input）和输出（output）。而程序员要做的就是定义好这两个阶段的函数：map函数和reduce函数。</p>
+<center><img src="http://p1.bpimg.com/567571/782bf941ee647106.png" alt=""></center><br><center>map reduce 过程图</center>
+
+<h2 id="JobClient-JobTracker-TaskTracker"><a href="#JobClient-JobTracker-TaskTracker" class="headerlink" title="JobClient JobTracker TaskTracker"></a>JobClient JobTracker TaskTracker</h2><center><img src="http://p1.bpimg.com/567571/8c0a589b9cf56e5c.png" alt=""></center><br><center>MR 架构</center>
+
+<ol>
+<li>JobClient 向 JobTracker 请求一个新的 jobID</li>
+<li>检查作业输出说明</li>
+<li>计算作业输出划分split</li>
+<li>将运行作业所需要的资源（作业的jar文件、配置文件、计算所得的输入划分）复制到一个以作业ID命名的目录中JobTracker的文件系统。</li>
+<li>通过调用JobTracker的submitJob()方法，告诉JobTracker作业准备执行</li>
+<li>JobTracker接收到submitJob()方法调用后，把此调用放到一个内部队列中，交由作业调</li>
+<li>器进行调度，并对其进行初始化</li>
+<li>创建运行任务列表，作业调度去首先从共享文件系统中获取JobClient已经计算好的输入划分信息（图中step6），然后为每个划分创建一个Map任务（一个split对应一个map，有多少split就有多少map）。</li>
+<li>TaskTracker执行一个简单的循环，定期发送心跳（heartbeat）调用JobTracker</li>
+</ol>
+<h2 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h2><ol>
+<li><strong>输入分片（input split）</strong>：在进行map计算之前，mapreduce会根据输入文件计算输入分片（input split），每个输入分片（input split）针对一个map任务，输入分片（input split）存储的并非数据本身，而是一个分片长度和一个记录数据的位置的数组，输入分片（input split）往往和hdfs的block（块）关系很密切，假如我们设定hdfs的块的大小是64mb，如果我们输入有三个文件，大小分别是3mb、65mb和127mb，那么mapreduce会把3mb文件分为一个输入分片（input split），65mb则是两个输入分片（input split）而127mb也是两个输入分片（input split），换句话说我们如果在map计算前做输入分片调整，例如合并小文件，那么就会有5个map任务将执行，而且每个map执行的数据大小不均，这个也是mapreduce优化计算的一个关键点；</li>
+<li><strong>map阶段</strong>：就是程序员编写好的map函数了，因此map函数效率相对好控制，而且一般map操作都是本地化操作也就是在数据存储节点上进行；</li>
+<li><strong>combiner阶段</strong>：combiner阶段是程序员可以选择的，combiner其实也是一种reduce操作，因此我们看见WordCount类里是用reduce进行加载的。Combiner是一个本地化的reduce操作，它是map运算的后续操作，主要是在map计算出中间文件前做一个简单的合并重复key值的操作，例如我们对文件里的单词频率做统计，map计算时候如果碰到一个hadoop的单词就会记录为1，但是这篇文章里hadoop可能会出现n多次，那么map输出文件冗余就会很多，因此在reduce计算前对相同的key做一个合并操作，那么文件会变小，这样就提高了宽带的传输效率，毕竟hadoop计算力宽带资源往往是计算的瓶颈也是最为宝贵的资源，但是combiner操作是有风险的，使用它的原则是combiner的输入不会影响到reduce计算的最终输入，例如：如果计算只是求总数，最大值，最小值可以使用combiner，但是做平均值计算使用combiner的话，最终的reduce计算结果就会出错；</li>
+<li><strong>shuffle阶段</strong>：将map的输出作为reduce的输入的过程就是shuffle了，这个是mapreduce优化的重点地方。这里我不讲怎么优化shuffle阶段，讲讲shuffle阶段的原理，因为大部分的书籍里都没讲清楚shuffle阶段。Shuffle一开始就是map阶段做输出操作，一般mapreduce计算的都是海量数据，map输出时候不可能把所有文件都放到内存操作，因此map写入磁盘的过程十分的复杂，更何况map输出时候要对结果进行排序，内存开销是很大的，map在做输出时候会在内存里开启一个环形内存缓冲区，这个缓冲区专门用来输出的，默认大小是100mb，并且在配置文件里为这个缓冲区设定了一个阀值，默认是0.80（这个大小和阀值都是可以在配置文件里进行配置的），同时map还会为输出操作启动一个守护线程，如果缓冲区的内存达到了阀值的80%时候，这个守护线程就会把内容写到磁盘上，这个过程叫spill，另外的20%内存可以继续写入要写进磁盘的数据，写入磁盘和写入内存操作是互不干扰的，如果缓存区被撑满了，那么map就会阻塞写入内存的操作，让写入磁盘操作完成后再继续执行写入内存操作，前面我讲到写入磁盘前会有个排序操作，这个是在写入磁盘操作时候进行，不是在写入内存时候进行的，如果我们定义了combiner函数，那么排序前还会执行combiner操作。每次spill操作也就是写入磁盘操作时候就会写一个溢出文件，也就是说在做map输出有几次spill就会产生多少个溢出文件，等map输出全部做完后，map会合并这些输出文件。这个过程里还会有一个Partitioner操作，对于这个操作很多人都很迷糊，其实Partitioner操作和map阶段的输入分片（Input split）很像，一个Partitioner对应一个reduce作业，如果我们mapreduce操作只有一个reduce操作，那么Partitioner就只有一个，如果我们有多个reduce操作，那么Partitioner对应的就会有多个，Partitioner因此就是reduce的输入分片，这个程序员可以编程控制，主要是根据实际key和value的值，根据实际业务类型或者为了更好的reduce负载均衡要求进行，这是提高reduce效率的一个关键所在。到了reduce阶段就是合并map输出文件了，Partitioner会找到对应的map输出文件，然后进行复制操作，复制操作时reduce会开启几个复制线程，这些线程默认个数是5个，程序员也可以在配置文件更改复制线程的个数，这个复制过程和map写入磁盘过程类似，也有阀值和内存大小，阀值一样可以在配置文件里配置，而内存大小是直接使用reduce的tasktracker的内存大小，复制时候reduce还会进行排序操作和合并文件操作，这些操作完了就会进行reduce计算了；</li>
+<li><strong>reduce阶段</strong>：和map函数一样也是程序员编写的，最终结果是存储在hdfs上的。</li>
+</ol>
+<h2 id="YARN"><a href="#YARN" class="headerlink" title="YARN"></a>YARN</h2><p>YARN（Yet Another Resource Negotiator）,下一代MapReduce框架的名称，为了容易记忆，一般称为MRv2（MapReduce version 2）。该框架已经不再是一个传统的MapReduce框架，甚至与MapReduce无关，她是一个通用的运行时框架，用户可以编写自己的计算框架，在该运行环境中运行。用于自己编写的框架作为客户端的一个lib，在运用提交作业时打包即可。</p>
+<h3 id="why-YARN-instead-of-MR"><a href="#why-YARN-instead-of-MR" class="headerlink" title="why YARN instead of MR"></a>why YARN instead of MR</h3><h4 id="MR-的缺点"><a href="#MR-的缺点" class="headerlink" title="MR 的缺点"></a>MR 的缺点</h4><p>经典 MapReduce 的最严重的限制主要关系到<strong>可伸缩性、资源利用和对与 MapReduce 不同的工作负载的支持</strong>。在 MapReduce 框架中，作业执行受两种类型的进程控制：</p>
+<ul>
+<li>一个称为 JobTracker 的主要进程，它协调在集群上运行的所有作业，分配要在 TaskTracker 上运行的 map 和 reduce 任务。</li>
+<li>许多称为 TaskTracker 的下级进程，它们运行分配的任务并定期向 JobTracker 报告进度。<br>大型的 Hadoop 集群显现出了由单个 JobTracker 导致的可伸缩性瓶颈。</li>
+</ul>
+<p>此外，较小和较大的 Hadoop 集群都从未最高效地使用他们的计算资源。在 Hadoop MapReduce 中，每个从属节点上的计算资源由集群管理员分解为固定数量的 map 和 reduce slot，这些 slot 不可替代。设定 map slot 和 reduce slot 的数量后，节点在任何时刻都不能运行比 map slot 更多的 map 任务，即使没有 reduce 任务在运行。这影响了集群的利用率，因为在所有 map slot 都被使用（而且我们还需要更多）时，我们无法使用任何 reduce slot，即使它们可用，反之亦然。<br>Hadoop 设计为仅运行 MapReduce 作业。随着替代性的编程模型（比如 Apache Giraph 所提供的图形处理）的到来，除 MapReduce 外，越来越需要为可通过高效的、公平的方式在同一个集群上运行并共享资源的其他编程模型提供支持。</p>
+<h4 id="原MapReduce框架的不足"><a href="#原MapReduce框架的不足" class="headerlink" title="原MapReduce框架的不足"></a>原MapReduce框架的不足</h4><ul>
+<li>JobTracker是集群事务的集中处理点，存在单点故障</li>
+<li>JobTracker是集群事务的集中处理点，存在单点故障</li>
+<li>在taskTracker端，用map/reduce task作为资源的表示过于简单，没有考虑到CPU、内存等资源情况，当把两个需要消耗大内存的task调度到一起，很容易出现OOM</li>
+<li>把资源强制划分为map/reduce slot,当只有map task时，reduce slot不能用；当只有reduce task时，map slot不能用，容易造成资源利用不足。</li>
+</ul>
+<h4 id="解决可伸缩性问题"><a href="#解决可伸缩性问题" class="headerlink" title="解决可伸缩性问题"></a>解决可伸缩性问题</h4><p>在 Hadoop MapReduce 中，JobTracker 具有两种不同的职责：</p>
+<ul>
+<li>管理集群中的计算资源，这涉及到维护活动节点列表、可用和占用的 map 和 reduce slots 列表，以及依据所选的调度策略将可用 slots 分配给合适的作业和任务</li>
+<li>协调在集群上运行的所有任务，这涉及到指导 TaskTracker 启动 map 和 reduce 任务，监视任务的执行，重新启动失败的任务，推测性地运行缓慢的任务，计算作业计数器值的总和，等等</li>
+</ul>
+<p>为单个进程安排大量职责会导致重大的可伸缩性问题，尤其是在较大的集群上，JobTracker 必须不断跟踪数千个 TaskTracker、数百个作业，以及数万个 map 和 reduce 任务。相反，TaskTracker 通常近运行十来个任务，这些任务由勤勉的 JobTracker 分配给它们。</p>
+<p>为了解决可伸缩性问题，一个简单而又绝妙的想法应运而生：我们减少了单个 JobTracker 的职责，将部分职责委派给 TaskTracker，因为集群中有许多 TaskTracker。在新设计中，这个概念通过将 JobTracker 的双重职责（集群资源管理和任务协调）分开为两种不同类型的进程来反映。</p>
+<h4 id="YARN-的优点"><a href="#YARN-的优点" class="headerlink" title="YARN 的优点"></a>YARN 的优点</h4><ol>
+<li>更快地MapReduce计算</li>
+<li>对多框架支持</li>
+<li>框架升级更容易</li>
+</ol>
+<center><img src="http://p1.bpimg.com/567571/1ae5e3582108b3aa.png" alt=""><center><br><center>YARN</center>
+
+<ul>
+<li>ResourceManager 代替集群管理器</li>
+<li>ApplicationMaster 代替一个专用且短暂的 JobTracker</li>
+<li>NodeManager 代替 TaskTracker</li>
+<li>一个分布式应用程序代替一个 MapReduce 作业</li>
+</ul>
+<p>一个全局 ResourceManager 以主要后台进程的形式运行，它通常在专用机器上运行，在各种竞争的应用程序之间仲裁可用的集群资源。<br>在用户提交一个应用程序时，一个称为 ApplicationMaster 的轻量型进程实例会启动来协调应用程序内的所有任务的执行。这包括监视任务，重新启动失败的任务，推测性地运行缓慢的任务，以及计算应用程序计数器值的总和。有趣的是，ApplicationMaster 可在容器内运行任何类型的任务。<br>NodeManager 是 TaskTracker 的一种更加普通和高效的版本。没有固定数量的 map 和 reduce slots，NodeManager 拥有许多动态创建的资源容器。</p>
+</center></center>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;Apache Hadoop 是一个开源软件框架，可安装在一个商用机器集群中，使机器可彼此通信并协同工作，以高度分布式的方式共同存储和处理大量数据。最初，Hadoop 包含以下两个主要组件：&lt;strong&gt;Hadoop Distributed Fil
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -1141,70 +1252,6 @@
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java 反射机制</title>
-    <link href="http://yoursite.com/2016/10/27/Java%20%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"/>
-    <id>http://yoursite.com/2016/10/27/Java 反射机制/</id>
-    <published>2016-10-27T07:39:49.000Z</published>
-    <updated>2017-02-17T02:10:12.176Z</updated>
-    
-    <content type="html"><![CDATA[<p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。<br>Java反射机制主要提供了以下功能： 在运行时判断任意一个对象所属的类；在运行时构造任意一个类的对象；在运行时判断任意一个类所具有的成员变量和方法；在运行时调用任意一个对象的方法；生成动态代理…</p>
-<h2 id="得到某个对象属性"><a href="#得到某个对象属性" class="headerlink" title="得到某个对象属性"></a><strong>得到某个对象属性</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getProperty</span><span class="params">(Object owner, String fieldName)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">       Class ownerClass = owner.getClass();</div><div class="line">       Field field = ownerClass.getField(fieldName);<span class="comment">// 属性必须是public，否则会报java.lang.NoSuchFieldException异常</span></div><div class="line">       Object property = field.get(owner);</div><div class="line">       <span class="keyword">return</span> property;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h2 id="得到某个类的静态属性"><a href="#得到某个类的静态属性" class="headerlink" title="得到某个类的静态属性"></a><strong>得到某个类的静态属性</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getStaticProperty</span><span class="params">(String className, String fieldName)</span></span></div><div class="line">        <span class="keyword">throws</span> Exception &#123;</div><div class="line">    Class ownerClass = Class.forName(className);</div><div class="line">    Field field = ownerClass.getField(fieldName);</div><div class="line">    Object property = field.get(ownerClass); <span class="comment">//因为该属性是静态的，所以直接从类的Class里取。</span></div><div class="line">    <span class="keyword">return</span> property;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="执行某对象的方法"><a href="#执行某对象的方法" class="headerlink" title="执行某对象的方法"></a><strong>执行某对象的方法</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">invokeMethod</span><span class="params">(Object owner, String methodName, Object[] args)</span></span></div><div class="line">        <span class="keyword">throws</span> Exception &#123;</div><div class="line">    Class ownerClass = owner.getClass();</div><div class="line">    Class[] argsClass = <span class="keyword">new</span> Class[args.length];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = args.length; i &lt; j; i++) &#123;</div><div class="line">        argsClass[i] = args[i].getClass();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通过methodName和参数的argsClass（方法中的参数类型集合）数组得到要执行的Method。</span></div><div class="line">    Method method = ownerClass.getMethod(methodName, argsClass);</div><div class="line">    <span class="comment">// 执行该Method.invoke方法的参数是执行这个方法的对象owner，和参数数组args，</span></div><div class="line">    <span class="comment">// 可以这么理解：owner对象中带有参数args的method方法。返回值是Object，也既是该方法的返回值。</span></div><div class="line">    <span class="keyword">return</span> method.invoke(owner, args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="执行某个类的静态方法"><a href="#执行某个类的静态方法" class="headerlink" title="执行某个类的静态方法"></a><strong>执行某个类的静态方法</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">invokeStaticMethod</span><span class="params">(Object owner, String methodName, Object[] args)</span></span></div><div class="line">        <span class="keyword">throws</span> Exception &#123;</div><div class="line">    Class ownerClass = owner.getClass();</div><div class="line">    Class[] argsClass = <span class="keyword">new</span> Class[args.length];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = args.length; i &lt; j; i++) &#123;</div><div class="line">        argsClass[i] = args[i].getClass();</div><div class="line">    &#125;</div><div class="line">    Method method = ownerClass.getMethod(methodName,argsClass);</div><div class="line">    <span class="comment">// 基本的原理和第3点相同，不同点是最后一行，invoke的一个参数是null，因为这是静态方法，不需要借助实例运行。</span></div><div class="line">    <span class="keyword">return</span> method.invoke(<span class="keyword">null</span>,args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="判断是否为某个类的实例"><a href="#判断是否为某个类的实例" class="headerlink" title="判断是否为某个类的实例"></a><strong>判断是否为某个类的实例</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInstance</span><span class="params">(Object obj, Class cls)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> cls.isInstance(obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="Method-invoke"><a href="#Method-invoke" class="headerlink" title="Method.invoke"></a><strong>Method.invoke</strong></h2><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InvokeTest</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> sum;</div><div class="line">    String msg;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> param1, <span class="keyword">int</span> param2)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> param1 + param2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">echo</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"echo "</span> + msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSum</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> sum;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSum</span><span class="params">(<span class="keyword">int</span> sum)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.sum = sum;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.msg = msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        Class&lt;InvokeTest&gt; classType = InvokeTest.class;</div><div class="line">        InvokeTest invokerTester = classType.newInstance();</div><div class="line"></div><div class="line">        Method addMethod = classType.getMethod(<span class="string">"add"</span>, <span class="keyword">int</span>.class,</div><div class="line">                <span class="keyword">int</span>.class);</div><div class="line">        <span class="comment">// Method类的invoke(Object obj,Object args[])方法接收的参数必须为对象，</span></div><div class="line">        <span class="comment">// 如果参数为基本类型数据，必须转换为相应的包装类型的对象。invoke()方法的返回值总是对象，</span></div><div class="line">        <span class="comment">// 如果实际被调用的方法的返回类型是基本类型数据，那么invoke()方法会把它转换为相应的包装类型的对象，再将其返回</span></div><div class="line">        Object result = addMethod.invoke(invokerTester, <span class="number">100</span>, <span class="number">200</span>);</div><div class="line">        System.out.println(result);</div><div class="line"></div><div class="line">        Method echoMethod = classType.getMethod(<span class="string">"echo"</span>, String.class);</div><div class="line">        result = echoMethod.invoke(invokerTester, <span class="string">"hello"</span>);</div><div class="line">        System.out.println(result);</div><div class="line"></div><div class="line">        Method setSumMethod = classType.getMethod(<span class="string">"setSum"</span>, <span class="keyword">int</span>.class);</div><div class="line">        setSumMethod.invoke(invokerTester, <span class="number">12</span>);</div><div class="line">        System.out.println(invokerTester.getSum());</div><div class="line"></div><div class="line">        Method setMsgMethod = classType.getMethod(<span class="string">"setMsg"</span>, String.class);</div><div class="line">        setMsgMethod.invoke(invokerTester, <span class="string">"Hello world!"</span>);</div><div class="line">        System.out.println(invokerTester.getMsg());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><a href="http://azrael6619.iteye.com/blog/429797" target="_blank" rel="external">参考链接</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。&lt;br&gt;Java反射机制主要提供了以下功能： 在运行时判断任意一个对象所
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="反射" scheme="http://yoursite.com/tags/%E5%8F%8D%E5%B0%84/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux 磁盘管理</title>
-    <link href="http://yoursite.com/2016/10/26/Linux-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/"/>
-    <id>http://yoursite.com/2016/10/26/Linux-磁盘管理/</id>
-    <published>2016-10-26T08:07:42.000Z</published>
-    <updated>2017-02-17T02:10:12.187Z</updated>
-    
-    <content type="html"><![CDATA[<p>Linux磁盘管理常用的命令：<strong>df</strong>、<strong>du</strong>、<strong>fdisk</strong>.</p>
-<h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><p>df命令可以获取硬盘被占用了多少空间，目前还剩下多少空间等信息，它也可以显示所有文件系统对i节点和磁盘块的使用情况。<br>df命令各个选项的含义如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">-a：显示所有文件系统的磁盘使用情况，包括0块（block）的文件系统，如/proc文件系统。</div><div class="line">-k：以k字节为单位显示。</div><div class="line">-i：显示i节点信息，而不是磁盘块。</div><div class="line">-t：显示各指定类型的文件系统的磁盘空间使用情况。</div><div class="line">-x：列出不是某一指定类型文件系统的磁盘空间使用情况（与t选项相反）。</div><div class="line">-T：显示文件系统类型。</div></pre></td></tr></table></figure></p>
-<h2 id="du"><a href="#du" class="headerlink" title="du"></a>du</h2><p>du的英文原义为“disk usage”，含义为显示磁盘空间的使用情况，统计目录（或文件）所占磁盘空间的大小。该命令的功能是逐级进入指定目录的每一个子目录并显示该目录占用文件系统数据块（1024字节）的情况。若没有给出指定目录，则对当前目录进行统计。<br>df命令的各个选项含义如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">-s：对每个Names参数只给出占用的数据块总数。</div><div class="line">-a：递归地显示指定目录中各文件及子目录中各文件占用的数据块数。若既不指定-s，也不指定-a，则只显示Names中的每一个目录及其中的各子目录所占的磁盘块数。</div><div class="line">-b：以字节为单位列出磁盘空间使用情况（系统默认以k字节为单位）。</div><div class="line">-k：以<span class="number">1024</span>字节为单位列出磁盘空间使用情况。</div><div class="line">-c：最后再加上一个总计（系统默认设置）。</div><div class="line">-l：计算所有的文件大小，对硬链接文件，则计算多次。</div><div class="line">-x：跳过在不同文件系统上的目录不予统计。</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">//列出各文件系统的磁盘空间使用情况</div><div class="line">#df</div><div class="line">Filesystem           1k-blocks      Used   Available Use% Mounted on</div><div class="line">/dev/hda5               381139     332921     28540  93% /</div><div class="line">/dev/hda1                46636      6871     37357  16% /boot</div><div class="line">/dev/hda3             10041144   6632528   2898556  70% /home</div><div class="line">none                    127372         0    127372   0% /dev/shm</div><div class="line">/dev/hda2             27474876  24130460   1948772  93% /usr</div><div class="line">/dev/hda6               256667    232729     10686  96% /var</div></pre></td></tr></table></figure>
-<p>第1列是代表文件系统对应的设备文件的路径名（一般是硬盘上的分区）；第2列给出分区包含的数据块（1024字节）的数目；第3，4列分别表示已用的和可用的数据块数目。<br>用户也许会感到奇怪，第3，4列块数之和不等于第2列中的块数。这是因为默认的每个分区都留了少量空间供系统管理员使用的缘故。即使遇到普通用户空间已满的情况，管理员仍能登录和留有解决问题所需的工作空间。清单中Use%列表示普通用户空间使用的百分比，若这一数字达到100%，分区仍然留有系统管理员使用的空间。<br>最后，Mounted on列表示文件系统的安装点。</p>
-<h2 id="fisk"><a href="#fisk" class="headerlink" title="fisk"></a>fisk</h2><p>fdisk可以划分磁盘分区。下面给出使用Fdisk命令进行磁盘分区的操作步骤。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Linux磁盘管理常用的命令：&lt;strong&gt;df&lt;/strong&gt;、&lt;strong&gt;du&lt;/strong&gt;、&lt;strong&gt;fdisk&lt;/strong&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;df&quot;&gt;&lt;a href=&quot;#df&quot; class=&quot;headerlink&quot; title=&quot;df
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-      <category term="磁盘" scheme="http://yoursite.com/tags/%E7%A3%81%E7%9B%98/"/>
     
   </entry>
   
