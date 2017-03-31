@@ -5,7 +5,6 @@ tags: [linux,localhost]
 categories: [linux]
 ---
 
-# localhost与127.0.0.1、0.0.0.0的区别
 localhost也叫local ，正确的解释是:**本地服务器**
 127.0.0.1在windows等系统的正确解释是:**本机地址(本机服务器)**
 
