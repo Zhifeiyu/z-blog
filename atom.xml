@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-31T09:37:57.963Z</updated>
+  <updated>2017-04-10T06:36:03.424Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,115 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>python基础&amp;函数</title>
+    <link href="http://yoursite.com/2017/04/10/python3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-python%E5%9F%BA%E7%A1%80&amp;%E5%87%BD%E6%95%B0/"/>
+    <id>http://yoursite.com/2017/04/10/python3学习笔记-python基础&amp;函数/</id>
+    <published>2017-04-10T06:35:42.000Z</published>
+    <updated>2017-04-10T06:36:03.424Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="python-基础"><a href="#python-基础" class="headerlink" title="python 基础"></a>python 基础</h1><h2 id="数据类型和变量"><a href="#数据类型和变量" class="headerlink" title="数据类型和变量"></a>数据类型和变量</h2><ol>
+<li>基本数据类型<ul>
+<li>整数型：任意大小整数，无short,int,long区分 0x表示16进制</li>
+<li>浮点型：即小数（科学计数法小数点可浮动）。 <strong><em>PS：整数运算永远准确，浮点数运算存在四舍五入</em></strong></li>
+<li>字符串：用’’或””括起来的内容 。 <strong><em>PS：转义字符：‘\’。不转义：r’…’。多行内容：’’’…’’’</em></strong></li>
+<li>布尔值：True，False。<em>PS：and or not运算</em></li>
+<li>空值：None</li>
+</ul>
+</li>
+<li>变量：下划线、字母、数字组合不能以数字开头。 <strong><em>PS：动态语言，变量无类型</em></strong></li>
+<li>常量：名称通常大写。<strong>实际无法约束常量不变</strong></li>
+</ol>
+<h2 id="字符串与编码"><a href="#字符串与编码" class="headerlink" title="字符串与编码"></a>字符串与编码</h2><ol>
+<li>字符编码<ul>
+<li>一个比特位只能表示0或者1</li>
+<li>8个比特位表示一个字节</li>
+<li>n个字节可以表示一个字符（n视编码方式而定）</li>
+<li>ASCII编码：一个字节，只能表示英文及常用字符</li>
+<li>Unicode编码：常用两个字节表示，通用</li>
+<li>UTF-8编码：变字节长度，英文一个字节，兼容ASCII，中文３个</li>
+<li><strong>存储和网络传输常用UTF-8，内存中常用Unicode</strong></li>
+</ul>
+</li>
+<li>字符串<ul>
+<li>ord()函数：取字符整数表示</li>
+<li>chr()函数：取整数字符表示</li>
+<li>b’…’表示比特类型数据</li>
+<li>.encode(‘utf-8,ascii,unicode’)函数，将字符按指定编码方式编码为比特型</li>
+<li>.decode(‘utf-8,ascii,unicode’)函数，将比特按指定编码方式编码为字符</li>
+</ul>
+</li>
+<li>格式化字符串<ul>
+<li>%d 整数型</li>
+<li>%s 字符串型</li>
+<li>%f 浮点数型</li>
+<li>%x 十六进制整数型 PS：整数和浮点数型可指定是否补0或小数点位数（%02d,%.2f）</li>
+</ul>
+</li>
+</ol>
+<h2 id="list和tuple"><a href="#list和tuple" class="headerlink" title="list和tuple"></a>list和tuple</h2><ol>
+<li>list(列表)<ul>
+<li>list是一种有序的集合，可以随时添加和删除其中的元素</li>
+<li>定义：mylist = [e1,e2…]</li>
+</ul>
+</li>
+<li>tuple(元祖)    <ul>
+<li>tuple和list非常类似，但是tuple一旦初始化就不能修改</li>
+<li>定义：mytuple = (e1,e2…)</li>
+</ul>
+</li>
+<li>list和tuple是Python内置的有序集合，一个可变，一个不可变。</li>
+</ol>
+<h2 id="dict-与-set"><a href="#dict-与-set" class="headerlink" title="dict 与 set"></a>dict 与 set</h2><ol>
+<li>dict(字典，同java map)<ul>
+<li>使用哈希函数实现，查找快，占用内存多</li>
+<li>定义：mydict = {key1:value,key2:value2,…,keyn:valuen} </li>
+</ul>
+</li>
+<li>set(集合)<ul>
+<li>key集合，key不重复 </li>
+<li>定义：myset = set([一个列表])</li>
+</ul>
+</li>
+<li>不可变对象<ul>
+<li><font color="red"><strong>通过对象自身的任何方法都不能改变对象自身的内容</strong></font></li>
+<li>ps: 通过对象自身的任何方法都不能改变对象自身的内容</li>
+</ul>
+</li>
+</ol>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ol>
+<li><p>定义一个函数要使用def语句，依次写出函数名、括号、括号中的参数和冒号:，然后，在缩进块中编写函数体，函数的返回值用return语句返回</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">def function_name(x):</div><div class="line">        return x</div></pre></td></tr></table></figure>
+</li>
+<li><p>空函数: pass可以用来作为占位符，比如现在还没想好怎么写函数的代码，就可以先放一个pass，让代码能运行起来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">def nop():</div><div class="line">    pass</div></pre></td></tr></table></figure>
+</li>
+<li><p>返回多个值: 函数可以同时返回多个值，但其实就是一个tuple。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">import math</div><div class="line"></div><div class="line">def move(x, y, step, angle=0):</div><div class="line">    nx = x + step * math.cos(angle)</div><div class="line">    ny = y - step * math.sin(angle)</div><div class="line">    return nx, ny</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h2><ol>
+<li>位置参数</li>
+<li>默认参数</li>
+<li>可变参数</li>
+<li>关键字参数</li>
+<li>命名关键字参数</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;python-基础&quot;&gt;&lt;a href=&quot;#python-基础&quot; class=&quot;headerlink&quot; title=&quot;python 基础&quot;&gt;&lt;/a&gt;python 基础&lt;/h1&gt;&lt;h2 id=&quot;数据类型和变量&quot;&gt;&lt;a href=&quot;#数据类型和变量&quot; class=&quot;he
+    
+    </summary>
+    
+      <category term="python" scheme="http://yoursite.com/categories/python/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+  </entry>
   
   <entry>
     <title>面向对象设计原则</title>
@@ -1326,52 +1435,6 @@
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Centos代理设置</title>
-    <link href="http://yoursite.com/2016/11/28/Centos%20%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/"/>
-    <id>http://yoursite.com/2016/11/28/Centos 代理设置/</id>
-    <published>2016-11-28T00:50:02.000Z</published>
-    <updated>2017-02-17T02:10:12.113Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="系统级代理"><a href="#系统级代理" class="headerlink" title="系统级代理"></a>系统级代理</h2><p>vi /etc/profile<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http_proxy = http://username:password@yourproxy:8080/</div><div class="line">ftp_proxy = http://username:password@yourproxy:8080/</div><div class="line">export http_proxy</div><div class="line">export ftp_proxy</div></pre></td></tr></table></figure></p>
-<h2 id="yum-代理"><a href="#yum-代理" class="headerlink" title="yum 代理"></a>yum 代理</h2><p>vi /etc/yum.conf<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">proxy = http://username:password@yourproxy:8080/</div></pre></td></tr></table></figure></p>
-<h2 id="wget代理"><a href="#wget代理" class="headerlink" title="wget代理"></a>wget代理</h2><p>vi /etc/wgetrc<br>添加下面内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http_proxy=http://username:password@proxy_ip:port/</div><div class="line">ftp_proxy=http://username:password@proxy_ip:port/</div></pre></td></tr></table></figure></p>
-<h2 id="docker代理"><a href="#docker代理" class="headerlink" title="docker代理"></a>docker代理</h2><ol>
-<li><p>创建目录</p>
- <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mkdir /etc/systemd/system/docker.service.d</div></pre></td></tr></table></figure>
-</li>
-<li><p>创建文件</p>
- <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">touch /etc/systemd/system/docker.service.d/http-proxy.conf</div></pre></td></tr></table></figure>
-</li>
-<li><p>配置http-proxy.conf文件</p>
- <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[Service]</div><div class="line">Environment=&quot;HTTP_PROXY=http://proxy.ip.com:80&quot;</div></pre></td></tr></table></figure>
-</li>
-<li><p>daemon重新reload 并重启docker</p>
- <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl daemon-reload</div><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
-</li>
-<li><p>检查变量是否加载</p>
- <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">systemctl show docker --property Environment</div></pre></td></tr></table></figure>
-</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;系统级代理&quot;&gt;&lt;a href=&quot;#系统级代理&quot; class=&quot;headerlink&quot; title=&quot;系统级代理&quot;&gt;&lt;/a&gt;系统级代理&lt;/h2&gt;&lt;p&gt;vi /etc/profile&lt;br&gt;添加下面内容&lt;br&gt;&lt;figure class=&quot;highlight plai
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="centos" scheme="http://yoursite.com/tags/centos/"/>
-    
-      <category term="代理" scheme="http://yoursite.com/tags/%E4%BB%A3%E7%90%86/"/>
-    
-      <category term="dokcer" scheme="http://yoursite.com/tags/dokcer/"/>
     
   </entry>
   

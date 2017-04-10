@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,并发,线程," />
+  <meta name="keywords" content="python," />
 
 
 
@@ -86,19 +86,34 @@
 
 
 
-<meta name="description" content="java内存模型java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。
-可见性多个线程之间是不能互相传递数据通信的，它们">
+<meta name="description" content="python 基础数据类型和变量
+基本数据类型
+整数型：任意大小整数，无short,int,long区分 0x表示16进制
+浮点型：即小数（科学计数法小数点可浮动）。 PS：整数运算永远准确，浮点数运算存在四舍五入
+字符串：用’’或””括起来的内容 。 PS：转义字符：‘\’。不转义：r’…’。多行内容：’’’…’’’
+布尔值：True，False。PS：and or not运算
+空值：None">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA 线程安全">
-<meta property="og:url" content="http://yoursite.com/2017/02/19/JAVA 线程安全/index.html">
+<meta property="og:title" content="python基础&函数">
+<meta property="og:url" content="http://yoursite.com/2017/04/10/python3学习笔记-python基础&函数/index.html">
 <meta property="og:site_name" content="zfylin-非鱼">
-<meta property="og:description" content="java内存模型java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。
-可见性多个线程之间是不能互相传递数据通信的，它们">
-<meta property="og:updated_time" content="2017-02-25T08:51:12.907Z">
+<meta property="og:description" content="python 基础数据类型和变量
+基本数据类型
+整数型：任意大小整数，无short,int,long区分 0x表示16进制
+浮点型：即小数（科学计数法小数点可浮动）。 PS：整数运算永远准确，浮点数运算存在四舍五入
+字符串：用’’或””括起来的内容 。 PS：转义字符：‘\’。不转义：r’…’。多行内容：’’’…’’’
+布尔值：True，False。PS：and or not运算
+空值：None">
+<meta property="og:updated_time" content="2017-04-10T06:36:03.424Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA 线程安全">
-<meta name="twitter:description" content="java内存模型java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。
-可见性多个线程之间是不能互相传递数据通信的，它们">
+<meta name="twitter:title" content="python基础&函数">
+<meta name="twitter:description" content="python 基础数据类型和变量
+基本数据类型
+整数型：任意大小整数，无short,int,long区分 0x表示16进制
+浮点型：即小数（科学计数法小数点可浮动）。 PS：整数运算永远准确，浮点数运算存在四舍五入
+字符串：用’’或””括起来的内容 。 PS：转义字符：‘\’。不转义：r’…’。多行内容：’’’…’’’
+布尔值：True，False。PS：and or not运算
+空值：None">
 
 
 
@@ -119,10 +134,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/19/JAVA 线程安全/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/10/python3学习笔记-python基础&函数/"/>
 
 
-  <title> JAVA 线程安全 | zfylin-非鱼 </title>
+  <title> python基础&函数 | zfylin-非鱼 </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -254,7 +269,7 @@
             
             
               
-                JAVA 线程安全
+                python基础&函数
               
             
           </h1>
@@ -266,8 +281,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-19T10:23:48+08:00" content="2017-02-19">
-              2017-02-19
+            <time itemprop="dateCreated" datetime="2017-04-10T14:35:42+08:00" content="2017-04-10">
+              2017-04-10
             </time>
           </span>
 
@@ -280,8 +295,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/java并发/" itemprop="url" rel="index">
-                    <span itemprop="name">java并发</span>
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
                   </a>
                 </span>
 
@@ -296,8 +311,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/02/19/JAVA 线程安全/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/19/JAVA 线程安全/" itemprop="commentsCount"></span>
+                <a href="/2017/04/10/python3学习笔记-python基础&函数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/10/python3学习笔记-python基础&函数/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -307,7 +322,7 @@
 
           
           
-             <span id="/2017/02/19/JAVA 线程安全/" class="leancloud_visitors" data-flag-title="JAVA 线程安全">
+             <span id="/2017/04/10/python3学习笔记-python基础&函数/" class="leancloud_visitors" data-flag-title="python基础&函数">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -329,31 +344,93 @@
       
 
       
-        <h1 id="java内存模型"><a href="#java内存模型" class="headerlink" title="java内存模型"></a>java内存模型</h1><p>java的多线程并发问题最终都会反映在java的内存模型上，所谓线程安全无非是要控制多个线程对某个资源的有序访问或修改。我们都知道计算机有高速缓存的存在，处理器并不是每次处理数据都是取内存的。JVM定义了自己的内存模型，屏蔽了底层平台内存管理细节，对于java开发人员，要清楚在jvm内存模型的基础上，如果解决多线程的可见性和有序性。</p>
-<h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>多个线程之间是不能互相传递数据通信的，它们之间的沟通只能通过共享变量来进行。Java内存模型（JMM）规定了jvm有主内存，主内存是多个线程共享的。当new一个对象的时候，也是被分配在主内存中，每个线程都有自己的工作内存，工作内存存储了主存的某些对象的副本，当然线程的工作内存大小是有限制的。当线程操作某个对象时，执行顺序如下：</p>
-<ul>
-<li>从主存复制变量到当前工作内存 (read and load)</li>
-<li>执行代码，改变共享变量值 (use and assign)</li>
-<li>用工作内存数据刷新主存相关内容 (store and write)<br>JVM规范定义了线程对主存的操作指令：read，load，use，assign，store，write。当一个共享变量在多个线程的工作内存中都有副本时，如果一个线程修改了这个共享变量，那么其他线程应该能够看到这个被修改后的值，这就是多线程的可见性问题。</li>
+        <h1 id="python-基础"><a href="#python-基础" class="headerlink" title="python 基础"></a>python 基础</h1><h2 id="数据类型和变量"><a href="#数据类型和变量" class="headerlink" title="数据类型和变量"></a>数据类型和变量</h2><ol>
+<li>基本数据类型<ul>
+<li>整数型：任意大小整数，无short,int,long区分 0x表示16进制</li>
+<li>浮点型：即小数（科学计数法小数点可浮动）。 <strong><em>PS：整数运算永远准确，浮点数运算存在四舍五入</em></strong></li>
+<li>字符串：用’’或””括起来的内容 。 <strong><em>PS：转义字符：‘\’。不转义：r’…’。多行内容：’’’…’’’</em></strong></li>
+<li>布尔值：True，False。<em>PS：and or not运算</em></li>
+<li>空值：None</li>
 </ul>
-<h2 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h2><p>线程在引用变量时不能直接从主内存中引用,如果线程工作内存中没有该变量,则会从主内存中拷贝一个副本到工作内存中,这个过程为read-load,完成后线程会引用该副本。当同一线程再度引用该字段时,有可能重新从主存中获取变量副本(read-load-use),也有可能直接引用原来的副本 (use),也就是说 read,load,use顺序可以由JVM实现系统决定。<br> 线程不能直接为主存中中字段赋值，它会将值指定给工作内存中的变量副本(assign),完成后这个变量副本会同步到主存储区(store- write)，至于何时同步过去，根据JVM实现系统决定.有该字段,则会从主内存中将该字段赋值到工作内存中,这个过程为read-load,完成后线程会引用该变量副本，当同一线程多次重复对字段赋值时,比如：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</div><div class="line">    a++;</div></pre></td></tr></table></figure></p>
-<p>线程有可能只对工作内存中的副本进行赋值,只到最后一次赋值后才同步到主存储区，所以assign,store,weite顺序可以由JVM实现系统决定。假设有一个共享变量x，线程a执行x=x+1。从上面的描述中可以知道x=x+1并不是一个原子操作，它的执行过程如下：</p>
-<ol>
-<li>`从主存中读取变量x副本到工作内存</li>
-<li>给x加1</li>
-<li>将x加1后的值写回主 存<br>如果另外一个线程b执行x=x-1，执行过程如下：</li>
-<li>从主存中读取变量x副本到工作内存</li>
-<li>给x减1</li>
-<li>将x减1后的值写回主存<br>那么显然，最终的x的值是不可靠的。假设x现在为10，线程a加1，线程b减1，从表面上看，似乎最终x还是为10，但是多线程情况下会有这种情况发生：</li>
-<li>线程a从主存读取x副本到工作内存，工作内存中x值为10</li>
-<li>线程b从主存读取x副本到工作内存，工作内存中x值为10</li>
-<li>线程a将工作内存中x加1，工作内存中x值为11</li>
-<li>线程a将x提交主存中，主存中x为11</li>
-<li>线程b将工作内存中x值减1，工作内存中x值为9</li>
-<li>线程b将x提交到中主存中，主存中x为9<br>同样，x有可能为11，如果x是一个银行账户，线程a存款，线程b扣款，显然这样是有严重问题的，要解决这个问题，必须保证线程a和线程b是有序执行的，并且每个线程执行的加1或减1是一个原子操作。</li>
+</li>
+<li>变量：下划线、字母、数字组合不能以数字开头。 <strong><em>PS：动态语言，变量无类型</em></strong></li>
+<li>常量：名称通常大写。<strong>实际无法约束常量不变</strong></li>
 </ol>
-<h1 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h1><h2 id="synchronized关键字"><a href="#synchronized关键字" class="headerlink" title="synchronized关键字"></a>synchronized关键字</h2><p>java用synchronized关键字做为多线程并发环境的执行有序性的保证手段之一。当一段代码会修改共享变量，这一段代码成为互斥区或临界区，为了保证共享变量的正确性，synchronized标示了临界区。典型的用法如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">synchronized</span>(锁)&#123;   </div><div class="line">     临界区代码   </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h2><p> volatile是java提供的一种同步手段，只不过它是轻量级的同步，为什么这么说，因为<strong>volatile只能保证多线程的内存可见性，不能保证多线程的执行有序性。而最彻底的同步要保证有序性和可见性，例如synchronized</strong>。任何被volatile修饰的变量，都不拷贝副本到工作内存，任何修改都及时写在主存。因此对于Valatile修饰的变量的修改，所有线程马上就能看到，但是volatile不能保证对变量的修改是有序的。</p>
+<h2 id="字符串与编码"><a href="#字符串与编码" class="headerlink" title="字符串与编码"></a>字符串与编码</h2><ol>
+<li>字符编码<ul>
+<li>一个比特位只能表示0或者1</li>
+<li>8个比特位表示一个字节</li>
+<li>n个字节可以表示一个字符（n视编码方式而定）</li>
+<li>ASCII编码：一个字节，只能表示英文及常用字符</li>
+<li>Unicode编码：常用两个字节表示，通用</li>
+<li>UTF-8编码：变字节长度，英文一个字节，兼容ASCII，中文３个</li>
+<li><strong>存储和网络传输常用UTF-8，内存中常用Unicode</strong></li>
+</ul>
+</li>
+<li>字符串<ul>
+<li>ord()函数：取字符整数表示</li>
+<li>chr()函数：取整数字符表示</li>
+<li>b’…’表示比特类型数据</li>
+<li>.encode(‘utf-8,ascii,unicode’)函数，将字符按指定编码方式编码为比特型</li>
+<li>.decode(‘utf-8,ascii,unicode’)函数，将比特按指定编码方式编码为字符</li>
+</ul>
+</li>
+<li>格式化字符串<ul>
+<li>%d 整数型</li>
+<li>%s 字符串型</li>
+<li>%f 浮点数型</li>
+<li>%x 十六进制整数型 PS：整数和浮点数型可指定是否补0或小数点位数（%02d,%.2f）</li>
+</ul>
+</li>
+</ol>
+<h2 id="list和tuple"><a href="#list和tuple" class="headerlink" title="list和tuple"></a>list和tuple</h2><ol>
+<li>list(列表)<ul>
+<li>list是一种有序的集合，可以随时添加和删除其中的元素</li>
+<li>定义：mylist = [e1,e2…]</li>
+</ul>
+</li>
+<li>tuple(元祖)    <ul>
+<li>tuple和list非常类似，但是tuple一旦初始化就不能修改</li>
+<li>定义：mytuple = (e1,e2…)</li>
+</ul>
+</li>
+<li>list和tuple是Python内置的有序集合，一个可变，一个不可变。</li>
+</ol>
+<h2 id="dict-与-set"><a href="#dict-与-set" class="headerlink" title="dict 与 set"></a>dict 与 set</h2><ol>
+<li>dict(字典，同java map)<ul>
+<li>使用哈希函数实现，查找快，占用内存多</li>
+<li>定义：mydict = {key1:value,key2:value2,…,keyn:valuen} </li>
+</ul>
+</li>
+<li>set(集合)<ul>
+<li>key集合，key不重复 </li>
+<li>定义：myset = set([一个列表])</li>
+</ul>
+</li>
+<li>不可变对象<ul>
+<li><font color="red"><strong>通过对象自身的任何方法都不能改变对象自身的内容</strong></font></li>
+<li>ps: 通过对象自身的任何方法都不能改变对象自身的内容</li>
+</ul>
+</li>
+</ol>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ol>
+<li><p>定义一个函数要使用def语句，依次写出函数名、括号、括号中的参数和冒号:，然后，在缩进块中编写函数体，函数的返回值用return语句返回</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">def function_name(x):</div><div class="line">        return x</div></pre></td></tr></table></figure>
+</li>
+<li><p>空函数: pass可以用来作为占位符，比如现在还没想好怎么写函数的代码，就可以先放一个pass，让代码能运行起来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">def nop():</div><div class="line">    pass</div></pre></td></tr></table></figure>
+</li>
+<li><p>返回多个值: 函数可以同时返回多个值，但其实就是一个tuple。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">import math</div><div class="line"></div><div class="line">def move(x, y, step, angle=0):</div><div class="line">    nx = x + step * math.cos(angle)</div><div class="line">    ny = y - step * math.sin(angle)</div><div class="line">    return nx, ny</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h2><ol>
+<li>位置参数</li>
+<li>默认参数</li>
+<li>可变参数</li>
+<li>关键字参数</li>
+<li>命名关键字参数</li>
+</ol>
 
       
     </div>
@@ -376,11 +453,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag">#java</a>
-          
-            <a href="/tags/并发/" rel="tag">#并发</a>
-          
-            <a href="/tags/线程/" rel="tag">#线程</a>
+            <a href="/tags/python/" rel="tag">#python</a>
           
         </div>
       
@@ -389,17 +462,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/17/Java集合类/" rel="next" title="Java集合类">
-                <i class="fa fa-chevron-left"></i> Java集合类
+              <a href="/2017/03/31/面向对象设计原则/" rel="next" title="面向对象设计原则">
+                <i class="fa fa-chevron-left"></i> 面向对象设计原则
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/20/Java final 详解/" rel="prev" title="Java final 详解">
-                Java final 详解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -414,10 +483,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/02/19/JAVA 线程安全/"
-     data-title="JAVA 线程安全"
+        <div class="ds-share flat" data-thread-key="2017/04/10/python3学习笔记-python基础&函数/"
+     data-title="python基础&函数"
      data-content=""
-     data-url="http://yoursite.com/2017/02/19/JAVA 线程安全/">
+     data-url="http://yoursite.com/2017/04/10/python3学习笔记-python基础&函数/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -447,8 +516,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/19/JAVA 线程安全/"
-           data-title="JAVA 线程安全" data-url="http://yoursite.com/2017/02/19/JAVA 线程安全/">
+      <div class="ds-thread" data-thread-key="2017/04/10/python3学习笔记-python基础&函数/"
+           data-title="python基础&函数" data-url="http://yoursite.com/2017/04/10/python3学习笔记-python基础&函数/">
       </div>
     
   </div>
@@ -546,7 +615,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java内存模型"><span class="nav-number">1.</span> <span class="nav-text">java内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可见性"><span class="nav-number">1.1.</span> <span class="nav-text">可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有序性"><span class="nav-number">1.2.</span> <span class="nav-text">有序性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程同步机制"><span class="nav-number">2.</span> <span class="nav-text">线程同步机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#synchronized关键字"><span class="nav-number">2.1.</span> <span class="nav-text">synchronized关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile关键字"><span class="nav-number">2.2.</span> <span class="nav-text">volatile关键字</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#python-基础"><span class="nav-number">1.</span> <span class="nav-text">python 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型和变量"><span class="nav-number">1.1.</span> <span class="nav-text">数据类型和变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串与编码"><span class="nav-number">1.2.</span> <span class="nav-text">字符串与编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#list和tuple"><span class="nav-number">1.3.</span> <span class="nav-text">list和tuple</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dict-与-set"><span class="nav-number">1.4.</span> <span class="nav-text">dict 与 set</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数"><span class="nav-number">2.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数参数"><span class="nav-number">2.2.</span> <span class="nav-text">函数参数</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
