@@ -1,6 +1,6 @@
 ---
 title: python3学习笔记—高级特性&函数式编程
-date: 2017-04-11 17:54:27
+date: 2017-04-12 13:30:49
 tags: [python]
 categories: [python]
 ---
@@ -127,7 +127,8 @@ g: 3
 g: 5
 g: 8
 Generator return value: done
-``` 
+
+```
 
 
 ## 迭代器
