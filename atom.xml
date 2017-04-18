@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-12T05:37:35.760Z</updated>
+  <updated>2017-04-18T08:31:22.214Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,68 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之单例模式</title>
+    <link href="http://yoursite.com/2017/04/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/04/18/设计模式之单例模式/</id>
+    <published>2017-04-18T08:30:27.000Z</published>
+    <updated>2017-04-18T08:31:22.214Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><strong>单例模式(Singleton Pattern)：确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法</strong>。单例模式是一种对象创建型模式。</p>
+<p> 单例模式有三个要点：一是某个类只能有一个实例；二是它必须自行创建这个实例；三是它必须自行向整个系统提供这个实例。<br>单例模式是结构最简单的设计模式一，在它的核心结构中只包含一个被称为单例类的特殊类。单例模式结构如图所示：</p>
+<p><img src="http://img.my.csdn.net/uploads/201204/02/1333305124_9327.gif" alt="单例模式结构"></p>
+<p>单例模式结构图中只包含一个单例角色：</p>
+<ul>
+<li>Singleton（单例）：在单例类的内部实现只生成一个实例，同时它提供一个静态的getInstance()工厂方法，让客户可以访问它的唯一实例；为了防止在外部对其实例化，将其构造函数设计为私有；在单例类内部定义了一个Singleton类型的静态对象，作为外部共享的唯一实例。</li>
+</ul>
+<h2 id="饿汉式单例与懒汉式单例"><a href="#饿汉式单例与懒汉式单例" class="headerlink" title="饿汉式单例与懒汉式单例"></a>饿汉式单例与懒汉式单例</h2><h3 id="饿汉式单例类"><a href="#饿汉式单例类" class="headerlink" title="饿汉式单例类"></a>饿汉式单例类</h3><p>饿汉式单例类是实现起来最简单的单例类，饿汉式单例类结构图如图所示</p>
+<p><img src="http://img.my.csdn.net/uploads/201204/02/1333305889_1823.gif" alt="饿汉式单例类结构图"></p>
+<p>从图中可以看出，由于在定义静态变量的时候实例化单例类，因此在类加载的时候就已经创建了单例对象，代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EagerSingleton</span> </span>&#123; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> EagerSingleton instance = <span class="keyword">new</span> EagerSingleton(); </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">EagerSingleton</span><span class="params">()</span> </span>&#123; &#125; </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> EagerSingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> instance; </div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当类被加载时，静态变量instance会被初始化，此时类的私有构造函数会被调用，单例类的唯一实例将被创建。如果使用饿汉式单例来实现单例模式的设计，则不<strong>会出现创建多个单例对象的情况，可确保单例对象的唯一性</strong>。</p>
+<h3 id="懒汉式单例类与线程锁定"><a href="#懒汉式单例类与线程锁定" class="headerlink" title="懒汉式单例类与线程锁定"></a>懒汉式单例类与线程锁定</h3><p>还有一种经典的懒汉式单例。懒汉式单例类结构图如图所示：</p>
+<p><img src="http://img.my.csdn.net/uploads/201204/02/1333305983_8045.gif" alt="懒汉式单例类结构图"></p>
+<p> 从图中可以看出，懒汉式单例在第一次调用getInstance()方法时实例化，在类加载时并不自行实例化，这种技术又称为<strong>延迟加载(Lazy Load)</strong>技术，即需要的时候再加载实例，为了避免多个线程同时调用getInstance()方法，我们可以使用关键字<strong>synchronized</strong>，代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LazySingleton</span> </span>&#123; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LazySingleton instance = <span class="keyword">null</span>; </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">LazySingleton</span><span class="params">()</span> </span>&#123; &#125; </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">public</span> <span class="keyword">static</span> LazySingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123; </div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            instance = <span class="keyword">new</span> LazySingleton(); </div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> instance; </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该懒汉式单例类在getInstance()方法前面增加了关键字synchronized进行线程锁，以处理多个线程同时访问的问题。但是，上述代码虽然解决了线程安全问题，但是每次调用getInstance()时都需要进行线程锁定判断，在多线程高并发访问环境中，将会导致系统性能大大降低。<br>如何既解决线程安全问题又不影响系统性能呢？我们继续对懒汉式单例进行改进。事实上，我们无须对整个getInstance()方法进行锁定，只需对其中的代码“instance = new LazySingleton();”进行锁定即可。因此getInstance()方法可以进行如下改进<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LazySingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123; </div><div class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">synchronized</span> (LazySingleton.class) &#123;</div><div class="line">            instance = <span class="keyword">new</span> LazySingleton(); </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> instance; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果使用以上代码来实现单例，还是会存在单例对象不唯一。<br>假如在某一瞬间线程A和线程B都在调用getInstance()方法，此时instance对象为null值，均能通过instance == null的判断。由于实现了synchronized加锁机制，线程A进入synchronized锁定的代码中执行实例创建代码，线程B处于排队等待状态，必须等待线程A执行完毕后才可以进入synchronized锁定代码。但当A执行完毕时，线程B并不知道实例已经创建，将继续创建新的实例，导致产生多个单例对象，违背单例模式的设计思想，因此需要进行进一步改进，在synchronized中再进行一次(instance == null)判断，这种方式称为双重检查锁定(Double-Check Locking)。使用<strong>双重检查锁定</strong>实现的懒汉式单例类完整代码如下所示：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LazySingleton</span> </span>&#123; </div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> LazySingleton instance = <span class="keyword">null</span>; </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">LazySingleton</span><span class="params">()</span> </span>&#123; &#125; </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LazySingleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123; </div><div class="line">        <span class="comment">//第一重判断</span></div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">//锁定代码块</span></div><div class="line">            <span class="keyword">synchronized</span> (LazySingleton.class) &#123;</div><div class="line">                <span class="comment">//第二重判断</span></div><div class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">                    instance = <span class="keyword">new</span> LazySingleton(); <span class="comment">//创建单例实例</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> instance; </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="饿汉式单例类VS懒汉式单例类"><a href="#饿汉式单例类VS懒汉式单例类" class="headerlink" title="饿汉式单例类VS懒汉式单例类"></a>饿汉式单例类VS懒汉式单例类</h3><p>饿汉式单例类在类被加载时就将自己实例化，它的优点在于无须考虑多线程访问问题，可以确保实例的唯一性；从调用速度和反应时间角度来讲，由于单例对象一开始就得以创建，因此要优于懒汉式单例。但是无论系统在运行时是否需要使用该单例对象，由于在类加载时该对象就需要创建，因此从资源利用效率角度来讲，饿汉式单例不及懒汉式单例，而且在系统加载时由于需要创建饿汉式单例对象，加载时间可能会比较长。<br>      懒汉式单例类在第一次使用时创建，无须一直占用系统资源，实现了延迟加载，但是必须处理好多个线程同时访问的问题，特别是当单例类作为资源控制器，在实例化时必然涉及资源初始化，而资源初始化很有可能耗费大量时间，这意味着出现多线程同时首次引用此类的机率变得较大，需要通过双重检查锁定等机制进行控制，这将导致系统性能受到一定影响。</p>
+<h2 id="IoDH（Initialization-Demand-Holder-）"><a href="#IoDH（Initialization-Demand-Holder-）" class="headerlink" title="IoDH（Initialization Demand Holder ）"></a>IoDH（Initialization Demand Holder ）</h2><p>饿汉式单例类不能实现延迟加载，不管将来用不用始终占据内存；懒汉式单例类线程安全控制烦琐，而且性能受影响。可见，无论是饿汉式单例还是懒汉式单例都存在这样那样的问题，有没有一种方法，能够将两种单例的缺点都克服，而将两者的优点合二为一呢？答案是：Yes！下面我们来学习这种更好的被称之为<strong>Initialization Demand Holder (IoDH)</strong>的技术。<br>在IoDH中，我们在单例类中增加一个<strong>静态(static)内部类</strong>，在该内部类中创建单例对象，再将该单例对象通过getInstance()方法返回给外部使用，实现代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//Initialization on Demand Holder</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HolderClass</span> </span>&#123;</div><div class="line">            <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">	    <span class="keyword">return</span> HolderClass.instance;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">	    Singleton s1, s2; </div><div class="line">            s1 = Singleton.getInstance();</div><div class="line">	    s2 = Singleton.getInstance();</div><div class="line">	    System.out.println(s1==s2);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译并运行上述代码，运行结果为：true，即创建的单例对象s1和s2为同一对象。由于静态单例对象没有作为Singleton的成员变量直接实例化，因此类加载时不会实例化Singleton，第一次调用getInstance()时将加载内部类HolderClass，在该内部类中定义了一个static类型的变量instance，此时会首先初始化这个成员变量，由Java虚拟机来保证其线程安全性，确保该成员变量只能初始化一次。由于getInstance()方法没有任何线程锁定，因此其性能不会造成任何影响。</p>
+<p><font color="red"><strong>通过使用IoDH，我们既可以实现延迟加载，又可以保证线程安全，不影响系统性能，不失为一种最好的Java语言单例模式实现方式</strong></font>（其缺点是与编程语言本身的特性相关，很多面向对象语言不支持IoDH）。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ol>
+<li>单例模式提供了对唯一实例的受控访问。因为单例类封装了它的唯一实例，所以它可以严格控制客户怎样以及何时访问它</li>
+<li>由于在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象单例模式无疑可以提高系统的性能</li>
+<li>允许可变数目的实例。基于单例模式我们可以进行扩展，使用与单例控制相似的方法来获得指定个数的对象实例，既节省系统资源，又解决了单例单例对象共享过多有损性能的问题</li>
+</ol>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
+<li>由于单例模式中没有抽象层，因此单例类的扩展有很大的困难</li>
+<li>单例类的职责过重，在一定程度上违背了“单一职责原则”。因为单例类既充当了工厂角色，提供了工厂方法，同时又充当了产品角色，包含一些业务方法，将产品的创建和产品的本身的功能融合到一起</li>
+<li>现在很多面向对象语言(如Java、C#)的运行环境都提供了自动垃圾回收的技术，因此，如果实例化的共享对象长时间不被利用，系统会认为它是垃圾，会自动销毁并回收资源，下次利用时又将重新实例化，这将导致共享的单例对象状态的丢失</li>
+</ol>
+<h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><ol>
+<li>系统只需要一个实例对象，如系统要求提供一个唯一的序列号生成器或资源管理器，或者需要考虑资源消耗太大而只允许创建一个对象</li>
+<li>客户调用类的单个实例只允许使用一个公共访问点，除了该公共访问点，不能通过其他途径访问该实例</li>
+</ol>
+<p><a href="http://blog.csdn.net/lovelion/article/details/7420886" target="_blank" rel="external">转自：确保对象的唯一性——单例模式 （三）</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;单例模式(Singleton Pattern)：确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+      <category term="工厂模式" scheme="http://yoursite.com/tags/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>python3学习笔记—高级特性&amp;函数式编程</title>
@@ -1324,9 +1386,9 @@
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="Hbase" scheme="http://yoursite.com/tags/Hbase/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   
@@ -1392,9 +1454,9 @@
     
       <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
-    
       <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+      <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
     
       <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
     
@@ -1437,81 +1499,6 @@
       <category term="RabbitMQ" scheme="http://yoursite.com/tags/RabbitMQ/"/>
     
       <category term="MQ" scheme="http://yoursite.com/tags/MQ/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>离线安装 Cloudera ( CDH 5.x )</title>
-    <link href="http://yoursite.com/2016/12/20/%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%20Cloudera%20(%20CDH%205.x%20)/"/>
-    <id>http://yoursite.com/2016/12/20/离线安装 Cloudera ( CDH 5.x )/</id>
-    <published>2016-12-20T02:37:06.000Z</published>
-    <updated>2017-02-17T02:10:12.332Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><ul>
-<li>系统 centos 6.5</li>
-<li>jdk 1.8</li>
-<li>三台主机节点<br>  节点角色说明</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>ip</th>
-<th style="text-align:center">主机名</th>
-<th style="text-align:right">角色描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>10.206.2.181</td>
-<td style="text-align:center">hadoop-master</td>
-<td style="text-align:right">cm，agent</td>
-</tr>
-<tr>
-<td>10.206.2.182</td>
-<td style="text-align:center">hadoop-slave1</td>
-<td style="text-align:right">agent</td>
-</tr>
-<tr>
-<td>10.206.2.183</td>
-<td style="text-align:center">hadoop-slave2</td>
-<td style="text-align:right">agent</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>域名解析<br>配置/etc/hosts, 将以下代码追加到文件末尾即可<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">sudo vim /etc/hosts</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">10.206.2.181 hadoop-master </div><div class="line">10.206.2.182 hadoop-slave1</div><div class="line">10.206.2.183 hadoop-slave2</div></pre></td></tr></table></figure>
-<ul>
-<li>关闭iptable 或配置 iptable策略</li>
-<li>关闭SELinux</li>
-<li>配置免密码ssh登录</li>
-<li>安装jdk（在所有节点操作）</li>
-<li>时间同步</li>
-<li>准备包（用parcel 方式安装）</li>
-<li></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;准备&quot;&gt;&lt;a href=&quot;#准备&quot; class=&quot;headerlink&quot; title=&quot;准备&quot;&gt;&lt;/a&gt;准备&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;系统 centos 6.5&lt;/li&gt;
-&lt;li&gt;jdk 1.8&lt;/li&gt;
-&lt;li&gt;三台主机节点&lt;br&gt;  节点角色说明&lt;/li&gt;
-
-    
-    </summary>
-    
-      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-    
-      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
-    
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="cdh" scheme="http://yoursite.com/tags/cdh/"/>
     
   </entry>
   
